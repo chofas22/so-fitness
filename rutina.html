@@ -7,8 +7,16 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
 
+        :root {
+            --primary-color: #e87c3e; /* Color por defecto, se sobrescribe dinámicamente */
+            --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, #ff9e5e 100%);
+            --bg-color: #050505;
+            --card-bg: #1a1a1a;
+            --card-inner: #2a2a2a;
+        }
+
         body {
-            background-color: #050505;
+            background-color: var(--bg-color);
             color: #ffffff;
             font-family: 'Montserrat', sans-serif;
             margin: 0;
@@ -24,7 +32,7 @@
 
         .back-btn {
             display: inline-block;
-            color: #e87c3e;
+            color: var(--primary-color);
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: 700;
@@ -56,14 +64,14 @@
             font-size: 2.2rem;
             font-weight: 800;
             margin: 5px 0 0 0;
-            color: #e87c3e;
+            color: var(--primary-color);
             text-transform: uppercase;
         }
 
         /* BANNER DE RACHA */
         .streak-banner {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a1a10 100%);
-            border: 1px solid #e87c3e;
+            border: 1px solid var(--primary-color);
             border-radius: 12px;
             padding: 12px 15px;
             margin-bottom: 20px;
@@ -84,7 +92,7 @@
         .streak-info h4 {
             margin: 2px 0 0 0;
             font-size: 1rem;
-            color: #e87c3e;
+            color: var(--primary-color);
             font-weight: 800;
         }
 
@@ -122,12 +130,12 @@
         }
 
         .btn-trainer {
-            background: linear-gradient(135deg, #e87c3e 0%, #ff9e5e 100%);
+            background: var(--primary-gradient);
             color: #050505;
         }
 
         .btn-add {
-            background-color: #2a2a2a;
+            background-color: var(--card-inner);
             color: #fff;
             border: 1px solid #444;
         }
@@ -141,7 +149,7 @@
             font-size: 1rem;
             font-weight: 700;
             margin: 25px 0 15px 0;
-            border-left: 4px solid #e87c3e;
+            border-left: 4px solid var(--primary-color);
             padding-left: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -149,7 +157,7 @@
 
         /* ESTILOS DE LA TARJETA TIPO ACORDEÓN */
         .exercise-card {
-            background-color: #2a2a2a;
+            background-color: var(--card-inner);
             border: 1px solid #444;
             border-radius: 12px;
             padding: 15px;
@@ -161,11 +169,11 @@
         }
 
         .exercise-card:hover {
-            border-color: #e87c3e;
+            border-color: var(--primary-color);
         }
 
         .card-title {
-            color: #e87c3e;
+            color: var(--primary-color);
             font-size: 1.05rem;
             font-weight: 700;
             margin: 0 0 4px 0;
@@ -180,7 +188,7 @@
 
         .card-details {
             font-size: 0.75rem;
-            color: #ffa726;
+            color: var(--primary-color);
             text-transform: uppercase;
             font-weight: 700;
             margin: 0;
@@ -234,7 +242,7 @@
             letter-spacing: 0.5px;
         }
 
-        .btn-small:hover { color: #e87c3e; }
+        .btn-small:hover { color: var(--primary-color); }
         .btn-delete:hover { color: #ff4444; }
 
         /* Modal Formulario */
@@ -251,8 +259,8 @@
         }
 
         .modal-box {
-            background-color: #1a1a1a;
-            border: 1px solid #e87c3e;
+            background-color: var(--card-bg);
+            border: 1px solid var(--primary-color);
             border-radius: 16px;
             padding: 20px;
             width: 100%;
@@ -270,7 +278,7 @@
         .form-group label {
             display: block;
             font-size: 0.75rem;
-            color: #e87c3e;
+            color: var(--primary-color);
             font-weight: 700;
             text-transform: uppercase;
             margin-bottom: 5px;
@@ -288,7 +296,7 @@
             box-sizing: border-box;
         }
 
-        .form-control:focus { outline: none; border-color: #e87c3e; }
+        .form-control:focus { outline: none; border-color: var(--primary-color); }
 
         .checkbox-group {
             display: flex;
@@ -303,7 +311,7 @@
         .checkbox-group input {
             width: 18px;
             height: 18px;
-            accent-color: #e87c3e;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
 
@@ -329,14 +337,14 @@
             text-transform: uppercase;
         }
 
-        .btn-cancel { background-color: #2a2a2a; color: #ccc; }
-        .btn-save { background-color: #e87c3e; color: #050505; }
+        .btn-cancel { background-color: var(--card-inner); color: #ccc; }
+        .btn-save { background-color: var(--primary-color); color: #050505; }
 
         /* Estilos Modo Entrenador */
         #trainer-mode-container {
             display: none;
-            background-color: #1a1a1a;
-            border: 1px solid #e87c3e;
+            background-color: var(--card-bg);
+            border: 1px solid var(--primary-color);
             border-radius: 16px;
             padding: 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.6);
@@ -354,7 +362,7 @@
 
         .trainer-counter {
             font-size: 0.8rem;
-            color: #e87c3e;
+            color: var(--primary-color);
             font-weight: 700;
             text-transform: uppercase;
         }
@@ -377,7 +385,7 @@
 
         .nav-step-btn {
             flex: 1;
-            background-color: #2a2a2a;
+            background-color: var(--card-inner);
             color: #fff;
             border: 1px solid #444;
             padding: 12px;
@@ -389,9 +397,9 @@
         }
 
         .nav-step-btn.primary {
-            background-color: #e87c3e;
+            background-color: var(--primary-color);
             color: #050505;
-            border-color: #e87c3e;
+            border-color: var(--primary-color);
         }
 
         .empty-state {
@@ -408,7 +416,7 @@
             position: fixed;
             bottom: 25px;
             right: 25px;
-            background-color: #e87c3e;
+            background-color: var(--primary-color);
             color: #050505;
             width: 60px;
             height: 60px;
@@ -430,8 +438,8 @@
             right: 20px;
             max-width: 360px;
             width: calc(100% - 40px);
-            background-color: #1a1a1a;
-            border: 1px solid #e87c3e;
+            background-color: var(--card-bg);
+            border: 1px solid var(--primary-color);
             border-radius: 16px;
             padding: 18px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.6);
@@ -449,7 +457,7 @@
             border-bottom: 1px solid #333;
             padding-bottom: 8px;
         }
-        .timer-header h3 { margin: 0; font-size: 0.95rem; color: #e87c3e; text-transform: uppercase; }
+        .timer-header h3 { margin: 0; font-size: 0.95rem; color: var(--primary-color); text-transform: uppercase; }
         .close-timer { background: none; border: none; color: #aaa; font-size: 1.2rem; cursor: pointer; padding: 0; width: auto; }
         .close-timer:hover { color: #fff; }
 
@@ -466,7 +474,7 @@
             font-size: 0.75rem; font-weight: 700; text-transform: uppercase; cursor: pointer;
             border-radius: 6px; font-family: 'Montserrat', sans-serif; transition: all 0.2s;
         }
-        .timer-tab.active { background-color: #e87c3e; color: #050505; }
+        .timer-tab.active { background-color: var(--primary-color); color: #050505; }
 
         .timer-inputs-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
         .timer-row {
@@ -484,7 +492,7 @@
         .timer-display {
             text-align: center; background-color: #111; border: 2px solid #333; border-radius: 12px; padding: 12px; margin-bottom: 12px;
         }
-        .timer-status { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #e87c3e; margin-bottom: 4px; font-weight: 700; }
+        .timer-status { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--primary-color); margin-bottom: 4px; font-weight: 700; }
         .timer-clock { font-size: 2.2rem; font-weight: 800; color: #ffffff; margin: 0; }
         .timer-rounds-info { font-size: 0.75rem; color: #888; margin-top: 4px; text-transform: uppercase; }
 
@@ -493,19 +501,19 @@
             padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center;
         }
         .timer-btn svg { width: 20px; height: 20px; fill: currentColor; }
-        .btn-main { background-color: #e87c3e; color: #050505; flex: 1; }
-        .btn-reset-icon { background-color: #2a2a2a; border: 1px solid #444; color: #fff; width: 48px; flex-shrink: 0; border-radius: 8px; }
+        .btn-main { background-color: var(--primary-color); color: #050505; flex: 1; }
+        .btn-reset-icon { background-color: var(--card-inner); border: 1px solid #444; color: #fff; width: 48px; flex-shrink: 0; border-radius: 8px; }
 
         /* TABLA Y GRÁFICA DE PROGRESO */
         .progress-section {
-            background-color: #1a1a1a;
+            background-color: var(--card-bg);
             border: 1px solid #333;
             border-radius: 12px;
             padding: 15px;
             margin-top: 25px;
         }
         .progress-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; margin-bottom: 15px; }
-        .progress-table th { color: #e87c3e; border-bottom: 1px solid #444; padding-bottom: 8px; font-size: 0.68rem; text-transform: uppercase; }
+        .progress-table th { color: var(--primary-color); border-bottom: 1px solid #444; padding-bottom: 8px; font-size: 0.68rem; text-transform: uppercase; }
         .progress-table td { padding: 8px 0; border-bottom: 1px solid #222; color: #ccc; }
         .progress-table tr:hover td { background-color: rgba(232, 124, 62, 0.05); }
 
@@ -518,7 +526,7 @@
         }
         .chart-title {
             font-size: 0.75rem;
-            color: #e87c3e;
+            color: var(--primary-color);
             text-transform: uppercase;
             font-weight: 700;
             margin-bottom: 10px;
@@ -592,8 +600,8 @@
         <!-- SECCIÓN PROGRESO Y GRÁFICAS -->
         <div class="progress-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h3 style="margin: 0; font-size: 0.9rem; color: #e87c3e; text-transform: uppercase;">📈 Historial y Series</h3>
-                <button class="btn-small" id="btnOpenProgress" style="color: #e87c3e;">+ Registrar Serie</button>
+                <h3 style="margin: 0; font-size: 0.9rem; color: var(--primary-color); text-transform: uppercase;">📈 Historial y Series</h3>
+                <button class="btn-small" id="btnOpenProgress" style="color: var(--primary-color);">+ Registrar Serie</button>
             </div>
             
             <table class="progress-table">
@@ -705,7 +713,7 @@
     <!-- MODAL AGREGAR EJERCICIO -->
     <div class="modal-overlay" id="exerciseModal">
         <div class="modal-box">
-            <h3 style="color:#e87c3e; margin-top:0;" id="modalFormTitle">Agregar Ejercicio</h3>
+            <h3 style="color:var(--primary-color); margin-top:0;" id="modalFormTitle">Agregar Ejercicio</h3>
             <input type="hidden" id="exId">
             <div class="form-group">
                 <label>Sección</label>
@@ -771,7 +779,7 @@
     <!-- MODAL REGISTRAR / EDITAR SERIE DE PROGRESO -->
     <div class="modal-overlay" id="progressModal">
         <div class="modal-box">
-            <h3 style="color:#e87c3e; margin-top:0;" id="progModalTitle">Registrar Serie de Carga</h3>
+            <h3 style="color:var(--primary-color); margin-top:0;" id="progModalTitle">Registrar Serie de Carga</h3>
             <input type="hidden" id="progIndexEdit" value="">
             <div class="form-group">
                 <label>Ejercicio con Seguimiento</label>
@@ -815,7 +823,16 @@
 
         const profiles = JSON.parse(localStorage.getItem('app_profiles')) || [];
         const activeProfile = profiles.find(p => p.id === activeProfileId);
-        if (activeProfile) { document.getElementById('profileHeaderName').innerText = activeProfile.name; }
+        
+        // APLICAR COLOR PERSONALIZADO DEL PERFIL
+        let currentThemeColor = '#e87c3e'; // Color por defecto
+        if (activeProfile) {
+            document.getElementById('profileHeaderName').innerText = activeProfile.name;
+            if (activeProfile.themeColor) {
+                currentThemeColor = activeProfile.themeColor;
+                document.documentElement.style.setProperty('--primary-color', currentThemeColor);
+            }
+        }
         document.getElementById('dayHeaderTitle').innerText = currentDay.toUpperCase();
 
         // Rachas
@@ -903,7 +920,7 @@
                         card.className = 'exercise-card';
                         card.onclick = function() { this.classList.toggle('active'); };
                         
-                        let trackBadge = ex.trackProgress ? '<span style="font-size:0.65rem; background:#e87c3e; color:#050505; padding:2px 6px; border-radius:4px; font-weight:800; margin-left:8px;">CON PROGRESO</span>' : '';
+                        let trackBadge = ex.trackProgress ? `<span style="font-size:0.65rem; background:${currentThemeColor}; color:#050505; padding:2px 6px; border-radius:4px; font-weight:800; margin-left:8px;">CON PROGRESO</span>` : '';
 
                         card.innerHTML = `
                             <div class="card-title">${ex.title} ${trackBadge}</div>
@@ -1149,7 +1166,7 @@
                     r.history.forEach((h, idx) => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td><strong style="color:#e87c3e">${r.exercise}</strong><br><span style="font-size:0.68rem; color:#aaa;">${h.date}</span></td>
+                            <td><strong style="color:${currentThemeColor}">${r.exercise}</strong><br><span style="font-size:0.68rem; color:#aaa;">${h.date}</span></td>
                             <td>Serie ${h.serie}</td>
                             <td><strong>${h.weight} KG</strong> x ${h.reps} reps</td>
                             <td>
@@ -1290,8 +1307,8 @@
 
             const stepX = history.length > 1 ? chartW / (history.length - 1) : chartW;
 
-            // DIBUJAR LÍNEA UNIDAS ENTRE LOS PUNTOS
-            ctx.strokeStyle = '#e87c3e';
+            // DIBUJAR LÍNEA UNIDAS ENTRE LOS PUNTOS CON EL COLOR DEL PERFIL
+            ctx.strokeStyle = currentThemeColor;
             ctx.lineWidth = 3;
             ctx.beginPath();
 
@@ -1309,12 +1326,11 @@
                 const x = padding + (i * stepX);
                 const y = canvas.height - padding - ((h.weight - minW) / (maxW - minW || 1)) * chartH;
 
-                ctx.fillStyle = '#e87c3e';
+                ctx.fillStyle = currentThemeColor;
                 ctx.beginPath();
                 ctx.arc(x, y, 5, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Círculo interno blanco para contraste
                 ctx.fillStyle = '#ffffff';
                 ctx.beginPath();
                 ctx.arc(x, y, 2, 0, Math.PI * 2);
