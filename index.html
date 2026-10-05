@@ -3,327 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rutina - Fitness App</title>
+    <title>Selecciona tu Perfil</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
 
-        :root {
-            --primary-color: #e87c3e; /* Color por defecto, se sobrescribe dinámicamente */
-            --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, #ff9e5e 100%);
-            --bg-color: #050505;
-            --card-bg: #1a1a1a;
-            --card-inner: #2a2a2a;
-        }
-
         body {
-            background-color: var(--bg-color);
+            background-color: #050505;
             color: #ffffff;
             font-family: 'Montserrat', sans-serif;
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .app-container {
             max-width: 450px;
             width: 100%;
-        }
-
-        .back-btn {
-            display: inline-block;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .back-btn:hover {
-            text-decoration: underline;
-        }
-
-        .header {
             text-align: center;
-            margin-bottom: 20px;
-            padding: 15px 0;
-            border-bottom: 1px solid #222;
         }
 
-        .header h2 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0;
-            color: #ffffff;
+        .logo {
+            font-size: 1.2rem;
+            color: #e87c3e;
+            font-weight: 800;
             letter-spacing: 2px;
+            margin-bottom: 40px;
             text-transform: uppercase;
         }
 
-        .header h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin: 5px 0 0 0;
-            color: var(--primary-color);
-            text-transform: uppercase;
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
         }
 
-        /* BANNER DE RACHA */
-        .streak-banner {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a1a10 100%);
-            border: 1px solid var(--primary-color);
-            border-radius: 12px;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(232, 124, 62, 0.15);
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .streak-info span {
-            font-size: 0.7rem;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: block;
-        }
-
-        .streak-info h4 {
-            margin: 2px 0 0 0;
-            font-size: 1rem;
-            color: var(--primary-color);
-            font-weight: 800;
-        }
-
-        .streak-badge {
-            font-size: 1.5rem;
-        }
-
-        .action-buttons-grid {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 12px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            font-size: 0.8rem;
-            text-transform: uppercase;
+        .profile-card {
+            background-color: #1a1a1a;
+            border: 2px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 25px 15px;
             cursor: pointer;
-            border: none;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            border-color: #e87c3e;
+            box-shadow: 0 8px 20px rgba(232, 124, 62, 0.15);
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            transition: transform 0.2s;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #050505;
+            margin-bottom: 15px;
         }
 
-        .action-btn svg {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
+        .profile-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            word-break: break-word;
         }
 
-        .btn-trainer {
-            background: var(--primary-gradient);
+        /* Tarjeta para agregar nuevo perfil */
+        .add-profile-card {
+            background-color: transparent;
+            border: 2px dashed #444;
+        }
+        
+        .add-profile-card:hover {
+            border-color: #e87c3e;
+            background-color: rgba(232, 124, 62, 0.05);
+        }
+
+        .add-avatar {
+            background: #2a2a2a;
+            color: #888;
+        }
+
+        .add-profile-card:hover .add-avatar {
+            background: #e87c3e;
             color: #050505;
         }
 
-        .btn-add {
-            background-color: var(--card-inner);
-            color: #fff;
-            border: 1px solid #444;
-        }
-
-        .action-btn:hover {
-            transform: scale(1.02);
-        }
-
-        .section-title {
-            color: #ffffff;
-            font-size: 1rem;
-            font-weight: 700;
-            margin: 25px 0 15px 0;
-            border-left: 4px solid var(--primary-color);
-            padding-left: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* ESTILOS DE LA TARJETA TIPO ACORDEÓN */
-        .exercise-card {
-            background-color: var(--card-inner);
-            border: 1px solid #444;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            position: relative;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-
-        .exercise-card:hover {
-            border-color: var(--primary-color);
-        }
-
-        .card-title {
-            color: var(--primary-color);
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin: 0 0 4px 0;
-            text-transform: uppercase;
-        }
-
-        .card-subtitle {
-            font-size: 0.82rem;
-            color: #d1d1d1;
-            margin: 0 0 6px 0;
-        }
-
-        .card-details {
-            font-size: 0.75rem;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .card-hidden-content {
-            display: none;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #383838;
-        }
-
-        .exercise-card.active .card-hidden-content {
-            display: block;
-        }
-
-        .exercise-img {
-            width: 100%;
-            max-height: 220px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            background-color: #111;
-            border: 1px solid #444;
-        }
-
-        .card-instructions {
-            font-size: 0.82rem;
-            color: #ccc;
-            line-height: 1.4;
-            margin: 0;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px;
-            border-top: 1px solid #383838;
-            padding-top: 12px;
-        }
-
-        .btn-small {
-            background: none;
-            border: none;
+        .add-name {
             color: #888;
-            font-size: 0.75rem;
-            font-weight: 800;
-            cursor: pointer;
-            text-transform: uppercase;
-            padding: 0;
-            letter-spacing: 0.5px;
         }
 
-        .btn-small:hover { color: var(--primary-color); }
-        .btn-delete:hover { color: #ff4444; }
+        .add-profile-card:hover .add-name {
+            color: #e87c3e;
+        }
 
-        /* Modal Formulario */
+        /* Modal para nuevo usuario */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.8);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
             padding: 20px;
-            box-sizing: border-box;
         }
 
         .modal-box {
-            background-color: var(--card-bg);
-            border: 1px solid var(--primary-color);
+            background-color: #1a1a1a;
+            border: 1px solid #e87c3e;
             border-radius: 16px;
-            padding: 20px;
+            padding: 25px;
             width: 100%;
-            max-width: 400px;
-            max-height: 90vh;
-            overflow-y: auto;
+            max-width: 320px;
+            text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--primary-color);
+        .modal-title {
+            color: #e87c3e;
+            font-size: 1.2rem;
             font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 5px;
+            margin-top: 0;
+            margin-bottom: 20px;
         }
 
-        .form-control {
+        .modal-input {
             width: 100%;
             background-color: #050505;
             border: 1px solid #444;
             color: #fff;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            margin-bottom: 15px;
             box-sizing: border-box;
+            text-align: center;
         }
 
-        .form-control:focus { outline: none; border-color: var(--primary-color); }
+        .modal-input:focus {
+            outline: none;
+            border-color: #e87c3e;
+        }
 
-        .checkbox-group {
+        .color-picker-container {
             display: flex;
             align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            color: #fff;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-        .checkbox-group input {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary-color);
-            cursor: pointer;
+            justify-content: space-between;
+            background-color: #050505;
+            border: 1px solid #444;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
-        .input-group-flex {
-            display: flex;
-            gap: 10px;
+        .color-picker-container label {
+            font-size: 0.8rem;
+            color: #aaa;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .color-picker-container input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            background: none;
+        }
+
+        .color-picker-container input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-picker-container input[type="color"]::-webkit-color-swatch {
+            border: 2px solid #fff;
+            border-radius: 50%;
         }
 
         .modal-buttons {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
         }
 
         .btn-cancel, .btn-save {
@@ -334,1190 +217,175 @@
             cursor: pointer;
             border: none;
             font-family: 'Montserrat', sans-serif;
-            text-transform: uppercase;
+            transition: background 0.2s;
         }
 
-        .btn-cancel { background-color: var(--card-inner); color: #ccc; }
-        .btn-save { background-color: var(--primary-color); color: #050505; }
-
-        /* Estilos Modo Entrenador */
-        #trainer-mode-container {
-            display: none;
-            background-color: var(--card-bg);
-            border: 1px solid var(--primary-color);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            margin-bottom: 25px;
+        .btn-cancel {
+            background-color: #2a2a2a;
+            color: #ccc;
         }
+        .btn-cancel:hover { background-color: #333; color: #fff; }
 
-        .trainer-top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
+        .btn-save {
+            background-color: #e87c3e;
+            color: #050505;
         }
-
-        .trainer-counter {
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .exit-trainer-btn {
-            background: none;
+        .btn-save:hover { background-color: #ff8c4a; }
+        
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
             border: none;
-            color: #aaa;
-            font-size: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .trainer-nav-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .nav-step-btn {
-            flex: 1;
-            background-color: var(--card-inner);
-            color: #fff;
-            border: 1px solid #444;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .nav-step-btn.primary {
-            background-color: var(--primary-color);
-            color: #050505;
-            border-color: var(--primary-color);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #666;
-            border: 2px dashed #333;
-            border-radius: 12px;
-            margin-top: 20px;
-        }
-
-        /* --- TEMPORIZADOR FLOTANTE --- */
-        #timer-bubble {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: var(--primary-color);
-            color: #050505;
-            width: 60px;
-            height: 60px;
+            color: #888;
             border-radius: 50%;
+            width: 30px;
+            height: 30px;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 4px 12px rgba(232, 124, 62, 0.4);
             cursor: pointer;
-            z-index: 9999;
-            transition: transform 0.2s ease;
         }
-        #timer-bubble:hover { transform: scale(1.08); }
-        #timer-bubble svg { width: 26px; height: 26px; fill: #050505; }
+        .delete-btn:hover { color: #ff4444; background: rgba(255, 68, 68, 0.1); }
 
-        #timer-modal {
-            position: fixed;
-            bottom: 95px;
-            right: 20px;
-            max-width: 360px;
-            width: calc(100% - 40px);
-            background-color: var(--card-bg);
-            border: 1px solid var(--primary-color);
-            border-radius: 16px;
-            padding: 18px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            z-index: 10000;
-            display: none;
-            color: #fff;
-            box-sizing: border-box;
-        }
-
-        .timer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 8px;
-        }
-        .timer-header h3 { margin: 0; font-size: 0.95rem; color: var(--primary-color); text-transform: uppercase; }
-        .close-timer { background: none; border: none; color: #aaa; font-size: 1.2rem; cursor: pointer; padding: 0; width: auto; }
-        .close-timer:hover { color: #fff; }
-
-        .timer-tabs {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 12px;
-            background-color: #111;
-            padding: 4px;
-            border-radius: 8px;
-        }
-        .timer-tab {
-            flex: 1; background: none; border: none; color: #888; padding: 8px;
-            font-size: 0.75rem; font-weight: 700; text-transform: uppercase; cursor: pointer;
-            border-radius: 6px; font-family: 'Montserrat', sans-serif; transition: all 0.2s;
-        }
-        .timer-tab.active { background-color: var(--primary-color); color: #050505; }
-
-        .timer-inputs-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-        .timer-row {
-            display: flex; justify-content: space-between; align-items: center;
-            background-color: #111; padding: 8px 12px; border-radius: 8px; border: 1px solid #333;
-        }
-        .timer-row label { font-size: 0.75rem; color: #ccc; text-transform: uppercase; font-weight: 700; }
-        .timer-input-wrapper { display: flex; align-items: center; gap: 6px; }
-        .timer-row input, .timer-row select {
-            background-color: #1a1a1a; border: 1px solid #444; border-radius: 6px; color: #fff; font-family: 'Montserrat', sans-serif;
-        }
-        .timer-row input { width: 55px; padding: 6px; text-align: center; font-size: 0.9rem; }
-        .timer-row select { padding: 6px; font-size: 0.8rem; cursor: pointer; }
-
-        .timer-display {
-            text-align: center; background-color: #111; border: 2px solid #333; border-radius: 12px; padding: 12px; margin-bottom: 12px;
-        }
-        .timer-status { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--primary-color); margin-bottom: 4px; font-weight: 700; }
-        .timer-clock { font-size: 2.2rem; font-weight: 800; color: #ffffff; margin: 0; }
-        .timer-rounds-info { font-size: 0.75rem; color: #888; margin-top: 4px; text-transform: uppercase; }
-
-        .timer-actions { display: flex; gap: 8px; }
-        .timer-btn {
-            padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center;
-        }
-        .timer-btn svg { width: 20px; height: 20px; fill: currentColor; }
-        .btn-main { background-color: var(--primary-color); color: #050505; flex: 1; }
-        .btn-reset-icon { background-color: var(--card-inner); border: 1px solid #444; color: #fff; width: 48px; flex-shrink: 0; border-radius: 8px; }
-
-        /* TABLA Y GRÁFICA DE PROGRESO */
-        .progress-section {
-            background-color: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 25px;
-        }
-        .progress-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; margin-bottom: 15px; }
-        .progress-table th { color: var(--primary-color); border-bottom: 1px solid #444; padding-bottom: 8px; font-size: 0.68rem; text-transform: uppercase; }
-        .progress-table td { padding: 8px 0; border-bottom: 1px solid #222; color: #ccc; }
-        .progress-table tr:hover td { background-color: rgba(232, 124, 62, 0.05); }
-
-        .chart-container {
-            background-color: #111;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-        }
-        .chart-title {
-            font-size: 0.75rem;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        canvas {
-            width: 100% !important;
-            height: 140px !important;
-        }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <a href="dashboard.html" class="back-btn">← Volver a la semana</a>
+        <div class="logo">MY FITNESS APP</div>
+        <h1>¿Quién entrena hoy?</h1>
 
-        <div class="header">
-            <h2 id="profileHeaderName">USUARIO</h2>
-            <h1 id="dayHeaderTitle">RUTINA</h1>
-        </div>
-
-        <!-- BANNER DE RACHAS -->
-        <div class="streak-banner">
-            <div class="streak-info">
-                <span>Racha de Entrenamiento</span>
-                <h4 id="streakText">¡0 días seguidos!</h4>
-            </div>
-            <div class="streak-badge">🔥</div>
-        </div>
-
-        <div class="action-buttons-grid">
-            <button class="action-btn btn-trainer" id="btnStartTrainer">
-                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Modo Entrenador
-            </button>
-            <button class="action-btn btn-add" id="btnAddExercise">
-                + Ejercicio
-            </button>
-        </div>
-
-        <!-- MODO ENTRENADOR -->
-        <div id="trainer-mode-container">
-            <div class="trainer-top-bar">
-                <span class="trainer-counter" id="trainerCounter">Ejercicio 1</span>
-                <button class="exit-trainer-btn" id="btnExitTrainer">✕ Salir</button>
-            </div>
-            
-            <h3 class="card-title" id="tTitle" style="font-size: 1.3rem;">TÍTULO</h3>
-            <p class="card-subtitle" id="tSubtitle">SUBTÍTULO</p>
-            <p class="card-details" id="tDetails">DETALLES</p>
-            
-            <img id="tImg" class="exercise-img" src="" alt="Ejercicio" style="display:none;">
-            
-            <p class="card-instructions" id="tInstructions" style="background:#111; padding:12px; border-radius:8px; border:1px solid #333;"></p>
-
-            <div class="trainer-nav-buttons">
-                <button class="nav-step-btn" id="btnPrevTrainer">← Anterior</button>
-                <button class="nav-step-btn primary" id="btnNextTrainer">Siguiente →</button>
-            </div>
-        </div>
-
-        <!-- LISTA DE EJERCICIOS -->
-        <div id="mainContentContainer">
-            <div id="calentamientoList"></div>
-            <div id="fuerzaList"></div>
-            <div id="estiramientoList"></div>
-            <div id="emptyState" class="empty-state" style="display:none;">
-                <p style="margin:0; font-size:0.9rem;">No hay ejercicios agregados para este día.</p>
-                <p style="margin:5px 0 0 0; font-size:0.8rem; color:#888;">Toca el botón "+ Ejercicio" para crear uno.</p>
-            </div>
-        </div>
-
-        <!-- SECCIÓN PROGRESO Y GRÁFICAS -->
-        <div class="progress-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h3 style="margin: 0; font-size: 0.9rem; color: var(--primary-color); text-transform: uppercase;">📈 Historial y Series</h3>
-                <button class="btn-small" id="btnOpenProgress" style="color: var(--primary-color);">+ Registrar Serie</button>
-            </div>
-            
-            <table class="progress-table">
-                <thead>
-                    <tr>
-                        <th>Fecha / Ejercicio</th>
-                        <th>Serie</th>
-                        <th>Peso / Reps</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="progressTableBody">
-                    <tr><td colspan="4" style="text-align: center; color: #666; font-size: 0.8rem;">Sin registros aún.</td></tr>
-                </tbody>
-            </table>
-
-            <!-- GRÁFICA DE EVOLUCIÓN CON FILTROS DE EJERCICIO Y SERIE -->
-            <div class="chart-container">
-                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                    <select id="chartExerciseSelect" class="form-control" style="font-size: 0.75rem; padding: 6px;" onchange="onChartFilterChange()"></select>
-                    <select id="chartSerieSelect" class="form-control" style="font-size: 0.75rem; padding: 6px; width: 130px;" onchange="onChartFilterChange()">
-                        <option value="all">Todas las series</option>
-                        <option value="1">Serie 1</option>
-                        <option value="2">Serie 2</option>
-                        <option value="3">Serie 3</option>
-                        <option value="4">Serie 4</option>
-                        <option value="5">Serie 5</option>
-                    </select>
-                </div>
-                <div class="chart-title" id="chartTitle">Selecciona un ejercicio y serie</div>
-                <canvas id="progressCanvas"></canvas>
-            </div>
-        </div>
+        <div class="profiles-grid" id="profilesGrid"></div>
     </div>
 
-    <!-- TEMPORIZADOR FLOTANTE -->
-    <div id="timer-bubble" title="Abrir Temporizador">
-        <svg viewBox="0 0 24 24">
-            <path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-        </svg>
-    </div>
-
-    <div id="timer-modal">
-        <div class="timer-header">
-            <h3 id="timerModalTitle">Temporizador HIIT</h3>
-            <button class="close-timer" id="btnCloseTimer">✕</button>
-        </div>
-
-        <div class="timer-tabs">
-            <button class="timer-tab active" id="tabHiitBtn">HIIT / Circuito</button>
-            <button class="timer-tab" id="tabRestBtn">Descanso Rápido</button>
-        </div>
-
-        <div id="hiitSection">
-            <div class="timer-inputs-grid" id="timerConfigSection">
-                <div class="timer-row">
-                    <label>Trabajo</label>
-                    <div class="timer-input-wrapper">
-                        <input type="number" id="workTime" value="45" min="1">
-                        <select id="workUnit"><option value="sec" selected>seg</option><option value="min">min</option></select>
-                    </div>
-                </div>
-                <div class="timer-row">
-                    <label>Descanso</label>
-                    <div class="timer-input-wrapper">
-                        <input type="number" id="restTime" value="15" min="0">
-                        <select id="restUnit"><option value="sec" selected>seg</option><option value="min">min</option></select>
-                    </div>
-                </div>
-                <div class="timer-row">
-                    <label>Rondas</label>
-                    <div class="timer-input-wrapper">
-                        <input type="number" id="totalRounds" value="3" min="1" style="width: 85px;">
-                    </div>
-                </div>
-            </div>
-
-            <div class="timer-display">
-                <div class="timer-status" id="timerStatusText">Listo para empezar</div>
-                <div class="timer-clock" id="timerClockDisplay">00:45</div>
-                <div class="timer-rounds-info" id="timerRoundsDisplay">Ronda 1 de 3</div>
-            </div>
-        </div>
-
-        <div id="restSection" style="display: none;">
-            <div class="timer-inputs-grid">
-                <div class="timer-row">
-                    <label>Tiempo de Descanso</label>
-                    <div class="timer-input-wrapper">
-                        <input type="number" id="quickRestTime" value="60" min="1">
-                        <select id="quickRestUnit"><option value="sec" selected>seg</option><option value="min">min</option></select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="timer-display">
-                <div class="timer-status" id="quickStatusText">Descanso entre series</div>
-                <div class="timer-clock" id="quickClockDisplay">01:00</div>
-                <div class="timer-rounds-info" id="quickSubText">Listo para iniciar</div>
-            </div>
-        </div>
-
-        <div class="timer-actions">
-            <button class="timer-btn btn-main" id="mainActionBtn"><svg id="mainBtnIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-            <button class="timer-btn btn-reset-icon" id="btnResetTimer"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
-        </div>
-    </div>
-
-    <!-- MODAL AGREGAR EJERCICIO -->
-    <div class="modal-overlay" id="exerciseModal">
+    <!-- Modal Nuevo Perfil -->
+    <div class="modal-overlay" id="newProfileModal">
         <div class="modal-box">
-            <h3 style="color:var(--primary-color); margin-top:0;" id="modalFormTitle">Agregar Ejercicio</h3>
-            <input type="hidden" id="exId">
-            <div class="form-group">
-                <label>Sección</label>
-                <select id="exSection" class="form-control">
-                    <option value="calentamiento">1. Calentamiento</option>
-                    <option value="fuerza" selected>2. Fuerza / Bloque Principal</option>
-                    <option value="estiramiento">3. Estiramiento / Calm</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Nombre del Ejercicio</label>
-                <input type="text" id="exTitle" class="form-control" placeholder="Ej. Sentadillas Goblet">
-            </div>
-            <div class="form-group">
-                <label>Subtítulo / Músculo</label>
-                <input type="text" id="exSubtitle" class="form-control" placeholder="Ej. Cuádriceps y Glúteos">
-            </div>
-            <div class="form-group">
-                <label>Tipo de Ejercicio</label>
-                <select id="exType" class="form-control">
-                    <option value="reps">Series y Repeticiones</option>
-                    <option value="time">Por Tiempo / Intervalos</option>
-                </select>
-            </div>
-            <div class="form-group" id="repsInputs">
-                <label>Configuración de Series</label>
-                <div class="input-group-flex">
-                    <input type="number" id="exSeries" class="form-control" placeholder="Series (Ej. 3)">
-                    <input type="number" id="exReps" class="form-control" placeholder="Reps (Ej. 12)">
-                </div>
-            </div>
-            <div class="form-group" id="timeInputs" style="display: none;">
-                <label>Configuración de Intervalos</label>
-                <div class="input-group-flex" style="margin-bottom: 8px;">
-                    <input type="text" id="exWorkTime" class="form-control" placeholder="Trabajo (Ej. 45s)">
-                    <input type="text" id="exRestTime" class="form-control" placeholder="Descanso (Ej. 15s)">
-                </div>
-                <input type="text" id="exRounds" class="form-control" placeholder="Rondas (Ej. 3 Rondas)">
-            </div>
-            <div class="form-group">
-                <label>Instrucciones</label>
-                <textarea id="exInstructions" class="form-control" rows="3" placeholder="Descripción técnica..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>Foto (Opcional)</label>
-                <input type="file" id="exImageInput" class="form-control" accept="image/*">
-            </div>
-
-            <div class="form-group">
-                <label class="checkbox-group">
-                    <input type="checkbox" id="exTrackProgress">
-                    📈 Registrar progreso de peso (KG) para este ejercicio
-                </label>
+            <h3 class="modal-title">Crear Nuevo Perfil</h3>
+            <input type="text" id="profileNameInput" class="modal-input" placeholder="Nombre del usuario" maxlength="15">
+            
+            <div class="color-picker-container">
+                <label for="profileColorInput">Color de Interfaz:</label>
+                <input type="color" id="profileColorInput" value="#e87c3e">
             </div>
 
             <div class="modal-buttons">
-                <button class="btn-cancel" id="btnCloseExerciseModal">Cancelar</button>
-                <button class="btn-save" id="btnSaveExercise">Guardar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL REGISTRAR / EDITAR SERIE DE PROGRESO -->
-    <div class="modal-overlay" id="progressModal">
-        <div class="modal-box">
-            <h3 style="color:var(--primary-color); margin-top:0;" id="progModalTitle">Registrar Serie de Carga</h3>
-            <input type="hidden" id="progIndexEdit" value="">
-            <div class="form-group">
-                <label>Ejercicio con Seguimiento</label>
-                <select id="progExerciseSelect" class="form-control">
-                    <!-- Se llena automáticamente -->
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Fecha</label>
-                <input type="date" id="progDate" class="form-control">
-            </div>
-            <div class="form-group">
-                <label>Número de Serie</label>
-                <input type="number" id="progSerieNum" class="form-control" value="1" min="1">
-            </div>
-            <div class="form-group">
-                <div class="input-group-flex">
-                    <div>
-                        <label>Peso (KG)</label>
-                        <input type="number" id="progWeight" class="form-control" placeholder="Ej. 80" step="0.5">
-                    </div>
-                    <div>
-                        <label>Repeticiones</label>
-                        <input type="number" id="progReps" class="form-control" placeholder="Ej. 10" min="1">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="btn-cancel" id="btnCloseProgressModal">Cancelar</button>
-                <button class="btn-save" id="btnSaveProgress">Guardar Serie</button>
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button class="btn-save" onclick="saveNewProfile()">Guardar</button>
             </div>
         </div>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentDay = urlParams.get('dia') || 'lunes';
-        const activeProfileId = localStorage.getItem('active_profile_id');
+        const MAX_PROFILES = 5;
+        let profiles = [];
 
-        if (!activeProfileId) { window.location.href = 'index.html'; }
-
-        const profiles = JSON.parse(localStorage.getItem('app_profiles')) || [];
-        const activeProfile = profiles.find(p => p.id === activeProfileId);
-        
-        // APLICAR COLOR PERSONALIZADO DEL PERFIL
-        let currentThemeColor = '#e87c3e'; // Color por defecto
-        if (activeProfile) {
-            document.getElementById('profileHeaderName').innerText = activeProfile.name;
-            if (activeProfile.themeColor) {
-                currentThemeColor = activeProfile.themeColor;
-                document.documentElement.style.setProperty('--primary-color', currentThemeColor);
-            }
-        }
-        document.getElementById('dayHeaderTitle').innerText = currentDay.toUpperCase();
-
-        // Rachas
-        function updateStreak() {
-            const streakData = JSON.parse(localStorage.getItem('user_streaks')) || {};
-            const userStreak = streakData[activeProfileId] || { count: 0, lastDate: '' };
-            const todayStr = new Date().toISOString().slice(0, 10);
-            const yesterdayStr = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-
-            if (userStreak.lastDate === todayStr) {}
-            else if (userStreak.lastDate === yesterdayStr) { userStreak.count += 1; userStreak.lastDate = todayStr; }
-            else if (!userStreak.lastDate) { userStreak.count = 1; userStreak.lastDate = todayStr; }
-            else { userStreak.count = 1; userStreak.lastDate = todayStr; }
-
-            streakData[activeProfileId] = userStreak;
-            localStorage.setItem('user_streaks', JSON.stringify(streakData));
-            document.getElementById('streakText').innerText = `¡${userStreak.count} ${userStreak.count === 1 ? 'día seguido' : 'días seguidos'}!`;
-        }
-        updateStreak();
-
-        let db;
-        const request = indexedDB.open("FitnessDB", 6);
-
-        request.onupgradeneeded = function(e) {
-            db = e.target.result;
-            if (!db.objectStoreNames.contains("exercises")) db.createObjectStore("exercises", { keyPath: "id" });
-            if (!db.objectStoreNames.contains("progress")) db.createObjectStore("progress", { keyPath: "id" });
-        };
-
-        request.onsuccess = function(e) {
-            db = e.target.result;
-            loadExercises();
-            loadProgressRecords();
-        };
-
-        let currentExercisesList = [];
-        let allUserExercises = [];
-
-        function loadExercises() {
-            if (!db) return;
-            const tx = db.transaction("exercises", "readonly");
-            const store = tx.objectStore("exercises");
-            const req = store.getAll();
-
-            req.onsuccess = function() {
-                const allExercises = req.result || [];
-                allUserExercises = allExercises.filter(ex => ex.userId === activeProfileId);
-                currentExercisesList = allUserExercises.filter(ex => ex.day === currentDay);
-                renderExercises();
-            };
+        try {
+            const saved = localStorage.getItem('app_profiles');
+            profiles = saved ? JSON.parse(saved) : [];
+            if (!Array.isArray(profiles)) profiles = [];
+        } catch (e) {
+            profiles = [];
         }
 
-        function renderExercises() {
-            const calList = document.getElementById('calentamientoList');
-            const fueList = document.getElementById('fuerzaList');
-            const estList = document.getElementById('estiramientoList');
-            const emptyState = document.getElementById('emptyState');
+        const profilesGrid = document.getElementById('profilesGrid');
+        const modal = document.getElementById('newProfileModal');
+        const nameInput = document.getElementById('profileNameInput');
+        const colorInput = document.getElementById('profileColorInput');
 
-            if (!calList || !fueList || !estList || !emptyState) return;
-            calList.innerHTML = ''; fueList.innerHTML = ''; estList.innerHTML = '';
+        function renderProfiles() {
+            if (!profilesGrid) return;
+            profilesGrid.innerHTML = '';
 
-            if (currentExercisesList.length === 0) {
-                emptyState.style.display = 'block';
-                return;
-            } else {
-                emptyState.style.display = 'none';
-            }
+            profiles.forEach(profile => {
+                const initial = profile.name ? profile.name.charAt(0).toUpperCase() : 'U';
+                const profileColor = profile.themeColor || '#e87c3e';
+                
+                const card = document.createElement('div');
+                card.className = 'profile-card';
+                card.onclick = () => selectProfile(profile.id);
 
-            const sections = {
-                calentamiento: { el: calList, title: "1. Calentamiento" },
-                fuerza: { el: fueList, title: "2. Bloque Principal" },
-                estiramiento: { el: estList, title: "3. Estiramientos" }
-            };
-
-            Object.keys(sections).forEach(key => {
-                const items = currentExercisesList.filter(ex => ex.section === key);
-                if (items.length > 0) {
-                    const titleEl = document.createElement('h3');
-                    titleEl.className = 'section-title';
-                    titleEl.innerText = sections[key].title;
-                    sections[key].el.appendChild(titleEl);
-
-                    items.forEach(ex => {
-                        const card = document.createElement('div');
-                        card.className = 'exercise-card';
-                        card.onclick = function() { this.classList.toggle('active'); };
-                        
-                        let trackBadge = ex.trackProgress ? `<span style="font-size:0.65rem; background:${currentThemeColor}; color:#050505; padding:2px 6px; border-radius:4px; font-weight:800; margin-left:8px;">CON PROGRESO</span>` : '';
-
-                        card.innerHTML = `
-                            <div class="card-title">${ex.title} ${trackBadge}</div>
-                            <div class="card-subtitle">${ex.subtitle || ''}</div>
-                            <div class="card-details">${ex.details || ''}</div>
-                            <div class="card-hidden-content">
-                                ${ex.image ? `<img src="${ex.image}" class="exercise-img">` : ''}
-                                <p class="card-instructions">${ex.instructions || 'Sin instrucciones adicionales.'}</p>
-                            </div>
-                            <div class="card-actions">
-                                <button class="btn-small" onclick="event.stopPropagation(); editExercise('${ex.id}')">Editar</button>
-                                <button class="btn-small btn-delete" onclick="event.stopPropagation(); deleteExercise('${ex.id}')">Eliminar</button>
-                            </div>
-                        `;
-                        sections[key].el.appendChild(card);
-                    });
-                }
-            });
-        }
-
-        let currentImageBase64 = null;
-        const imageInputEl = document.getElementById('exImageInput');
-        if(imageInputEl) {
-            imageInputEl.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) { currentImageBase64 = event.target.result; };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        function toggleTypeInputs() {
-            const type = document.getElementById('exType').value;
-            document.getElementById('repsInputs').style.display = (type === 'reps') ? 'block' : 'none';
-            document.getElementById('timeInputs').style.display = (type === 'time') ? 'block' : 'none';
-        }
-
-        function openExerciseModal() {
-            document.getElementById('exId').value = '';
-            document.getElementById('exTitle').value = '';
-            document.getElementById('exSubtitle').value = '';
-            document.getElementById('exInstructions').value = '';
-            if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = '';
-            document.getElementById('exType').value = 'reps';
-            document.getElementById('exTrackProgress').checked = false;
-            toggleTypeInputs();
-            currentImageBase64 = null;
-            document.getElementById('modalFormTitle').innerText = "Agregar Ejercicio";
-            document.getElementById('exerciseModal').style.display = 'flex';
-        }
-
-        function closeExerciseModal() { document.getElementById('exerciseModal').style.display = 'none'; }
-
-        function saveExercise() {
-            const title = document.getElementById('exTitle').value.trim();
-            if (!title) { alert("Ingresa un nombre para el ejercicio"); return; }
-            const exId = document.getElementById('exId').value || 'ex_' + Date.now();
-            const existing = currentExercisesList.find(e => e.id === exId);
-            const imageToSave = currentImageBase64 || (existing ? existing.image : null);
-            const type = document.getElementById('exType').value;
-            const trackProgress = document.getElementById('exTrackProgress').checked;
-
-            let finalDetailsStr = "";
-            let seriesVal = document.getElementById('exSeries').value;
-            let repsVal = document.getElementById('exReps').value;
-            let workTimeVal = document.getElementById('exWorkTime').value;
-            let restTimeVal = document.getElementById('exRestTime').value;
-            let roundsVal = document.getElementById('exRounds').value;
-
-            if (type === 'reps') {
-                finalDetailsStr = `${seriesVal || 0} Series x ${repsVal || 0} Repeticiones`;
-            } else {
-                let workPart = workTimeVal ? `${workTimeVal} trabajo` : '';
-                let restPart = restTimeVal ? `${restTimeVal} descanso` : '';
-                let roundsPart = roundsVal ? `${roundsVal}` : '';
-                finalDetailsStr = [roundsPart, [workPart, restPart].filter(Boolean).join(' / ')].filter(Boolean).join(' • ') || 'Por tiempo';
-            }
-
-            const exerciseData = {
-                id: exId, userId: activeProfileId, day: currentDay,
-                section: document.getElementById('exSection').value,
-                title, subtitle: document.getElementById('exSubtitle').value.trim(),
-                type, series: seriesVal, reps: repsVal, workTime: workTimeVal, restTime: restTimeVal, rounds: roundsVal,
-                details: finalDetailsStr, instructions: document.getElementById('exInstructions').value.trim(), image: imageToSave,
-                trackProgress: trackProgress
-            };
-
-            const tx = db.transaction("exercises", "readwrite");
-            tx.objectStore("exercises").put(exerciseData);
-            tx.oncomplete = function() { 
-                closeExerciseModal(); 
-                loadExercises(); 
-            };
-        }
-
-        function editExercise(id) {
-            const ex = currentExercisesList.find(e => e.id === id);
-            if (ex) {
-                document.getElementById('exId').value = ex.id;
-                document.getElementById('exSection').value = ex.section;
-                document.getElementById('exTitle').value = ex.title;
-                document.getElementById('exSubtitle').value = ex.subtitle || '';
-                document.getElementById('exInstructions').value = ex.instructions || '';
-                document.getElementById('exType').value = ex.type || 'reps';
-                document.getElementById('exSeries').value = ex.series || '';
-                document.getElementById('exReps').value = ex.reps || '';
-                document.getElementById('exWorkTime').value = ex.workTime || '';
-                document.getElementById('exRestTime').value = ex.restTime || '';
-                document.getElementById('exRounds').value = ex.rounds || '';
-                document.getElementById('exTrackProgress').checked = !!ex.trackProgress;
-                toggleTypeInputs();
-                currentImageBase64 = ex.image || null;
-                document.getElementById('modalFormTitle').innerText = "Editar Ejercicio";
-                document.getElementById('exerciseModal').style.display = 'flex';
-            }
-        }
-
-        function deleteExercise(id) {
-            if (confirm("¿Seguro de que deseas eliminar este ejercicio?")) {
-                const tx = db.transaction("exercises", "readwrite");
-                tx.objectStore("exercises").delete(id);
-                tx.oncomplete = function() { loadExercises(); };
-            }
-        }
-
-        // --- PROGRESO DETALLADO POR SERIE, FECHA, PESO Y REPS ---
-        function openProgressModal(editIndex = null, existingData = null) {
-            const select = document.getElementById('progExerciseSelect');
-            select.innerHTML = '';
-
-            const trackableExercises = allUserExercises.filter(e => e.trackProgress);
-
-            if (trackableExercises.length === 0) {
-                const opt = document.createElement('option');
-                opt.value = '';
-                opt.textContent = 'No hay ejercicios marcados para progreso';
-                select.appendChild(opt);
-            } else {
-                const uniqueNames = [...new Set(trackableExercises.map(e => e.title))];
-                uniqueNames.forEach(name => {
-                    const opt = document.createElement('option');
-                    opt.value = name;
-                    opt.textContent = name;
-                    select.appendChild(opt);
-                });
-            }
-
-            if (editIndex !== null && existingData) {
-                document.getElementById('progModalTitle').textContent = "Editar Serie";
-                select.value = existingData.exercise;
-                document.getElementById('progDate').value = existingData.date;
-                document.getElementById('progSerieNum').value = existingData.serie;
-                document.getElementById('progWeight').value = existingData.weight;
-                document.getElementById('progReps').value = existingData.reps;
-                document.getElementById('progIndexEdit').value = editIndex;
-            } else {
-                document.getElementById('progModalTitle').textContent = "Registrar Serie de Carga";
-                document.getElementById('progDate').value = new Date().toISOString().slice(0, 10);
-                document.getElementById('progSerieNum').value = '1';
-                document.getElementById('progWeight').value = '';
-                document.getElementById('progReps').value = '';
-                document.getElementById('progIndexEdit').value = '';
-            }
-
-            document.getElementById('progressModal').style.display = 'flex';
-        }
-
-        function closeProgressModal() { document.getElementById('progressModal').style.display = 'none'; }
-
-        function saveProgressRecord() {
-            const exerciseName = document.getElementById('progExerciseSelect').value;
-            const dateVal = document.getElementById('progDate').value;
-            const serieVal = parseInt(document.getElementById('progSerieNum').value) || 1;
-            const weightVal = parseFloat(document.getElementById('progWeight').value);
-            const repsVal = parseInt(document.getElementById('progReps').value);
-            const editIdx = document.getElementById('progIndexEdit').value;
-
-            if (!exerciseName) { alert("Selecciona un ejercicio válido."); return; }
-            if (!dateVal) { alert("Ingresa la fecha."); return; }
-            if (isNaN(weightVal)) { alert("Ingresa un peso válido."); return; }
-            if (isNaN(repsVal)) { alert("Ingresa las repeticiones."); return; }
-
-            const tx = db.transaction("progress", "readwrite");
-            const store = tx.objectStore("progress");
-            const recordId = activeProfileId + '_' + exerciseName;
-            const getReq = store.get(recordId);
-
-            getReq.onsuccess = function() {
-                let record = getReq.result || {
-                    id: recordId,
-                    userId: activeProfileId,
-                    exercise: exerciseName,
-                    history: []
-                };
-
-                const newEntry = { date: dateVal, serie: serieVal, weight: weightVal, reps: repsVal };
-
-                if (editIdx !== "") {
-                    record.history[parseInt(editIdx)] = newEntry;
-                } else {
-                    record.history.push(newEntry);
-                }
-
-                // Ordenar historial por fecha
-                record.history.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-                store.put(record);
-                tx.oncomplete = function() {
-                    closeProgressModal();
-                    loadProgressRecords();
-                    updateChartSelectors();
-                    drawChart(exerciseName, document.getElementById('chartSerieSelect').value);
-                };
-            };
-        }
-
-        let globalProgressRecords = [];
-        let currentChartExercise = '';
-
-        function loadProgressRecords() {
-            if (!db) return;
-            const tx = db.transaction("progress", "readonly");
-            const store = tx.objectStore("progress");
-            const req = store.getAll();
-
-            req.onsuccess = function() {
-                const allRecords = req.result || [];
-                globalProgressRecords = allRecords.filter(r => r.userId === activeProfileId);
-                const tbody = document.getElementById('progressTableBody');
-                tbody.innerHTML = '';
-
-                if (globalProgressRecords.length === 0 || globalProgressRecords.every(r => r.history.length === 0)) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #666; font-size: 0.8rem;">Sin registros de progreso aún.</td></tr>';
-                    document.getElementById('chartTitle').textContent = "Selecciona un ejercicio para ver su gráfica";
-                    clearCanvas();
-                    updateChartSelectors();
-                    return;
-                }
-
-                globalProgressRecords.forEach((r) => {
-                    r.history.forEach((h, idx) => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td><strong style="color:${currentThemeColor}">${r.exercise}</strong><br><span style="font-size:0.68rem; color:#aaa;">${h.date}</span></td>
-                            <td>Serie ${h.serie}</td>
-                            <td><strong>${h.weight} KG</strong> x ${h.reps} reps</td>
-                            <td>
-                                <button class="btn-small" onclick="editProgressRecord('${r.exercise}', ${idx})">✏️</button>
-                                <button class="btn-small btn-delete" onclick="deleteProgressRecord('${r.exercise}', ${idx})">🗑️</button>
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                });
-
-                updateChartSelectors();
-                const serieVal = document.getElementById('chartSerieSelect').value;
-                const targetEx = currentChartExercise || globalProgressRecords[0].exercise;
-                drawChart(targetEx, serieVal);
-            };
-        }
-
-        function updateChartSelectors() {
-            const selectEx = document.getElementById('chartExerciseSelect');
-            if (!selectEx) return;
-            selectEx.innerHTML = '';
-            
-            const uniqueNames = [];
-            globalProgressRecords.forEach(r => {
-                if (!uniqueNames.includes(r.exercise)) uniqueNames.push(r.exercise);
+                card.innerHTML = `
+                    <button class="delete-btn" onclick="deleteProfile('${profile.id}', event)" title="Eliminar perfil">✕</button>
+                    <div class="avatar" style="background: linear-gradient(135deg, ${profileColor} 0%, #ffffff 100%);">${initial}</div>
+                    <div class="profile-name">${profile.name}</div>
+                `;
+                profilesGrid.appendChild(card);
             });
 
-            if (uniqueNames.length === 0) {
-                selectEx.innerHTML = '<option value="">Sin ejercicios con registros</option>';
+            if (profiles.length < MAX_PROFILES) {
+                const addCard = document.createElement('div');
+                addCard.className = 'profile-card add-profile-card';
+                addCard.onclick = openModal;
+                addCard.innerHTML = `
+                    <div class="avatar add-avatar">+</div>
+                    <div class="profile-name add-name">Añadir Perfil</div>
+                `;
+                profilesGrid.appendChild(addCard);
+            }
+        }
+
+        function openModal() {
+            if (nameInput) nameInput.value = '';
+            if (colorInput) colorInput.value = '#e87c3e';
+            if (modal) modal.style.display = 'flex';
+            if (nameInput) nameInput.focus();
+        }
+
+        function closeModal() {
+            if (modal) modal.style.display = 'none';
+        }
+
+        function saveNewProfile() {
+            const name = nameInput ? nameInput.value.trim() : '';
+            const themeColor = colorInput ? colorInput.value : '#e87c3e';
+
+            if (name === '') {
+                alert('Por favor ingresa un nombre.');
                 return;
             }
 
-            uniqueNames.forEach(name => {
-                const opt = document.createElement('option');
-                opt.value = name;
-                opt.textContent = name;
-                if (name === currentChartExercise) opt.selected = true;
-                selectEx.appendChild(opt);
-            });
+            const newProfile = {
+                id: 'user_' + Date.now(),
+                name: name,
+                themeColor: themeColor
+            };
 
-            if (!currentChartExercise && uniqueNames.length > 0) {
-                currentChartExercise = uniqueNames[0];
-                selectEx.value = currentChartExercise;
-            }
-        }
-
-        function onChartFilterChange() {
-            currentChartExercise = document.getElementById('chartExerciseSelect').value;
-            const serieVal = document.getElementById('chartSerieSelect').value;
-            if (currentChartExercise) {
-                drawChart(currentChartExercise, serieVal);
-            }
-        }
-
-        function editProgressRecord(exerciseName, index) {
-            const record = globalProgressRecords.find(r => r.exercise === exerciseName);
-            if (record && record.history[index]) {
-                openProgressModal(index, {
-                    exercise: exerciseName,
-                    ...record.history[index]
-                });
-            }
-        }
-
-        function deleteProgressRecord(exerciseName, index) {
-            if (confirm("¿Deseas eliminar este registro de serie?")) {
-                const tx = db.transaction("progress", "readwrite");
-                const store = tx.objectStore("progress");
-                const recordId = activeProfileId + '_' + exerciseName;
-                const getReq = store.get(recordId);
-
-                getReq.onsuccess = function() {
-                    let record = getReq.result;
-                    if (record && record.history) {
-                        record.history.splice(index, 1);
-                        store.put(record);
-                        tx.oncomplete = function() {
-                            loadProgressRecords();
-                        };
-                    }
-                };
-            }
-        }
-
-        function clearCanvas() {
-            const canvas = document.getElementById('progressCanvas');
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function drawChart(exerciseName, serieFilter = 'all') {
-            currentChartExercise = exerciseName;
-            const record = globalProgressRecords.find(r => r.exercise === exerciseName);
-            const titleEl = document.getElementById('chartTitle');
-            const canvas = document.getElementById('progressCanvas');
-            const ctx = canvas.getContext('2d');
-
-            canvas.width = canvas.parentElement.clientWidth - 24;
-            canvas.height = 140;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            if (!record || !record.history || record.history.length === 0) {
-                titleEl.textContent = `Gráfica: ${exerciseName} (Sin datos)`;
-                return;
-            }
-
-            let history = record.history;
-            if (serieFilter !== 'all') {
-                history = history.filter(h => String(h.serie) === String(serieFilter));
-            }
-
-            let serieLabelText = serieFilter === 'all' ? 'Todas las series' : `Serie ${serieFilter}`;
-            titleEl.textContent = `${exerciseName} — ${serieLabelText}`;
-
-            if (history.length === 0) {
-                ctx.fillStyle = '#888';
-                ctx.font = '11px Montserrat';
-                ctx.textAlign = 'center';
-                ctx.fillText("No hay registros para esta serie", canvas.width / 2, canvas.height / 2);
-                return;
-            }
-
-            const weights = history.map(h => h.weight);
-            const maxW = Math.max(...weights, 10);
-            const minW = Math.min(...weights, 0);
-            const padding = 30;
-            const chartW = canvas.width - padding * 2;
-            const chartH = canvas.height - padding * 2;
-
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(padding, padding);
-            ctx.lineTo(padding, canvas.height - padding);
-            ctx.lineTo(canvas.width - padding, canvas.height - padding);
-            ctx.stroke();
-
-            const stepX = history.length > 1 ? chartW / (history.length - 1) : chartW;
-
-            // DIBUJAR LÍNEA UNIDAS ENTRE LOS PUNTOS CON EL COLOR DEL PERFIL
-            ctx.strokeStyle = currentThemeColor;
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-
-            history.forEach((h, i) => {
-                const x = padding + (i * stepX);
-                const y = canvas.height - padding - ((h.weight - minW) / (maxW - minW || 1)) * chartH;
-
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            });
-            ctx.stroke();
-
-            // DIBUJAR PUNTOS Y ETIQUETAS
-            history.forEach((h, i) => {
-                const x = padding + (i * stepX);
-                const y = canvas.height - padding - ((h.weight - minW) / (maxW - minW || 1)) * chartH;
-
-                ctx.fillStyle = currentThemeColor;
-                ctx.beginPath();
-                ctx.arc(x, y, 5, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.arc(x, y, 2, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.fillStyle = '#fff';
-                ctx.font = '9px Montserrat';
-                ctx.textAlign = 'center';
-                ctx.fillText(`${h.weight}kg (${h.reps}r)`, x, y - 10);
-            });
-        }
-
-        // MODO ENTRENADOR
-        let trainerIndex = 0;
-        function startTrainerMode() {
-            if (currentExercisesList.length === 0) { alert("Primero debes agregar al menos un ejercicio."); return; }
-            trainerIndex = 0;
-            document.getElementById('mainContentContainer').style.display = 'none';
-            document.querySelector('.action-buttons-grid').style.display = 'none';
-            document.getElementById('trainer-mode-container').style.display = 'block';
-            renderTrainerStep();
-        }
-        function exitTrainerMode() {
-            document.getElementById('trainer-mode-container').style.display = 'none';
-            document.getElementById('mainContentContainer').style.display = 'block';
-            document.querySelector('.action-buttons-grid').style.display = 'flex';
-        }
-        function renderTrainerStep() {
-            const ex = currentExercisesList[trainerIndex];
-            document.getElementById('trainerCounter').innerText = `Ejercicio ${trainerIndex + 1} de ${currentExercisesList.length}`;
-            document.getElementById('tTitle').innerText = ex.title;
-            document.getElementById('tSubtitle').innerText = ex.subtitle || '';
-            document.getElementById('tDetails').innerText = ex.details || '';
-            document.getElementById('tInstructions').innerText = ex.instructions || 'Sin instrucciones adicionales.';
-            const imgEl = document.getElementById('tImg');
-            if (ex.image) { imgEl.src = ex.image; imgEl.style.display = 'block'; } else { imgEl.style.display = 'none'; }
-        }
-        function nextTrainerStep() {
-            if (trainerIndex < currentExercisesList.length - 1) { trainerIndex++; renderTrainerStep(); }
-            else { alert("¡Felicidades! Has completado el entrenamiento."); exitTrainerMode(); }
-        }
-        function prevTrainerStep() { if (trainerIndex > 0) { trainerIndex--; renderTrainerStep(); } }
-
-        // TEMPORIZADOR DUAL
-        let audioCtx = null;
-        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-        function playTone(freq, dur) {
+            profiles.push(newProfile);
             try {
-                initAudio();
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.frequency.value = freq;
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(); osc.stop(audioCtx.currentTime + dur);
+                localStorage.setItem('app_profiles', JSON.stringify(profiles));
             } catch (e) {}
-        }
-        function playBeepShort() { playTone(600, 0.15); }
-        function playBeepHigh() { playTone(880, 0.25); }
-        function playDoubleBeep() { playTone(880, 0.15); setTimeout(() => playTone(1200, 0.25), 180); }
-
-        let currentTimerMode = 'hiit';
-        let timerInterval = null, isRunning = false, isPaused = false;
-        let currentPhase = 'prep', timeLeft = 10, currentRound = 1, maxRounds = 3, workDuration = 45, restDuration = 15, restTimeLeft = 60;
-
-        function toggleTimerModal() {
-            const modal = document.getElementById('timer-modal');
-            modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
-            if(modal.style.display === 'block' && currentTimerMode === 'rest') updateRestDisplayInit();
-        }
-
-        function switchTimerTab(mode) {
-            if(isRunning || isPaused) { clearInterval(timerInterval); isRunning = false; isPaused = false; }
-            currentTimerMode = mode;
-            document.getElementById('hiitSection').style.display = (mode === 'hiit') ? 'block' : 'none';
-            document.getElementById('restSection').style.display = (mode === 'rest') ? 'block' : 'none';
-            document.getElementById('tabHiitBtn').classList.toggle('active', mode === 'hiit');
-            document.getElementById('tabRestBtn').classList.toggle('active', mode === 'rest');
-            document.getElementById('timerModalTitle').textContent = (mode === 'hiit') ? "Temporizador HIIT" : "Descanso Entre Series";
-            if(mode === 'rest') updateRestDisplayInit();
-        }
-
-        function updateRestDisplayInit() {
-            const val = parseInt(document.getElementById('quickRestTime').value) || 60;
-            restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val;
-            let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60;
-            document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            document.getElementById('quickStatusText').textContent = "Descanso entre series";
-        }
-
-        function updateDisplay() {
-            if(currentTimerMode === 'hiit') {
-                const statusEl = document.getElementById('timerStatusText');
-                const clockEl = document.getElementById('timerClockDisplay');
-                document.getElementById('timerRoundsDisplay').textContent = `Ronda ${currentRound} de ${maxRounds}`;
-                let m = Math.floor(timeLeft / 60), s = timeLeft % 60, ft = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-                if(currentPhase === 'prep') { statusEl.textContent = "⏳ Preparación"; clockEl.textContent = ft; }
-                else if(currentPhase === 'round_announcement') { statusEl.textContent = ""; clockEl.textContent = `¡RONDA ${currentRound}!`; }
-                else if(currentPhase === 'work') { statusEl.textContent = "🔥 ¡Trabajo!"; clockEl.textContent = ft; }
-                else { statusEl.textContent = "💧 Descanso"; clockEl.textContent = ft; }
-            } else {
-                let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60;
-                document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            }
-        }
-
-        function startPauseTimer() {
-            if(currentTimerMode === 'rest') {
-                if (!isRunning && !isPaused) {
-                    const val = parseInt(document.getElementById('quickRestTime').value) || 60;
-                    restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val;
-                    isRunning = true; isPaused = false; playBeepHigh();
-                } else { isPaused = !isPaused; }
-
-                if(timerInterval) clearInterval(timerInterval);
-                timerInterval = setInterval(() => {
-                    if (isRunning && !isPaused) {
-                        if (restTimeLeft > 0) { restTimeLeft--; if (restTimeLeft <= 3) playBeepShort(); updateDisplay(); }
-                        else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('quickStatusText').textContent = "¡Tiempo terminado! 🎉"; }
-                    }
-                }, 1000);
-                return;
-            }
-
-            if (!isRunning && !isPaused) {
-                workDuration = (document.getElementById('workUnit').value === 'min') ? parseInt(document.getElementById('workTime').value)*60 : parseInt(document.getElementById('workTime').value);
-                restDuration = (document.getElementById('restUnit').value === 'min') ? parseInt(document.getElementById('restTime').value)*60 : parseInt(document.getElementById('restTime').value);
-                maxRounds = parseInt(document.getElementById('totalRounds').value) || 3;
-                currentPhase = 'prep'; timeLeft = 10; currentRound = 1;
-                isRunning = true; isPaused = false; playBeepHigh();
-            } else { isPaused = !isPaused; }
-
-            updateDisplay();
-            if(timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (isRunning && !isPaused) {
-                    if (timeLeft > 0) { timeLeft--; if (currentPhase !== 'round_announcement' && timeLeft <= 3) playBeepShort(); updateDisplay(); }
-                    else {
-                        if (currentPhase === 'prep') { currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); }
-                        else if (currentPhase === 'round_announcement') { currentPhase = 'work'; timeLeft = workDuration; playBeepHigh(); updateDisplay(); }
-                        else if (currentPhase === 'work') {
-                            if (restDuration > 0) { currentPhase = 'rest'; timeLeft = restDuration; playBeepShort(); updateDisplay(); }
-                            else { nextRoundProgression(); }
-                        } else if (currentPhase === 'rest') { nextRoundProgression(); }
-                    }
-                }
-            }, 1000);
-        }
-
-        function nextRoundProgression() {
-            if (currentRound < maxRounds) { currentRound++; currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); }
-            else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('timerStatusText').textContent = "¡Completado! 🎉"; }
-        }
-
-        function resetTimer() {
-            clearInterval(timerInterval); isRunning = false; isPaused = false;
-            if(currentTimerMode === 'rest') { updateRestDisplayInit(); return; }
-            timeLeft = 10; currentPhase = 'prep'; currentRound = 1;
-            document.getElementById('timerStatusText').textContent = "Listo para empezar";
-            updateDisplay();
-        }
-
-        // ================= ASIGNACIÓN DE EVENTOS =================
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('btnStartTrainer').addEventListener('click', startTrainerMode);
-            document.getElementById('btnAddExercise').addEventListener('click', openExerciseModal);
-            document.getElementById('btnExitTrainer').addEventListener('click', exitTrainerMode);
-            document.getElementById('btnPrevTrainer').addEventListener('click', prevTrainerStep);
-            document.getElementById('btnNextTrainer').addEventListener('click', nextTrainerStep);
             
-            document.getElementById('btnOpenProgress').addEventListener('click', () => openProgressModal());
-            document.getElementById('btnCloseProgressModal').addEventListener('click', closeProgressModal);
-            document.getElementById('btnSaveProgress').addEventListener('click', saveProgressRecord);
+            closeModal();
+            renderProfiles();
+        }
 
-            document.getElementById('timer-bubble').addEventListener('click', toggleTimerModal);
-            document.getElementById('btnCloseTimer').addEventListener('click', toggleTimerModal);
-            document.getElementById('tabHiitBtn').addEventListener('click', () => switchTimerTab('hiit'));
-            document.getElementById('tabRestBtn').addEventListener('click', () => switchTimerTab('rest'));
-            document.getElementById('mainActionBtn').addEventListener('click', startPauseTimer);
-            document.getElementById('btnResetTimer').addEventListener('click', resetTimer);
+        function selectProfile(profileId) {
+            try {
+                localStorage.setItem('active_profile_id', profileId);
+            } catch (e) {}
+            window.location.href = 'dashboard.html';
+        }
 
-            document.getElementById('exType').addEventListener('change', toggleTypeInputs);
-            document.getElementById('btnCloseExerciseModal').addEventListener('click', closeExerciseModal);
-            document.getElementById('btnSaveExercise').addEventListener('click', saveExercise);
-        });
+        function deleteProfile(profileId, event) {
+            event.stopPropagation();
+            
+            if(confirm('¿Estás seguro de que deseas eliminar este perfil y todos sus datos?')) {
+                profiles = profiles.filter(p => p.id !== profileId);
+                try {
+                    localStorage.setItem('app_profiles', JSON.stringify(profiles));
+                    if(localStorage.getItem('active_profile_id') === profileId) {
+                        localStorage.removeItem('active_profile_id');
+                    }
+                } catch (e) {}
+                
+                renderProfiles();
+            }
+        }
+
+        renderProfiles();
     </script>
 </body>
 </html>
