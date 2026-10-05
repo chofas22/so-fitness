@@ -9,9 +9,7 @@
 
         :root {
             --primary-color: #e87c3e; /* Se actualiza dinámicamente según el perfil */
-            --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, color-mix(in srgb, var(--primary-color) 60%, white 40%) 100%);
             --bg-color: #050505;
-            --card-bg: #1a1a1a;
             --card-inner: #2a2a2a;
         }
 
@@ -30,24 +28,30 @@
             width: 100%;
         }
 
-        .back-btn {
-            display: inline-block;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-transform: uppercase;
+        /* Botón superior derecho para cambiar perfil */
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
         }
 
-        .back-btn:hover {
+        .switch-profile-top {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .switch-profile-top:hover {
             text-decoration: underline;
         }
 
         .header {
             text-align: center;
             margin-bottom: 25px;
-            padding: 15px 0;
+            padding: 10px 0 15px 0;
             border-bottom: 1px solid #222;
         }
 
@@ -61,7 +65,7 @@
         }
 
         .header h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 800;
             margin: 5px 0 0 0;
             color: var(--primary-color);
@@ -99,7 +103,7 @@
             font-weight: 700;
             font-size: 1.05rem;
             text-transform: uppercase;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: transform 0.2s, border-color 0.2s, color 0.2s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
@@ -112,37 +116,15 @@
         .day-card span {
             font-size: 1.2rem;
         }
-
-        /* BOTÓN CAMBIAR DE PERFIL */
-        .switch-profile-btn {
-            display: block;
-            width: 100%;
-            background-color: var(--card-inner);
-            border: 1px solid #444;
-            color: #aaa;
-            text-align: center;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-family: 'Montserrat', sans-serif;
-            text-transform: uppercase;
-            text-decoration: none;
-            margin-top: 35px;
-            box-sizing: border-box;
-            transition: all 0.2s;
-        }
-
-        .switch-profile-btn:hover {
-            border-color: var(--primary-color);
-            color: #fff;
-            background-color: rgba(255, 255, 255, 0.05);
-        }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <a href="index.html" class="back-btn">← Cambiar Perfil</a>
+        <!-- Botón superior derecho original -->
+        <div class="top-bar">
+            <a href="index.html" class="switch-profile-top">← Cambiar Perfil</a>
+        </div>
 
         <div class="header">
             <h2>SEMANA DE ENTRENAMIENTO</h2>
@@ -160,8 +142,6 @@
             <a href="rutina.html?dia=sabado" class="day-card">Sábado <span>→</span></a>
             <a href="rutina.html?dia=domingo" class="day-card">Domingo <span>→</span></a>
         </div>
-
-        <a href="index.html" class="switch-profile-btn">👥 Cambiar de Usuario</a>
     </div>
 
     <script>
