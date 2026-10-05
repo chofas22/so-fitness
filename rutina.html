@@ -610,9 +610,20 @@
                 </tbody>
             </table>
 
-            <!-- GRÁFICA DE EVOLUCIÓN -->
+            <!-- GRÁFICA DE EVOLUCIÓN CON FILTROS DE EJERCICIO Y SERIE -->
             <div class="chart-container">
-                <div class="chart-title" id="chartTitle">Selecciona un ejercicio para ver su gráfica</div>
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                    <select id="chartExerciseSelect" class="form-control" style="font-size: 0.75rem; padding: 6px;" onchange="onChartFilterChange()"></select>
+                    <select id="chartSerieSelect" class="form-control" style="font-size: 0.75rem; padding: 6px; width: 130px;" onchange="onChartFilterChange()">
+                        <option value="all">Todas las series</option>
+                        <option value="1">Serie 1</option>
+                        <option value="2">Serie 2</option>
+                        <option value="3">Serie 3</option>
+                        <option value="4">Serie 4</option>
+                        <option value="5">Serie 5</option>
+                    </select>
+                </div>
+                <div class="chart-title" id="chartTitle">Selecciona un ejercicio y serie</div>
                 <canvas id="progressCanvas"></canvas>
             </div>
         </div>
@@ -1105,12 +1116,14 @@
                 tx.oncomplete = function() {
                     closeProgressModal();
                     loadProgressRecords();
-                    drawChart(exerciseName);
+                    updateChartSelectors();
+                    drawChart(exerciseName, document.getElementById('chartSerieSelect').value);
                 };
             };
         }
 
         let globalProgressRecords = [];
+        let currentChartExercise = '';
 
         function loadProgressRecords() {
             if (!db) return;
@@ -1128,6 +1141,7 @@
                     tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #666; font-size: 0.8rem;">Sin registros de progreso aún.</td></tr>';
                     document.getElementById('chartTitle').textContent = "Selecciona un ejercicio para ver su gráfica";
                     clearCanvas();
+                    updateChartSelectors();
                     return;
                 }
 
@@ -1147,8 +1161,48 @@
                     });
                 });
 
-                drawChart(globalProgressRecords[0].exercise);
+                updateChartSelectors();
+                const serieVal = document.getElementById('chartSerieSelect').value;
+                const targetEx = currentChartExercise || globalProgressRecords[0].exercise;
+                drawChart(targetEx, serieVal);
             };
+        }
+
+        function updateChartSelectors() {
+            const selectEx = document.getElementById('chartExerciseSelect');
+            if (!selectEx) return;
+            selectEx.innerHTML = '';
+            
+            const uniqueNames = [];
+            globalProgressRecords.forEach(r => {
+                if (!uniqueNames.includes(r.exercise)) uniqueNames.push(r.exercise);
+            });
+
+            if (uniqueNames.length === 0) {
+                selectEx.innerHTML = '<option value="">Sin ejercicios con registros</option>';
+                return;
+            }
+
+            uniqueNames.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                if (name === currentChartExercise) opt.selected = true;
+                selectEx.appendChild(opt);
+            });
+
+            if (!currentChartExercise && uniqueNames.length > 0) {
+                currentChartExercise = uniqueNames[0];
+                selectEx.value = currentChartExercise;
+            }
+        }
+
+        function onChartFilterChange() {
+            currentChartExercise = document.getElementById('chartExerciseSelect').value;
+            const serieVal = document.getElementById('chartSerieSelect').value;
+            if (currentChartExercise) {
+                drawChart(currentChartExercise, serieVal);
+            }
         }
 
         function editProgressRecord(exerciseName, index) {
@@ -1175,7 +1229,6 @@
                         store.put(record);
                         tx.oncomplete = function() {
                             loadProgressRecords();
-                            drawChart(exerciseName);
                         };
                     }
                 };
@@ -1188,7 +1241,8 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        function drawChart(exerciseName) {
+        function drawChart(exerciseName, serieFilter = 'all') {
+            currentChartExercise = exerciseName;
             const record = globalProgressRecords.find(r => r.exercise === exerciseName);
             const titleEl = document.getElementById('chartTitle');
             const canvas = document.getElementById('progressCanvas');
@@ -1203,8 +1257,22 @@
                 return;
             }
 
-            titleEl.textContent = `Evolución de Carga: ${exerciseName}`;
-            const history = record.history;
+            let history = record.history;
+            if (serieFilter !== 'all') {
+                history = history.filter(h => String(h.serie) === String(serieFilter));
+            }
+
+            let serieLabelText = serieFilter === 'all' ? 'Todas las series' : `Serie ${serieFilter}`;
+            titleEl.textContent = `${exerciseName} — ${serieLabelText}`;
+
+            if (history.length === 0) {
+                ctx.fillStyle = '#888';
+                ctx.font = '11px Montserrat';
+                ctx.textAlign = 'center';
+                ctx.fillText("No hay registros para esta serie", canvas.width / 2, canvas.height / 2);
+                return;
+            }
+
             const weights = history.map(h => h.weight);
             const maxW = Math.max(...weights, 10);
             const minW = Math.min(...weights, 0);
@@ -1222,6 +1290,7 @@
 
             const stepX = history.length > 1 ? chartW / (history.length - 1) : chartW;
 
+            // DIBUJAR LÍNEA UNIDAS ENTRE LOS PUNTOS
             ctx.strokeStyle = '#e87c3e';
             ctx.lineWidth = 3;
             ctx.beginPath();
@@ -1232,17 +1301,30 @@
 
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // DIBUJAR PUNTOS Y ETIQUETAS
+            history.forEach((h, i) => {
+                const x = padding + (i * stepX);
+                const y = canvas.height - padding - ((h.weight - minW) / (maxW - minW || 1)) * chartH;
 
                 ctx.fillStyle = '#e87c3e';
                 ctx.beginPath();
-                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Círculo interno blanco para contraste
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(x, y, 2, 0, Math.PI * 2);
                 ctx.fill();
 
                 ctx.fillStyle = '#fff';
                 ctx.font = '9px Montserrat';
-                ctx.fillText(`${h.weight}kg (S${h.serie})`, x - 15, y - 10);
+                ctx.textAlign = 'center';
+                ctx.fillText(`${h.weight}kg (${h.reps}r)`, x, y - 10);
             });
-            ctx.stroke();
         }
 
         // MODO ENTRENADOR
