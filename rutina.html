@@ -8,7 +8,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
 
         :root {
-            --primary-color: #e87c3e; /* Color por defecto, se sobrescribe dinámicamente */
+            --primary-color: #e87c3e; /* Se actualiza dinámicamente según el perfil */
             --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, #ff9e5e 100%);
             --bg-color: #050505;
             --card-bg: #1a1a1a;
@@ -618,7 +618,7 @@
                 </tbody>
             </table>
 
-            <!-- GRÁFICA DE EVOLUCIÓN CON FILTROS DE EJERCICIO Y SERIE -->
+            <!-- GRÁFICA DE EVOLUCIÓN CON LÍNEA CONTINUA Y FILTROS -->
             <div class="chart-container">
                 <div style="display: flex; gap: 8px; margin-bottom: 10px;">
                     <select id="chartExerciseSelect" class="form-control" style="font-size: 0.75rem; padding: 6px;" onchange="onChartFilterChange()"></select>
@@ -824,8 +824,7 @@
         const profiles = JSON.parse(localStorage.getItem('app_profiles')) || [];
         const activeProfile = profiles.find(p => p.id === activeProfileId);
         
-        // APLICAR COLOR PERSONALIZADO DEL PERFIL
-        let currentThemeColor = '#e87c3e'; // Color por defecto
+        let currentThemeColor = '#e87c3e';
         if (activeProfile) {
             document.getElementById('profileHeaderName').innerText = activeProfile.name;
             if (activeProfile.themeColor) {
@@ -1126,7 +1125,6 @@
                     record.history.push(newEntry);
                 }
 
-                // Ordenar historial por fecha
                 record.history.sort((a, b) => new Date(a.date) - new Date(b.date));
 
                 store.put(record);
@@ -1307,7 +1305,7 @@
 
             const stepX = history.length > 1 ? chartW / (history.length - 1) : chartW;
 
-            // DIBUJAR LÍNEA UNIDAS ENTRE LOS PUNTOS CON EL COLOR DEL PERFIL
+            // Línea continua conectando los puntos con el color personalizado
             ctx.strokeStyle = currentThemeColor;
             ctx.lineWidth = 3;
             ctx.beginPath();
@@ -1321,7 +1319,7 @@
             });
             ctx.stroke();
 
-            // DIBUJAR PUNTOS Y ETIQUETAS
+            // Puntos y etiquetas
             history.forEach((h, i) => {
                 const x = padding + (i * stepX);
                 const y = canvas.height - padding - ((h.weight - minW) / (maxW - minW || 1)) * chartH;
@@ -1495,7 +1493,6 @@
             updateDisplay();
         }
 
-        // ================= ASIGNACIÓN DE EVENTOS =================
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('btnStartTrainer').addEventListener('click', startTrainerMode);
             document.getElementById('btnAddExercise').addEventListener('click', openExerciseModal);
