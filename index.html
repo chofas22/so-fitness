@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selecciona tu Perfil</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .app-container {
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            color: #e87c3e;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .profile-card {
+            background-color: #1a1a1a;
+            border: 2px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 25px 15px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            border-color: #e87c3e;
+            box-shadow: 0 8px 20px rgba(232, 124, 62, 0.15);
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e87c3e 0%, #ff9e5e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #050505;
+            margin-bottom: 15px;
+        }
+
+        .profile-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            word-break: break-word;
+        }
+
+        /* Tarjeta para agregar nuevo perfil */
+        .add-profile-card {
+            background-color: transparent;
+            border: 2px dashed #444;
+        }
+        
+        .add-profile-card:hover {
+            border-color: #e87c3e;
+            background-color: rgba(232, 124, 62, 0.05);
+        }
+
+        .add-avatar {
+            background: #2a2a2a;
+            color: #888;
+        }
+
+        .add-profile-card:hover .add-avatar {
+            background: #e87c3e;
+            color: #050505;
+        }
+
+        .add-name {
+            color: #888;
+        }
+
+        .add-profile-card:hover .add-name {
+            color: #e87c3e;
+        }
+
+        /* Modal para nuevo usuario */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background-color: #1a1a1a;
+            border: 1px solid #e87c3e;
+            border-radius: 16px;
+            padding: 25px;
+            width: 100%;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .modal-title {
+            color: #e87c3e;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .modal-input {
+            width: 100%;
+            background-color: #050505;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #e87c3e;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-cancel, .btn-save {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            transition: background 0.2s;
+        }
+
+        .btn-cancel {
+            background-color: #2a2a2a;
+            color: #ccc;
+        }
+        .btn-cancel:hover { background-color: #333; color: #fff; }
+
+        .btn-save {
+            background-color: #e87c3e;
+            color: #050505;
+        }
+        .btn-save:hover { background-color: #ff8c4a; }
+        
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            color: #888;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .delete-btn:hover { color: #ff4444; background: rgba(255, 68, 68, 0.1); }
+        .profile-card { position: relative; }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="logo">MY FITNESS APP</div>
+        <h1>¿Quién entrena hoy?</h1>
+
+        <!-- Cuadrícula donde aparecerán los perfiles -->
+        <div class="profiles-grid" id="profilesGrid">
+            <!-- Los perfiles se inyectan aquí con JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal Nuevo Perfil -->
+    <div class="modal-overlay" id="newProfileModal">
+        <div class="modal-box">
+            <h3 class="modal-title">Crear Nuevo Perfil</h3>
+            <input type="text" id="profileNameInput" class="modal-input" placeholder="Nombre del usuario" maxlength="15">
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button class="btn-save" onclick="saveNewProfile()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Límite comercial de usuarios
+        const MAX_PROFILES = 5;
+
+        // Cargar perfiles desde la memoria local (si no hay, inicia un arreglo vacío)
+        let profiles = JSON.parse(localStorage.getItem('app_profiles')) || [];
+
+        const profilesGrid = document.getElementById('profilesGrid');
+        const modal = document.getElementById('newProfileModal');
+        const nameInput = document.getElementById('profileNameInput');
+
+        // Función principal para dibujar los perfiles en pantalla
+        function renderProfiles() {
+            profilesGrid.innerHTML = ''; // Limpiar cuadrícula
+
+            // 1. Dibujar los perfiles existentes
+            profiles.forEach(profile => {
+                const initial = profile.name.charAt(0).toUpperCase();
+                
+                const card = document.createElement('div');
+                card.className = 'profile-card';
+                card.onclick = () => selectProfile(profile.id);
+
+                card.innerHTML = `
+                    <button class="delete-btn" onclick="deleteProfile('${profile.id}', event)" title="Eliminar perfil">✕</button>
+                    <div class="avatar">${initial}</div>
+                    <div class="profile-name">${profile.name}</div>
+                `;
+                profilesGrid.appendChild(card);
+            });
+
+            // 2. Dibujar el botón de "+" SI NO hemos llegado al límite
+            if (profiles.length < MAX_PROFILES) {
+                const addCard = document.createElement('div');
+                addCard.className = 'profile-card add-profile-card';
+                addCard.onclick = openModal;
+                addCard.innerHTML = `
+                    <div class="avatar add-avatar">+</div>
+                    <div class="profile-name add-name">Añadir Perfil</div>
+                `;
+                profilesGrid.appendChild(addCard);
+            }
+        }
+
+        // --- Funciones del Modal ---
+        function openModal() {
+            nameInput.value = '';
+            modal.style.display = 'flex';
+            nameInput.focus();
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        function saveNewProfile() {
+            const name = nameInput.value.trim();
+            if (name === '') {
+                alert('Por favor ingresa un nombre.');
+                return;
+            }
+
+            // Crear el objeto del nuevo perfil
+            const newProfile = {
+                id: 'user_' + Date.now(), // ID único basado en la fecha exacta
+                name: name
+            };
+
+            // Guardar y actualizar
+            profiles.push(newProfile);
+            localStorage.setItem('app_profiles', JSON.stringify(profiles));
+            
+            closeModal();
+            renderProfiles();
+        }
+
+        // --- Funciones de Gestión ---
+        function selectProfile(profileId) {
+            // Guardar quién es el usuario activo actualmente
+            localStorage.setItem('active_profile_id', profileId);
+            
+            // Redirigir al panel principal del usuario (lo crearemos en el Paso 2)
+            // Por ahora, mostrará un alert y simulará la redirección
+            console.log(`Cargando datos para el perfil: ${profileId}`);
+            window.location.href = 'dashboard.html'; // Próximo archivo a crear
+        }
+
+        function deleteProfile(profileId, event) {
+            event.stopPropagation(); // Evita que al dar clic en borrar, se "seleccione" el perfil
+            
+            if(confirm('¿Estás seguro de que deseas eliminar este perfil y todos sus datos?')) {
+                // Filtrar para quitar el eliminado
+                profiles = profiles.filter(p => p.id !== profileId);
+                localStorage.setItem('app_profiles', JSON.stringify(profiles));
+                
+                // Limpiar si era el activo
+                if(localStorage.getItem('active_profile_id') === profileId) {
+                    localStorage.removeItem('active_profile_id');
+                }
+                
+                renderProfiles();
+            }
+        }
+
+        // Iniciar la app renderizando lo que haya
+        renderProfiles();
+
+    </script>
+</body>
+</html>
