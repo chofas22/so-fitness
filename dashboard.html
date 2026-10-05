@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Semana - Fitness App</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 15px;
+        }
+
+        .welcome-text {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .greeting {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #e87c3e;
+            margin: 5px 0 0 0;
+            text-transform: uppercase;
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            border-color: #e87c3e;
+            color: #fff;
+            background-color: rgba(232, 124, 62, 0.1);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-left: 4px solid #e87c3e;
+            padding-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .day-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .day-card:hover {
+            border-color: #e87c3e;
+            transform: translateX(5px);
+        }
+
+        .day-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .day-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .day-action {
+            color: #e87c3e;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Cabecera dinámica -->
+        <div class="header">
+            <div>
+                <p class="welcome-text">Entrenando hoy</p>
+                <h1 class="greeting" id="userName">Usuario</h1>
+            </div>
+            <button class="logout-btn" onclick="logout()">Cambiar Perfil</button>
+        </div>
+
+        <h2 class="section-title">Tu Semana de Entrenamiento</h2>
+        
+        <!-- Contenedor de los días -->
+        <div id="weekDaysList">
+            <!-- Los días se inyectan con JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // 1. VALIDAR QUE HAYA UN USUARIO ACTIVO
+        const activeProfileId = localStorage.getItem('active_profile_id');
+        if(!activeProfileId) {
+            window.location.href = 'index.html'; // Si alguien entra directo sin perfil, lo regresa al inicio
+        }
+
+        // 2. BUSCAR EL NOMBRE DEL USUARIO Y MOSTRARLO
+        const profiles = JSON.parse(localStorage.getItem('app_profiles')) || [];
+        const activeProfile = profiles.find(p => p.id === activeProfileId);
+        
+        if(activeProfile) {
+            document.getElementById('userName').innerText = activeProfile.name;
+        } else {
+            // Si el perfil fue borrado por error
+            localStorage.removeItem('active_profile_id');
+            window.location.href = 'index.html';
+        }
+
+        // 3. FUNCIÓN PARA CAMBIAR DE PERFIL
+        function logout() {
+            localStorage.removeItem('active_profile_id');
+            window.location.href = 'index.html';
+        }
+
+        // 4. GENERAR LA LISTA DE DÍAS
+        const days = [
+            { id: 'lunes', name: 'Lunes' },
+            { id: 'martes', name: 'Martes' },
+            { id: 'miercoles', name: 'Miércoles' },
+            { id: 'jueves', name: 'Jueves' },
+            { id: 'viernes', name: 'Viernes' }
+        ];
+
+        const weekDaysList = document.getElementById('weekDaysList');
+
+        days.forEach(day => {
+            const card = document.createElement('div');
+            card.className = 'day-card';
+            
+            // Al hacer clic, nos llevará al archivo rutina.html pasándole el día por la URL
+            card.onclick = () => {
+                window.location.href = `rutina.html?dia=${day.id}`;
+            };
+            
+            card.innerHTML = `
+                <div class="day-info">
+                    <h3>${day.name}</h3>
+                    <p>Toca para entrenar o configurar</p>
+                </div>
+                <div class="day-action">→</div>
+            `;
+            weekDaysList.appendChild(card);
+        });
+    </script>
+</body>
+</html>
