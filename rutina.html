@@ -118,7 +118,7 @@
             margin-bottom: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             position: relative;
-            cursor: pointer; /* Indica que se puede tocar */
+            cursor: pointer;
             transition: border-color 0.2s;
         }
 
@@ -156,7 +156,6 @@
             border-top: 1px solid #383838;
         }
 
-        /* Cuando la tarjeta tiene la clase 'active', mostramos el contenido */
         .exercise-card.active .card-hidden-content {
             display: block;
         }
@@ -429,12 +428,12 @@
                 <input type="text" id="exSubtitle" class="form-control" placeholder="Ej. Cuádriceps y Glúteos">
             </div>
 
-            <!-- SELECCIÓN DINÁMICA: TIEMPO VS REPETICIONES -->
+            <!-- SELECCIÓN DINÁMICA: REPS VS TIEMPO -->
             <div class="form-group">
                 <label>Tipo de Ejercicio</label>
                 <select id="exType" class="form-control" onchange="toggleTypeInputs()">
                     <option value="reps">Series y Repeticiones</option>
-                    <option value="time">Por Tiempo</option>
+                    <option value="time">Por Tiempo / Intervalos</option>
                 </select>
             </div>
 
@@ -447,8 +446,12 @@
             </div>
 
             <div class="form-group" id="timeInputs" style="display: none;">
-                <label>Duración</label>
-                <input type="text" id="exTime" class="form-control" placeholder="Ej. 1 Minuto / 45 Seg">
+                <label>Configuración de Intervalos</label>
+                <div class="input-group-flex" style="margin-bottom: 8px;">
+                    <input type="text" id="exWorkTime" class="form-control" placeholder="Trabajo (Ej. 45s)">
+                    <input type="text" id="exRestTime" class="form-control" placeholder="Descanso (Ej. 15s)">
+                </div>
+                <input type="text" id="exRounds" class="form-control" placeholder="Rondas (Ej. 3 Rondas)">
             </div>
             <!-- FIN SELECCIÓN DINÁMICA -->
 
@@ -552,7 +555,6 @@
                         const card = document.createElement('div');
                         card.className = 'exercise-card';
                         
-                        // Evento para expandir/contraer tarjeta
                         card.onclick = function() {
                             this.classList.toggle('active');
                         };
@@ -562,7 +564,6 @@
                             <div class="card-subtitle">${ex.subtitle || ''}</div>
                             <div class="card-details">${ex.details || ''}</div>
                             
-                            <!-- CONTENIDO OCULTO (Acordeón) -->
                             <div class="card-hidden-content">
                                 ${ex.image ? `<img src="${ex.image}" class="exercise-img">` : ''}
                                 <p class="card-instructions">${ex.instructions || 'Sin instrucciones adicionales.'}</p>
@@ -615,7 +616,9 @@
             document.getElementById('exType').value = 'reps';
             document.getElementById('exSeries').value = '';
             document.getElementById('exReps').value = '';
-            document.getElementById('exTime').value = '';
+            document.getElementById('exWorkTime').value = '';
+            document.getElementById('exRestTime').value = '';
+            document.getElementById('exRounds').value = '';
             toggleTypeInputs();
 
             currentImageBase64 = null;
@@ -638,17 +641,23 @@
             const existing = currentExercisesList.find(e => e.id === exId);
             const imageToSave = currentImageBase64 || (existing ? existing.image : null);
 
-            // Generar el texto 'details' según lo elegido
             const type = document.getElementById('exType').value;
             let finalDetailsStr = "";
             let seriesVal = document.getElementById('exSeries').value;
             let repsVal = document.getElementById('exReps').value;
-            let timeVal = document.getElementById('exTime').value;
+            let workTimeVal = document.getElementById('exWorkTime').value;
+            let restTimeVal = document.getElementById('exRestTime').value;
+            let roundsVal = document.getElementById('exRounds').value;
 
             if (type === 'reps') {
                 finalDetailsStr = `${seriesVal || 0} Series x ${repsVal || 0} Repeticiones`;
             } else {
-                finalDetailsStr = timeVal || 'Sin tiempo definido';
+                let workPart = workTimeVal ? `${workTimeVal} trabajo` : '';
+                let restPart = restTimeVal ? `${restTimeVal} descanso` : '';
+                let roundsPart = roundsVal ? `${roundsVal}` : '';
+                
+                let combinedTime = [workPart, restPart].filter(Boolean).join(' / ');
+                finalDetailsStr = [roundsPart, combinedTime].filter(Boolean).join(' • ') || 'Por tiempo';
             }
 
             const exerciseData = {
@@ -661,8 +670,10 @@
                 type: type,
                 series: seriesVal,
                 reps: repsVal,
-                time: timeVal,
-                details: finalDetailsStr, // Texto dinámico
+                workTime: workTimeVal,
+                restTime: restTimeVal,
+                rounds: roundsVal,
+                details: finalDetailsStr,
                 instructions: document.getElementById('exInstructions').value.trim(),
                 image: imageToSave
             };
@@ -686,12 +697,13 @@
                 document.getElementById('exSubtitle').value = ex.subtitle || '';
                 document.getElementById('exInstructions').value = ex.instructions || '';
                 
-                // Cargar datos del selector de Tipo
                 if (ex.type) {
                     document.getElementById('exType').value = ex.type;
                     document.getElementById('exSeries').value = ex.series || '';
                     document.getElementById('exReps').value = ex.reps || '';
-                    document.getElementById('exTime').value = ex.time || '';
+                    document.getElementById('exWorkTime').value = ex.workTime || '';
+                    document.getElementById('exRestTime').value = ex.restTime || '';
+                    document.getElementById('exRounds').value = ex.rounds || '';
                 } else {
                     document.getElementById('exType').value = 'reps';
                 }
