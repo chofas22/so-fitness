@@ -306,7 +306,7 @@
             window.location.href = 'index.html';
         }
 
-        // Lista completa de días disponibles por defecto
+        // Lista completa de días disponibles
         const allPossibleDays = [
             { id: 'lunes', defaultName: 'Lunes' },
             { id: 'martes', defaultName: 'Martes' },
@@ -317,22 +317,21 @@
             { id: 'domingo', defaultName: 'Domingo' }
         ];
 
-        // Obtener la configuración guardada de este usuario o crear una por defecto (Lunes a Viernes)
+        // Obtener la configuración guardada o iniciar completamente VACÍA para usuarios nuevos
         function getUserSchedule() {
             const savedSchedules = JSON.parse(localStorage.getItem('user_schedules')) || {};
             if (savedSchedules[activeProfileId]) {
                 return savedSchedules[activeProfileId];
             } else {
-                // Por defecto habilitar Lunes a Viernes con subtítulos genéricos
-                let defaultSched = {};
+                // VACÍO POR DEFECTO: Ningún día seleccionado para usuarios nuevos
+                let emptySched = {};
                 allPossibleDays.forEach(d => {
-                    let activeByDefault = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'].includes(d.id);
-                    defaultSched[d.id] = {
-                        active: activeByDefault,
-                        subtitle: activeByDefault ? `${d.defaultName} - Entrenamiento` : ''
+                    emptySched[d.id] = {
+                        active: false,
+                        subtitle: ''
                     };
                 });
-                return defaultSched;
+                return emptySched;
             }
         }
 
@@ -358,7 +357,7 @@
                     card.innerHTML = `
                         <div class="day-info">
                             <h3>${d.defaultName}</h3>
-                            <p>${dayConfig.subtitle || 'Toca para configurar'}</p>
+                            <p>${dayConfig.subtitle || 'Entrenamiento'}</p>
                         </div>
                         <div class="day-action">→</div>
                     `;
@@ -419,7 +418,6 @@
                 schedule[d.id] = { active, subtitle };
             });
 
-            // Guardar en localStorage asociado al usuario
             const savedSchedules = JSON.parse(localStorage.getItem('user_schedules')) || {};
             savedSchedules[activeProfileId] = schedule;
             localStorage.setItem('user_schedules', JSON.stringify(savedSchedules));
