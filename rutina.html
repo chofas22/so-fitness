@@ -558,4 +558,134 @@
 
         <div class="action-buttons-grid">
             <button class="action-btn btn-trainer" id="btnStartTrainer">
-                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Modo Entren
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Modo Entrenador
+            </button>
+            <button class="action-btn btn-add" id="btnAddExercise">
+                + Ejercicio
+            </button>
+        </div>
+
+        <!-- MODO ENTRENADOR -->
+        <div id="trainer-mode-container">
+            <div class="trainer-top-bar">
+                <span class="trainer-counter" id="trainerCounter">Ejercicio 1</span>
+                <button class="exit-trainer-btn" id="btnExitTrainer">✕ Salir</button>
+            </div>
+            
+            <h3 class="card-title" id="tTitle" style="font-size: 1.3rem;">TÍTULO</h3>
+            <p class="card-subtitle" id="tSubtitle">SUBTÍTULO</p>
+            <p class="card-details" id="tDetails">DETALLES</p>
+            
+            <img id="tImg" class="exercise-img" src="" alt="Ejercicio" style="display:none;">
+            
+            <p class="card-instructions" id="tInstructions" style="background:#111; padding:12px; border-radius:8px; border:1px solid #333;"></p>
+
+            <div class="trainer-nav-buttons">
+                <button class="nav-step-btn" id="btnPrevTrainer">← Anterior</button>
+                <button class="nav-step-btn primary" id="btnNextTrainer">Siguiente →</button>
+            </div>
+        </div>
+
+        <!-- LISTA DE EJERCICIOS -->
+        <div id="mainContentContainer">
+            <div id="calentamientoList"></div>
+            <div id="fuerzaList"></div>
+            <div id="estiramientoList"></div>
+            <div id="emptyState" class="empty-state" style="display:none;">
+                <p style="margin:0; font-size:0.9rem;">No hay ejercicios agregados para este día.</p>
+                <p style="margin:5px 0 0 0; font-size:0.8rem; color:#888;">Toca el botón "+ Ejercicio" para crear uno.</p>
+            </div>
+        </div>
+
+        <!-- SECCIÓN PROGRESO Y GRÁFICAS -->
+        <div class="progress-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="margin: 0; font-size: 0.9rem; color: var(--primary-color); text-transform: uppercase;">📈 Historial y Series</h3>
+                <button class="btn-small" id="btnOpenProgress" style="color: var(--primary-color);">+ Registrar Serie</button>
+            </div>
+            
+            <table class="progress-table">
+                <thead>
+                    <tr>
+                        <th>Fecha / Ejercicio</th>
+                        <th>Serie</th>
+                        <th>Peso / Reps</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="progressTableBody">
+                    <tr><td colspan="4" style="text-align: center; color: #666; font-size: 0.8rem;">Sin registros aún.</td></tr>
+                </tbody>
+            </table>
+
+            <!-- GRÁFICA DE EVOLUCIÓN CON LÍNEA CONTINUA Y FILTROS -->
+            <div class="chart-container">
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                    <select id="chartExerciseSelect" class="form-control" style="font-size: 0.75rem; padding: 6px;" onchange="onChartFilterChange()"></select>
+                    <select id="chartSerieSelect" class="form-control" style="font-size: 0.75rem; padding: 6px; width: 130px;" onchange="onChartFilterChange()">
+                        <option value="all">Todas las series</option>
+                        <option value="1">Serie 1</option>
+                        <option value="2">Serie 2</option>
+                        <option value="3">Serie 3</option>
+                        <option value="4">Serie 4</option>
+                        <option value="5">Serie 5</option>
+                    </select>
+                </div>
+                <div class="chart-title" id="chartTitle">Selecciona un ejercicio y serie</div>
+                <canvas id="progressCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEMPORIZADOR FLOTANTE -->
+    <div id="timer-bubble" title="Abrir Temporizador">
+        <svg viewBox="0 0 24 24">
+            <path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+        </svg>
+    </div>
+
+    <div id="timer-modal">
+        <div class="timer-header">
+            <h3 id="timerModalTitle">Temporizador HIIT</h3>
+            <button class="close-timer" id="btnCloseTimer">✕</button>
+        </div>
+
+        <div class="timer-tabs">
+            <button class="timer-tab active" id="tabHiitBtn">HIIT / Circuito</button>
+            <button class="timer-tab" id="tabRestBtn">Descanso Rápido</button>
+        </div>
+
+        <div id="hiitSection">
+            <div class="timer-inputs-grid" id="timerConfigSection">
+                <div class="timer-row">
+                    <label>Trabajo</label>
+                    <div class="timer-input-wrapper">
+                        <input type="number" id="workTime" value="45" min="1">
+                        <select id="workUnit"><option value="sec" selected>seg</option><option value="min">min</option></select>
+                    </div>
+                </div>
+                <div class="timer-row">
+                    <label>Descanso</label>
+                    <div class="timer-input-wrapper">
+                        <input type="number" id="restTime" value="15" min="0">
+                        <select id="restUnit"><option value="sec" selected>seg</option><option value="min">min</option></select>
+                    </div>
+                </div>
+                <div class="timer-row">
+                    <label>Rondas</label>
+                    <div class="timer-input-wrapper">
+                        <input type="number" id="totalRounds" value="3" min="1" style="width: 85px;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="timer-display">
+                <div class="timer-status" id="timerStatusText">Listo para empezar</div>
+                <div class="timer-clock" id="timerClockDisplay">00:45</div>
+                <div class="timer-rounds-info" id="timerRoundsDisplay">Ronda 1 de 3</div>
+            </div>
+        </div>
+
+        <div id="restSection" style="display: none;">
+            <div class="timer-inputs-grid">
+                <div class="timer-row">
