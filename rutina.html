@@ -111,8 +111,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
             transition: transform 0.2s;
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
         }
 
         .btn-trainer {
@@ -498,11 +504,10 @@
             padding: 15px;
             margin-top: 25px;
         }
-        .progress-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left; margin-bottom: 15px; }
-        .progress-table th { color: #e87c3e; border-bottom: 1px solid #444; padding-bottom: 8px; font-size: 0.7rem; text-transform: uppercase; }
-        .progress-table td { padding: 10px 0; border-bottom: 1px solid #222; color: #ccc; cursor: pointer; }
+        .progress-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; margin-bottom: 15px; }
+        .progress-table th { color: #e87c3e; border-bottom: 1px solid #444; padding-bottom: 8px; font-size: 0.68rem; text-transform: uppercase; }
+        .progress-table td { padding: 8px 0; border-bottom: 1px solid #222; color: #ccc; }
         .progress-table tr:hover td { background-color: rgba(232, 124, 62, 0.05); }
-        .diff-tag { font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; background-color: rgba(76, 175, 80, 0.2); color: #4caf50; }
 
         .chart-container {
             background-color: #111;
@@ -545,7 +550,7 @@
 
         <div class="action-buttons-grid">
             <button class="action-btn btn-trainer" id="btnStartTrainer">
-                ▶ Modo Entrenador
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Modo Entrenador
             </button>
             <button class="action-btn btn-add" id="btnAddExercise">
                 + Ejercicio
@@ -587,17 +592,17 @@
         <!-- SECCIÓN PROGRESO Y GRÁFICAS -->
         <div class="progress-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h3 style="margin: 0; font-size: 0.9rem; color: #e87c3e; text-transform: uppercase;">📈 Historial y Gráfica</h3>
-                <button class="btn-small" id="btnOpenProgress" style="color: #e87c3e;">+ Registrar Peso</button>
+                <h3 style="margin: 0; font-size: 0.9rem; color: #e87c3e; text-transform: uppercase;">📈 Historial y Series</h3>
+                <button class="btn-small" id="btnOpenProgress" style="color: #e87c3e;">+ Registrar Serie</button>
             </div>
             
             <table class="progress-table">
                 <thead>
                     <tr>
-                        <th>Ejercicio</th>
-                        <th>Inicio</th>
-                        <th>Actual</th>
-                        <th>Cambio</th>
+                        <th>Fecha / Ejercicio</th>
+                        <th>Serie</th>
+                        <th>Peso / Reps</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody id="progressTableBody">
@@ -752,23 +757,40 @@
         </div>
     </div>
 
-    <!-- MODAL REGISTRAR PESO ACTUAL -->
+    <!-- MODAL REGISTRAR / EDITAR SERIE DE PROGRESO -->
     <div class="modal-overlay" id="progressModal">
         <div class="modal-box">
-            <h3 style="color:#e87c3e; margin-top:0;">Actualizar Carga</h3>
+            <h3 style="color:#e87c3e; margin-top:0;" id="progModalTitle">Registrar Serie de Carga</h3>
+            <input type="hidden" id="progIndexEdit" value="">
             <div class="form-group">
-                <label>Seleccionar Ejercicio con Seguimiento</label>
+                <label>Ejercicio con Seguimiento</label>
                 <select id="progExerciseSelect" class="form-control">
                     <!-- Se llena automáticamente -->
                 </select>
             </div>
             <div class="form-group">
-                <label>Nuevo Peso Actual (KG)</label>
-                <input type="number" id="progWeight" class="form-control" placeholder="Ej. 80" step="0.5">
+                <label>Fecha</label>
+                <input type="date" id="progDate" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Número de Serie</label>
+                <input type="number" id="progSerieNum" class="form-control" value="1" min="1">
+            </div>
+            <div class="form-group">
+                <div class="input-group-flex">
+                    <div>
+                        <label>Peso (KG)</label>
+                        <input type="number" id="progWeight" class="form-control" placeholder="Ej. 80" step="0.5">
+                    </div>
+                    <div>
+                        <label>Repeticiones</label>
+                        <input type="number" id="progReps" class="form-control" placeholder="Ej. 10" min="1">
+                    </div>
+                </div>
             </div>
             <div class="modal-buttons">
                 <button class="btn-cancel" id="btnCloseProgressModal">Cancelar</button>
-                <button class="btn-save" id="btnSaveProgress">Guardar</button>
+                <button class="btn-save" id="btnSaveProgress">Guardar Serie</button>
             </div>
         </div>
     </div>
@@ -804,7 +826,7 @@
         updateStreak();
 
         let db;
-        const request = indexedDB.open("FitnessDB", 5);
+        const request = indexedDB.open("FitnessDB", 6);
 
         request.onupgradeneeded = function(e) {
             db = e.target.result;
@@ -998,8 +1020,8 @@
             }
         }
 
-        // --- PROGRESO Y GRÁFICAS ---
-        function openProgressModal() {
+        // --- PROGRESO DETALLADO POR SERIE, FECHA, PESO Y REPS ---
+        function openProgressModal(editIndex = null, existingData = null) {
             const select = document.getElementById('progExerciseSelect');
             select.innerHTML = '';
 
@@ -1020,7 +1042,23 @@
                 });
             }
 
-            document.getElementById('progWeight').value = '';
+            if (editIndex !== null && existingData) {
+                document.getElementById('progModalTitle').textContent = "Editar Serie";
+                select.value = existingData.exercise;
+                document.getElementById('progDate').value = existingData.date;
+                document.getElementById('progSerieNum').value = existingData.serie;
+                document.getElementById('progWeight').value = existingData.weight;
+                document.getElementById('progReps').value = existingData.reps;
+                document.getElementById('progIndexEdit').value = editIndex;
+            } else {
+                document.getElementById('progModalTitle').textContent = "Registrar Serie de Carga";
+                document.getElementById('progDate').value = new Date().toISOString().slice(0, 10);
+                document.getElementById('progSerieNum').value = '1';
+                document.getElementById('progWeight').value = '';
+                document.getElementById('progReps').value = '';
+                document.getElementById('progIndexEdit').value = '';
+            }
+
             document.getElementById('progressModal').style.display = 'flex';
         }
 
@@ -1028,30 +1066,40 @@
 
         function saveProgressRecord() {
             const exerciseName = document.getElementById('progExerciseSelect').value;
+            const dateVal = document.getElementById('progDate').value;
+            const serieVal = parseInt(document.getElementById('progSerieNum').value) || 1;
             const weightVal = parseFloat(document.getElementById('progWeight').value);
+            const repsVal = parseInt(document.getElementById('progReps').value);
+            const editIdx = document.getElementById('progIndexEdit').value;
 
-            if (!exerciseName) { alert("No hay ningún ejercicio válido seleccionado."); return; }
+            if (!exerciseName) { alert("Selecciona un ejercicio válido."); return; }
+            if (!dateVal) { alert("Ingresa la fecha."); return; }
             if (isNaN(weightVal)) { alert("Ingresa un peso válido."); return; }
+            if (isNaN(repsVal)) { alert("Ingresa las repeticiones."); return; }
 
             const tx = db.transaction("progress", "readwrite");
             const store = tx.objectStore("progress");
-            const getReq = store.get(activeProfileId + '_' + exerciseName);
+            const recordId = activeProfileId + '_' + exerciseName;
+            const getReq = store.get(recordId);
 
             getReq.onsuccess = function() {
-                let existing = getReq.result;
-                let history = existing ? existing.history : [];
-                let initial = existing ? existing.initial : weightVal;
-
-                history.push({ date: new Date().toLocaleDateString(), weight: weightVal });
-
-                const record = {
-                    id: activeProfileId + '_' + exerciseName,
+                let record = getReq.result || {
+                    id: recordId,
                     userId: activeProfileId,
                     exercise: exerciseName,
-                    initial: initial,
-                    current: weightVal,
-                    history: history
+                    history: []
                 };
+
+                const newEntry = { date: dateVal, serie: serieVal, weight: weightVal, reps: repsVal };
+
+                if (editIdx !== "") {
+                    record.history[parseInt(editIdx)] = newEntry;
+                } else {
+                    record.history.push(newEntry);
+                }
+
+                // Ordenar historial por fecha
+                record.history.sort((a, b) => new Date(a.date) - new Date(b.date));
 
                 store.put(record);
                 tx.oncomplete = function() {
@@ -1076,7 +1124,7 @@
                 const tbody = document.getElementById('progressTableBody');
                 tbody.innerHTML = '';
 
-                if (globalProgressRecords.length === 0) {
+                if (globalProgressRecords.length === 0 || globalProgressRecords.every(r => r.history.length === 0)) {
                     tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #666; font-size: 0.8rem;">Sin registros de progreso aún.</td></tr>';
                     document.getElementById('chartTitle').textContent = "Selecciona un ejercicio para ver su gráfica";
                     clearCanvas();
@@ -1084,23 +1132,54 @@
                 }
 
                 globalProgressRecords.forEach((r) => {
-                    const diff = r.current - r.initial;
-                    let diffText = diff > 0 ? `+${diff} KG` : `${diff} KG`;
-                    if (diff === 0) diffText = 'Sin cambios';
-
-                    const tr = document.createElement('tr');
-                    tr.onclick = () => drawChart(r.exercise);
-                    tr.innerHTML = `
-                        <td><strong>${r.exercise}</strong></td>
-                        <td>${r.initial} KG</td>
-                        <td style="color: #e87c3e; font-weight:700;">${r.current} KG</td>
-                        <td><span class="diff-tag">${diffText}</span></td>
-                    `;
-                    tbody.appendChild(tr);
+                    r.history.forEach((h, idx) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong style="color:#e87c3e">${r.exercise}</strong><br><span style="font-size:0.68rem; color:#aaa;">${h.date}</span></td>
+                            <td>Serie ${h.serie}</td>
+                            <td><strong>${h.weight} KG</strong> x ${h.reps} reps</td>
+                            <td>
+                                <button class="btn-small" onclick="editProgressRecord('${r.exercise}', ${idx})">✏️</button>
+                                <button class="btn-small btn-delete" onclick="deleteProgressRecord('${r.exercise}', ${idx})">🗑️</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
                 });
 
                 drawChart(globalProgressRecords[0].exercise);
             };
+        }
+
+        function editProgressRecord(exerciseName, index) {
+            const record = globalProgressRecords.find(r => r.exercise === exerciseName);
+            if (record && record.history[index]) {
+                openProgressModal(index, {
+                    exercise: exerciseName,
+                    ...record.history[index]
+                });
+            }
+        }
+
+        function deleteProgressRecord(exerciseName, index) {
+            if (confirm("¿Deseas eliminar este registro de serie?")) {
+                const tx = db.transaction("progress", "readwrite");
+                const store = tx.objectStore("progress");
+                const recordId = activeProfileId + '_' + exerciseName;
+                const getReq = store.get(recordId);
+
+                getReq.onsuccess = function() {
+                    let record = getReq.result;
+                    if (record && record.history) {
+                        record.history.splice(index, 1);
+                        store.put(record);
+                        tx.oncomplete = function() {
+                            loadProgressRecords();
+                            drawChart(exerciseName);
+                        };
+                    }
+                };
+            }
         }
 
         function clearCanvas() {
@@ -1160,8 +1239,8 @@
                 ctx.fill();
 
                 ctx.fillStyle = '#fff';
-                ctx.font = '10px Montserrat';
-                ctx.fillText(`${h.weight}kg`, x - 12, y - 10);
+                ctx.font = '9px Montserrat';
+                ctx.fillText(`${h.weight}kg (S${h.serie})`, x - 15, y - 10);
             });
             ctx.stroke();
         }
@@ -1326,7 +1405,7 @@
             document.getElementById('btnPrevTrainer').addEventListener('click', prevTrainerStep);
             document.getElementById('btnNextTrainer').addEventListener('click', nextTrainerStep);
             
-            document.getElementById('btnOpenProgress').addEventListener('click', openProgressModal);
+            document.getElementById('btnOpenProgress').addEventListener('click', () => openProgressModal());
             document.getElementById('btnCloseProgressModal').addEventListener('click', closeProgressModal);
             document.getElementById('btnSaveProgress').addEventListener('click', saveProgressRecord);
 
