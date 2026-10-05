@@ -26,7 +26,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             border-bottom: 1px solid #222;
             padding-bottom: 15px;
         }
@@ -40,7 +40,7 @@
         }
 
         .greeting {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: #e87c3e;
             margin: 5px 0 0 0;
@@ -67,6 +67,32 @@
             background-color: rgba(232, 124, 62, 0.1);
         }
 
+        .actions-top-grid {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .action-top-btn {
+            flex: 1;
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 12px;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-top-btn:hover {
+            border-color: #e87c3e;
+            background-color: rgba(232, 124, 62, 0.05);
+        }
+
         .section-title {
             font-size: 1rem;
             margin-bottom: 20px;
@@ -81,7 +107,7 @@
             background: #1a1a1a;
             border: 1px solid #333;
             border-radius: 12px;
-            padding: 20px;
+            padding: 18px 20px;
             margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
@@ -97,8 +123,8 @@
         }
 
         .day-info h3 {
-            margin: 0 0 5px 0;
-            font-size: 1.2rem;
+            margin: 0 0 4px 0;
+            font-size: 1.1rem;
             color: #fff;
             text-transform: uppercase;
             font-weight: 800;
@@ -107,14 +133,110 @@
         .day-info p {
             margin: 0;
             font-size: 0.8rem;
-            color: #888;
+            color: #e87c3e;
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
         .day-action {
-            color: #e87c3e;
+            color: #888;
             font-weight: 800;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            border: 2px dashed #333;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        /* Modal de Configuración de Días */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-box {
+            background-color: #1a1a1a;
+            border: 1px solid #e87c3e;
+            border-radius: 16px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .day-config-row {
+            background-color: #050505;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .day-config-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #e87c3e;
+            cursor: pointer;
+        }
+
+        .day-config-header input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #e87c3e;
+            cursor: pointer;
+        }
+
+        .form-control {
+            width: 100%;
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus { outline: none; border-color: #e87c3e; }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-cancel, .btn-save {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .btn-cancel { background-color: #2a2a2a; color: #ccc; }
+        .btn-save { background-color: #e87c3e; color: #050505; }
     </style>
 </head>
 <body>
@@ -128,68 +250,186 @@
             <button class="logout-btn" onclick="logout()">Cambiar Perfil</button>
         </div>
 
+        <!-- Botón para configurar los días que entrena -->
+        <div class="actions-top-grid">
+            <button class="action-top-btn" onclick="openConfigModal()">⚙️ Configurar Mis Días</button>
+        </div>
+
         <h2 class="section-title">Tu Semana de Entrenamiento</h2>
         
-        <!-- Contenedor de los días -->
+        <!-- Contenedor de los días activos -->
         <div id="weekDaysList">
-            <!-- Los días se inyectan con JavaScript -->
+            <!-- Se inyectan con JavaScript -->
+        </div>
+        <div id="emptyState" class="empty-state" style="display:none;">
+            <p style="margin:0; font-size:0.9rem;">No tienes días de entrenamiento configurados.</p>
+            <p style="margin:5px 0 0 0; font-size:0.8rem; color:#888;">Toca "Configurar Mis Días" para armar tu rutina.</p>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIGURACIÓN DE DÍAS -->
+    <div class="modal-overlay" id="configModal">
+        <div class="modal-box">
+            <h3 style="color:#e87c3e; margin-top:0; text-transform:uppercase; font-size:1.1rem;">Personalizar Tus Días</h3>
+            <p style="font-size:0.75rem; color:#888; margin-bottom:15px;">Selecciona los días que entrenas y ponle un subtítulo a cada uno.</p>
+            
+            <div id="daysConfigContainer">
+                <!-- Se generan dinámicamente los 7 días de la semana -->
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeConfigModal()">Cancelar</button>
+                <button class="btn-save" onclick="saveUserSchedule()">Guardar Cambios</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // 1. VALIDAR QUE HAYA UN USUARIO ACTIVO
+        // 1. VALIDAR USUARIO ACTIVO
         const activeProfileId = localStorage.getItem('active_profile_id');
         if(!activeProfileId) {
-            window.location.href = 'index.html'; // Si alguien entra directo sin perfil, lo regresa al inicio
+            window.location.href = 'index.html';
         }
 
-        // 2. BUSCAR EL NOMBRE DEL USUARIO Y MOSTRARLO
         const profiles = JSON.parse(localStorage.getItem('app_profiles')) || [];
         const activeProfile = profiles.find(p => p.id === activeProfileId);
         
         if(activeProfile) {
             document.getElementById('userName').innerText = activeProfile.name;
         } else {
-            // Si el perfil fue borrado por error
             localStorage.removeItem('active_profile_id');
             window.location.href = 'index.html';
         }
 
-        // 3. FUNCIÓN PARA CAMBIAR DE PERFIL
         function logout() {
             localStorage.removeItem('active_profile_id');
             window.location.href = 'index.html';
         }
 
-        // 4. GENERAR LA LISTA DE DÍAS
-        const days = [
-            { id: 'lunes', name: 'Lunes' },
-            { id: 'martes', name: 'Martes' },
-            { id: 'miercoles', name: 'Miércoles' },
-            { id: 'jueves', name: 'Jueves' },
-            { id: 'viernes', name: 'Viernes' }
+        // Lista completa de días disponibles por defecto
+        const allPossibleDays = [
+            { id: 'lunes', defaultName: 'Lunes' },
+            { id: 'martes', defaultName: 'Martes' },
+            { id: 'miercoles', defaultName: 'Miércoles' },
+            { id: 'jueves', defaultName: 'Jueves' },
+            { id: 'viernes', defaultName: 'Viernes' },
+            { id: 'sabado', defaultName: 'Sábado' },
+            { id: 'domingo', defaultName: 'Domingo' }
         ];
 
-        const weekDaysList = document.getElementById('weekDaysList');
+        // Obtener la configuración guardada de este usuario o crear una por defecto (Lunes a Viernes)
+        function getUserSchedule() {
+            const savedSchedules = JSON.parse(localStorage.getItem('user_schedules')) || {};
+            if (savedSchedules[activeProfileId]) {
+                return savedSchedules[activeProfileId];
+            } else {
+                // Por defecto habilitar Lunes a Viernes con subtítulos genéricos
+                let defaultSched = {};
+                allPossibleDays.forEach(d => {
+                    let activeByDefault = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'].includes(d.id);
+                    defaultSched[d.id] = {
+                        active: activeByDefault,
+                        subtitle: activeByDefault ? `${d.defaultName} - Entrenamiento` : ''
+                    };
+                });
+                return defaultSched;
+            }
+        }
 
-        days.forEach(day => {
-            const card = document.createElement('div');
-            card.className = 'day-card';
-            
-            // Al hacer clic, nos llevará al archivo rutina.html pasándole el día por la URL
-            card.onclick = () => {
-                window.location.href = `rutina.html?dia=${day.id}`;
-            };
-            
-            card.innerHTML = `
-                <div class="day-info">
-                    <h3>${day.name}</h3>
-                    <p>Toca para entrenar o configurar</p>
-                </div>
-                <div class="day-action">→</div>
-            `;
-            weekDaysList.appendChild(card);
-        });
+        // 2. RENDERIZAR LA SEMANA DEL USUARIO EN EL DASHBOARD
+        function renderUserDashboard() {
+            const schedule = getUserSchedule();
+            const weekDaysList = document.getElementById('weekDaysList');
+            const emptyState = document.getElementById('emptyState');
+            weekDaysList.innerHTML = '';
+
+            let activeCount = 0;
+
+            allPossibleDays.forEach(d => {
+                const dayConfig = schedule[d.id];
+                if (dayConfig && dayConfig.active) {
+                    activeCount++;
+                    const card = document.createElement('div');
+                    card.className = 'day-card';
+                    card.onclick = () => {
+                        window.location.href = `rutina.html?dia=${d.id}`;
+                    };
+                    
+                    card.innerHTML = `
+                        <div class="day-info">
+                            <h3>${d.defaultName}</h3>
+                            <p>${dayConfig.subtitle || 'Toca para configurar'}</p>
+                        </div>
+                        <div class="day-action">→</div>
+                    `;
+                    weekDaysList.appendChild(card);
+                }
+            });
+
+            if (activeCount === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+            }
+        }
+
+        // 3. FUNCIONES DEL MODAL DE CONFIGURACIÓN
+        function openConfigModal() {
+            const schedule = getUserSchedule();
+            const container = document.getElementById('daysConfigContainer');
+            container.innerHTML = '';
+
+            allPossibleDays.forEach(d => {
+                const dayConfig = schedule[d.id] || { active: false, subtitle: '' };
+                
+                const row = document.createElement('div');
+                row.className = 'day-config-row';
+                row.innerHTML = `
+                    <label class="day-config-header">
+                        <input type="checkbox" id="chk_${d.id}" ${dayConfig.active ? 'checked' : ''} onchange="toggleDayInput('${d.id}')">
+                        ${d.defaultName}
+                    </label>
+                    <input type="text" id="sub_${d.id}" class="form-control" placeholder="Ej. Upper Body, Natación..." value="${dayConfig.subtitle}" ${dayConfig.active ? '' : 'disabled'}>
+                `;
+                container.appendChild(row);
+            });
+
+            document.getElementById('configModal').style.display = 'flex';
+        }
+
+        function toggleDayInput(dayId) {
+            const isChecked = document.getElementById(`chk_${dayId}`).checked;
+            const inputSub = document.getElementById(`sub_${dayId}`);
+            inputSub.disabled = !isChecked;
+            if(isChecked && !inputSub.value) {
+                const dayObj = allPossibleDays.find(d => d.id === dayId);
+                inputSub.value = `${dayObj.defaultName} - Rutina`;
+            }
+        }
+
+        function closeConfigModal() {
+            document.getElementById('configModal').style.display = 'none';
+        }
+
+        function saveUserSchedule() {
+            const schedule = {};
+            allPossibleDays.forEach(d => {
+                const active = document.getElementById(`chk_${d.id}`).checked;
+                const subtitle = document.getElementById(`sub_${d.id}`).value.trim();
+                schedule[d.id] = { active, subtitle };
+            });
+
+            // Guardar en localStorage asociado al usuario
+            const savedSchedules = JSON.parse(localStorage.getItem('user_schedules')) || {};
+            savedSchedules[activeProfileId] = schedule;
+            localStorage.setItem('user_schedules', JSON.stringify(savedSchedules));
+
+            closeConfigModal();
+            renderUserDashboard();
+        }
+
+        // Iniciar al cargar
+        renderUserDashboard();
     </script>
 </body>
 </html>
