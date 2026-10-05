@@ -38,7 +38,7 @@
 
         .header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             padding: 15px 0;
             border-bottom: 1px solid #222;
         }
@@ -60,6 +60,38 @@
             text-transform: uppercase;
         }
 
+        /* BANNER DE RACHA */
+        .streak-banner {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a1a10 100%);
+            border: 1px solid #e87c3e;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(232, 124, 62, 0.15);
+        }
+
+        .streak-info span {
+            font-size: 0.7rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+        }
+
+        .streak-info h4 {
+            margin: 2px 0 0 0;
+            font-size: 1rem;
+            color: #e87c3e;
+            font-weight: 800;
+        }
+
+        .streak-badge {
+            font-size: 1.5rem;
+        }
+
         .action-buttons-grid {
             display: flex;
             gap: 10px;
@@ -72,14 +104,14 @@
             border-radius: 12px;
             font-family: 'Montserrat', sans-serif;
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             cursor: pointer;
             border: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             transition: transform 0.2s;
         }
 
@@ -556,6 +588,41 @@
             background-color: #383838;
             border-color: #e87c3e;
         }
+
+        /* TABLA COMPARATIVA DE PROGRESO DE PESOS */
+        .progress-table-container {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 25px;
+        }
+        .progress-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            text-align: left;
+        }
+        .progress-table th {
+            color: #e87c3e;
+            border-bottom: 1px solid #444;
+            padding-bottom: 8px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+        .progress-table td {
+            padding: 10px 0;
+            border-bottom: 1px solid #222;
+            color: #ccc;
+        }
+        .diff-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
     </style>
 </head>
 <body>
@@ -566,6 +633,15 @@
         <div class="header">
             <h2 id="profileHeaderName">USUARIO</h2>
             <h1 id="dayHeaderTitle">RUTINA</h1>
+        </div>
+
+        <!-- BANNER DE RACHAS (STREAKS) -->
+        <div class="streak-banner">
+            <div class="streak-info">
+                <span>Racha de Entrenamiento</span>
+                <h4 id="streakText">¡0 días seguidos!</h4>
+            </div>
+            <div class="streak-badge">🔥</div>
         </div>
 
         <div class="action-buttons-grid">
@@ -608,6 +684,29 @@
                 <p style="margin:5px 0 0 0; font-size:0.8rem; color:#888;">Toca el botón "+ Ejercicio" para crear uno.</p>
             </div>
         </div>
+
+        <!-- SECCIÓN DE TABLA COMPARATIVA DE PROGRESO (INICIAL VS ACTUAL) -->
+        <div class="progress-table-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin: 0; font-size: 0.9rem; color: #e87c3e; text-transform: uppercase;">📈 Tabla de Progreso (Cargas)</h3>
+                <button class="btn-small" onclick="openProgressModal()" style="color: #e87c3e;">+ Actualizar Peso</button>
+            </div>
+            <table class="progress-table">
+                <thead>
+                    <tr>
+                        <th>Ejercicio</th>
+                        <th>Inicio</th>
+                        <th>Actual</th>
+                        <th>Progreso</th>
+                    </tr>
+                </thead>
+                <tbody id="progressTableBody">
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #666; font-size: 0.8rem;">Sin registros de progreso aún.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- BURBUJA FLOTANTE DEL TEMPORIZADOR -->
@@ -629,7 +728,6 @@
             <button class="timer-tab" id="tabRestBtn" onclick="switchTimerTab('rest')">Descanso Rápido</button>
         </div>
 
-        <!-- SECCIÓN MODO HIIT -->
         <div id="hiitSection">
             <div class="timer-inputs-grid" id="timerConfigSection">
                 <div class="timer-row">
@@ -667,7 +765,6 @@
             </div>
         </div>
 
-        <!-- SECCIÓN MODO DESCANSO RÁPIDO -->
         <div id="restSection" style="display: none;">
             <div class="timer-inputs-grid">
                 <div class="timer-row">
@@ -689,7 +786,6 @@
             </div>
         </div>
 
-        <!-- CONTROLES COMUNES -->
         <div class="timer-actions">
             <button class="timer-btn btn-main" id="mainActionBtn" onclick="startPauseTimer()" title="Iniciar / Pausar">
                 <svg id="mainBtnIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -768,6 +864,28 @@
         </div>
     </div>
 
+    <!-- MODAL ACTUALIZAR PROGRESO DE PESO -->
+    <div class="modal-overlay" id="progressModal">
+        <div class="modal-box">
+            <h3 style="color:#e87c3e; margin-top:0;">Actualizar Carga</h3>
+            
+            <div class="form-group">
+                <label>Nombre del Ejercicio</label>
+                <input type="text" id="progExerciseName" class="form-control" placeholder="Ej. Press de Banca">
+            </div>
+
+            <div class="form-group">
+                <label>Nuevo Peso Actual (KG)</label>
+                <input type="number" id="progWeight" class="form-control" placeholder="Ej. 80">
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeProgressModal()">Cancelar</button>
+                <button class="btn-save" onclick="saveProgressRecord()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 1. CONFIGURACIÓN E INDEXEDDB
         const urlParams = new URLSearchParams(window.location.search);
@@ -785,23 +903,51 @@
         }
         document.getElementById('dayHeaderTitle').innerText = currentDay.toUpperCase();
 
-        let db;
-        const request = indexedDB.open("FitnessDB", 1);
+        // Sistema de Rachas (Streaks)
+        function updateStreak() {
+            const streakData = JSON.parse(localStorage.getItem('user_streaks')) || {};
+            const userStreak = streakData[activeProfileId] || { count: 0, lastDate: '' };
+            
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const yesterdayStr = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
 
-        request.onerror = function(e) {
-            console.error("Error al abrir IndexedDB", e);
-        };
+            if (userStreak.lastDate === todayStr) {
+                // Ya entrenó hoy
+            } else if (userStreak.lastDate === yesterdayStr) {
+                userStreak.count += 1;
+                userStreak.lastDate = todayStr;
+            } else if (!userStreak.lastDate) {
+                userStreak.count = 1;
+                userStreak.lastDate = todayStr;
+            } else {
+                userStreak.count = 1;
+                userStreak.lastDate = todayStr;
+            }
+
+            streakData[activeProfileId] = userStreak;
+            localStorage.setItem('user_streaks', JSON.stringify(streakData));
+            
+            document.getElementById('streakText').innerText = `¡${userStreak.count} ${userStreak.count === 1 ? 'día seguido' : 'días seguidos'}!`;
+        }
+        updateStreak();
+
+        let db;
+        const request = indexedDB.open("FitnessDB", 3); // Versión 3 para la tabla comparativa
 
         request.onupgradeneeded = function(e) {
             db = e.target.result;
             if (!db.objectStoreNames.contains("exercises")) {
                 db.createObjectStore("exercises", { keyPath: "id" });
             }
+            if (!db.objectStoreNames.contains("progress")) {
+                db.createObjectStore("progress", { keyPath: "exercise" }); // Clave por ejercicio para mantener Inicial y Actual
+            }
         };
 
         request.onsuccess = function(e) {
             db = e.target.result;
             loadExercises();
+            loadProgressRecords();
         };
 
         let currentExercisesList = [];
@@ -886,7 +1032,6 @@
         }
 
         let currentImageBase64 = null;
-
         const imageInputEl = document.getElementById('exImageInput');
         if(imageInputEl) {
             imageInputEl.addEventListener('change', function(e) {
@@ -1032,6 +1177,93 @@
             }
         }
 
+        // GESTIÓN DE TABLA DE PROGRESO (INICIAL VS ACTUAL)
+        function openProgressModal() {
+            document.getElementById('progExerciseName').value = '';
+            document.getElementById('progWeight').value = '';
+            document.getElementById('progressModal').style.display = 'flex';
+        }
+
+        function closeProgressModal() {
+            document.getElementById('progressModal').style.display = 'none';
+        }
+
+        function saveProgressRecord() {
+            const exerciseName = document.getElementById('progExerciseName').value.trim();
+            const weightVal = parseFloat(document.getElementById('progWeight').value);
+
+            if (!exerciseName || isNaN(weightVal)) {
+                alert("Ingresa un nombre de ejercicio y un peso válido.");
+                return;
+            }
+
+            const tx = db.transaction("progress", "readwrite");
+            const store = tx.objectStore("progress");
+            const getReq = store.get(exerciseName);
+
+            getReq.onsuccess = function() {
+                const existingRecord = getReq.result;
+                let initialWeight = weightVal;
+
+                if (existingRecord) {
+                    initialWeight = existingRecord.initial; // Mantiene el peso con el que empezó
+                }
+
+                const updatedRecord = {
+                    exercise: exerciseName,
+                    userId: activeProfileId,
+                    initial: initialWeight,
+                    current: weightVal
+                };
+
+                store.put(updatedRecord);
+
+                tx.oncomplete = function() {
+                    closeProgressModal();
+                    loadProgressRecords();
+                };
+            };
+        }
+
+        function loadProgressRecords() {
+            if (!db) return;
+            try {
+                const tx = db.transaction("progress", "readonly");
+                const store = tx.objectStore("progress");
+                const req = store.getAll();
+
+                req.onsuccess = function() {
+                    const allRecords = req.result || [];
+                    const userRecords = allRecords.filter(r => r.userId === activeProfileId);
+                    const tbody = document.getElementById('progressTableBody');
+                    tbody.innerHTML = '';
+
+                    if (userRecords.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #666; font-size: 0.8rem;">Sin registros de progreso aún.</td></tr>';
+                        return;
+                    }
+
+                    userRecords.forEach(r => {
+                        const diff = r.current - r.initial;
+                        let diffText = diff > 0 ? `+${diff} KG` : `${diff} KG`;
+                        if (diff === 0) diffText = 'Sin cambios';
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${r.exercise}</strong></td>
+                            <td>${r.initial} KG</td>
+                            <td style="color: #e87c3e; font-weight:700;">${r.current} KG</td>
+                            <td><span class="diff-tag">${diffText}</span></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                };
+            } catch (err) {
+                console.error("Error cargando progreso:", err);
+            }
+        }
+
+        // MODO ENTRENADOR
         let trainerIndex = 0;
 
         function startTrainerMode() {
@@ -1116,9 +1348,6 @@
         let timerInterval = null, isRunning = false, isPaused = false;
         let currentPhase = 'prep', timeLeft = 10, currentRound = 1, maxRounds = 3, workDuration = 45, restDuration = 15;
         let restTimeLeft = 60;
-
-        const playSvgHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-        const pauseSvgHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
 
         function toggleTimerModal() {
             const modal = document.getElementById('timer-modal');
