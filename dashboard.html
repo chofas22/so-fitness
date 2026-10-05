@@ -326,18 +326,18 @@
             { id: 'domingo', defaultName: 'Domingo' }
         ];
 
-        // Obtener la configuración guardada de este usuario o crear una por defecto (Lunes a Viernes)
+        // Obtener la configuración guardada de este usuario o crear una por defecto (Todo vacío)
         function getUserSchedule() {
             const savedSchedules = JSON.parse(localStorage.getItem('user_schedules')) || {};
             if (savedSchedules[activeProfileId]) {
                 return savedSchedules[activeProfileId];
             } else {
                 let defaultSched = {};
+                // Ahora todos los días nacen inactivos por defecto para que el usuario los configure
                 allPossibleDays.forEach(d => {
-                    let activeByDefault = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'].includes(d.id);
                     defaultSched[d.id] = {
-                        active: activeByDefault,
-                        subtitle: activeByDefault ? `${d.defaultName} - Entrenamiento` : ''
+                        active: false,
+                        subtitle: ''
                     };
                 });
                 return defaultSched;
