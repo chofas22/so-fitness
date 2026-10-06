@@ -256,7 +256,7 @@
             <div class="timer-display"><div class="timer-status" id="timerStatusText">Listo</div><div class="timer-clock" id="timerClockDisplay">00:45</div><div class="timer-rounds-info" id="timerRoundsDisplay">Ronda 1 de 3</div></div>
         </div>
         <div id="restSection" style="display: none;">
-            <div class="timer-inputs-grid"><div class="timer-row"><label>Tiempo Descanso</label><div class="timer-input-wrapper"><input type="number" id="quickRestTime" value="60" min="1"><select id="quickRestUnit"><option value="sec" selected>seg</option><option value="min">min</option></select></div></div></div>
+            <div class="timer-inputs-grid"><div class="timer-row"><label>Tiempo Descanso</label><div class="timer-input-wrapper"><input type="number" id="quickRestTime" value="60" min="1" id="quickRestInput"><select id="quickRestUnit" onchange="onQuickRestUnitChange()"><option value="sec" selected>seg</option><option value="min">min</option></select></div></div></div>
             <div class="timer-display"><div class="timer-status" id="quickStatusText">Descanso</div><div class="timer-clock" id="quickClockDisplay">01:00</div><div class="timer-rounds-info" id="quickSubText">Listo</div></div>
         </div>
         <div class="timer-actions"><button class="timer-btn btn-main" id="mainActionBtn"><svg id="mainBtnIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><button class="timer-btn btn-reset-icon" id="btnResetTimer"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button></div>
@@ -277,7 +277,7 @@
                 <div class="input-group-flex" style="margin-bottom: 8px;"><input type="number" id="exSeries" class="form-control" placeholder="Series (Ej. 3)"><input type="number" id="exReps" class="form-control" placeholder="Reps (Ej. 12)"></div>
                 <div class="time-input-group">
                     <input type="number" id="exRepsRest" class="form-control" placeholder="Descanso">
-                    <select id="exRepsRestUnit" class="form-control" style="width: 80px;"><option value="s">seg</option><option value="m">min</option></select>
+                    <select id="exRepsRestUnit" class="form-control" style="width: 80px;" onchange="onModalUnitChange('exRepsRest', this)"><option value="s">seg</option><option value="m">min</option></select>
                 </div>
             </div>
 
@@ -286,11 +286,11 @@
                 <div class="input-group-flex" style="margin-bottom: 8px;">
                     <div class="time-input-group">
                         <input type="number" id="exWorkTime" class="form-control" placeholder="Trabajo">
-                        <select id="exWorkUnit" class="form-control" style="width: 65px; padding: 5px;"><option value="s">seg</option><option value="m">min</option></select>
+                        <select id="exWorkUnit" class="form-control" style="width: 65px; padding: 5px;" onchange="onModalUnitChange('exWorkTime', this)"><option value="s">seg</option><option value="m">min</option></select>
                     </div>
                     <div class="time-input-group">
                         <input type="number" id="exRestTime" class="form-control" placeholder="Descanso">
-                        <select id="exRestUnit" class="form-control" style="width: 65px; padding: 5px;"><option value="s">seg</option><option value="m">min</option></select>
+                        <select id="exRestUnit" class="form-control" style="width: 65px; padding: 5px;" onchange="onModalUnitChange('exRestTime', this)"><option value="s">seg</option><option value="m">min</option></select>
                     </div>
                 </div>
                 <input type="number" id="exRounds" class="form-control" placeholder="Rondas (Ej. 3)">
@@ -301,7 +301,7 @@
                 <div class="input-group-flex" style="margin-bottom: 8px;"><input type="text" id="exDistance" class="form-control" placeholder="Distancia (Ej. 100m, 5km)"><input type="number" id="exLaps" class="form-control" placeholder="Vueltas (Ej. 4)"></div>
                 <div class="time-input-group">
                     <input type="number" id="exDistRest" class="form-control" placeholder="Descanso">
-                    <select id="exDistRestUnit" class="form-control" style="width: 80px;"><option value="s">seg</option><option value="m">min</option></select>
+                    <select id="exDistRestUnit" class="form-control" style="width: 80px;" onchange="onModalUnitChange('exDistRest', this)"><option value="s">seg</option><option value="m">min</option></select>
                 </div>
             </div>
 
@@ -368,7 +368,7 @@
             });
         }
 
-        // LÓGICA MODAL EJERCICIOS
+        // LÓGICA MODAL EJERCICIOS Y CORRECCIÓN DE UNIDADES (MIN / SEG)
         let currentImageBase64 = null;
         document.getElementById('exImageInput')?.addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { currentImageBase64 = event.target.result; }; reader.readAsDataURL(file); } });
         
@@ -379,11 +379,38 @@
             document.getElementById('distanceInputs').style.display = (type === 'distance') ? 'block' : 'none'; 
         }
 
+        // Conversión inteligente automática de valores al cambiar seg <-> min en los inputs
+        function onModalUnitChange(inputId, selectEl) {
+            const input = document.getElementById(inputId);
+            let val = parseInt(input.value);
+            if(isNaN(val)) return;
+            if(selectEl.value === 'm') {
+                // De segundos a minutos (ej. 60s -> 1m, si no es divisible exacto lo dejamos redondeado o limpio)
+                input.value = Math.max(1, Math.round(val / 60));
+            } else {
+                // De minutos a segundos (ej. 1m -> 60s)
+                input.value = val * 60;
+            }
+        }
+
+        function onQuickRestUnitChange() {
+            const input = document.getElementById('quickRestTime');
+            const select = document.getElementById('quickRestUnit');
+            let val = parseInt(input.value);
+            if(isNaN(val)) return;
+            if(select.value === 'min') {
+                input.value = Math.max(1, Math.round(val / 60));
+            } else {
+                input.value = val * 60;
+            }
+            updateRestDisplayInit();
+        }
+
         function openExerciseModal() { 
             document.getElementById('exId').value = ''; document.getElementById('exTitle').value = ''; document.getElementById('exSubtitle').value = ''; document.getElementById('exInstructions').value = ''; if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = ''; 
-            document.getElementById('exSeries').value = ''; document.getElementById('exReps').value = ''; document.getElementById('exRepsRest').value = ''; document.getElementById('exRepsRestUnit').value = 's';
-            document.getElementById('exWorkTime').value = ''; document.getElementById('exWorkUnit').value = 's'; document.getElementById('exRestTime').value = ''; document.getElementById('exRestUnit').value = 's'; document.getElementById('exRounds').value = ''; 
-            document.getElementById('exDistance').value = ''; document.getElementById('exLaps').value = ''; document.getElementById('exDistRest').value = ''; document.getElementById('exDistRestUnit').value = 's';
+            document.getElementById('exSeries').value = ''; document.getElementById('exReps').value = ''; document.getElementById('exRepsRest').value = '60'; document.getElementById('exRepsRestUnit').value = 's';
+            document.getElementById('exWorkTime').value = '45'; document.getElementById('exWorkUnit').value = 's'; document.getElementById('exRestTime').value = '15'; document.getElementById('exRestUnit').value = 's'; document.getElementById('exRounds').value = '3'; 
+            document.getElementById('exDistance').value = ''; document.getElementById('exLaps').value = ''; document.getElementById('exDistRest').value = '30'; document.getElementById('exDistRestUnit').value = 's';
             document.getElementById('exType').value = 'reps'; document.getElementById('exTrackProgress').checked = false; toggleTypeInputs(); currentImageBase64 = null; document.getElementById('modalFormTitle').innerText = "Agregar Ejercicio"; document.getElementById('exerciseModal').style.display = 'flex'; 
         }
         function closeExerciseModal() { document.getElementById('exerciseModal').style.display = 'none'; }
@@ -434,13 +461,13 @@
         }
         function deleteExercise(id) { if (confirm("¿Seguro de que deseas eliminar este ejercicio?")) { const tx = db.transaction("exercises", "readwrite"); tx.objectStore("exercises").delete(id); tx.oncomplete = function() { loadExercises(); }; } }
 
-        // MODO ENTRENADOR UTILIDADES DE TIEMPO
+        // MODO ENTRENADOR Y CORRECCIÓN DE SEGUNDO PLANO (TIMESTAMPS ABSOLUTOS)
         function parseTimeStringToSeconds(str) {
             if (!str) return 0;
             str = str.toLowerCase().trim();
-            if (str.includes('m')) return parseInt(str) * 60;
-            if (str.includes(':')) { const parts = str.split(':'); return (parseInt(parts[0]) * 60) + parseInt(parts[1]); }
-            return parseInt(str) || 0;
+            let num = parseInt(str) || 0;
+            if (str.includes('m')) return num * 60;
+            return num; // Por defecto segundos
         }
         function formatSecondsToMS(totalSeconds) { const m = Math.floor(totalSeconds / 60); const s = totalSeconds % 60; return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`; }
         function formatMSMToStopwatch(ms) { const date = new Date(ms); const m = String(date.getUTCMinutes()).padStart(2, '0'); const s = String(date.getUTCSeconds()).padStart(2, '0'); const msStr = String(Math.floor(date.getUTCMilliseconds() / 10)).padStart(2, '0'); return `${m}:${s}.${msStr}`; }
@@ -465,37 +492,145 @@
             if (ex.type === 'reps') {
                 const restSecs = parseTimeStringToSeconds(ex.repsRest) || 60;
                 timerArea.innerHTML = `<div class="inline-timer-status" id="inlineStatus">Termina tu serie y toma un respiro</div><div class="inline-timer-display" id="inlineClock">${formatSecondsToMS(restSecs)}</div><div class="inline-btn-group"><button class="inline-btn inline-btn-main" id="btnInlineAction">${playSvg} Iniciar Descanso</button></div>`;
-                let isResting = false; let timeLeft = restSecs;
+                let isResting = false; let targetTimestamp = 0;
                 document.getElementById('btnInlineAction').onclick = function() {
-                    if(!isResting) { isResting = true; timeLeft = restSecs; playBeepHigh(); this.innerHTML = `${pauseSvg} Omitir Descanso`; this.className = "inline-btn inline-btn-sec"; document.getElementById('inlineStatus').innerText = "RECUPERACIÓN"; inlineTimerInterval = setInterval(() => { timeLeft--; document.getElementById('inlineClock').innerText = formatSecondsToMS(timeLeft); if(timeLeft <= 3 && timeLeft > 0) playBeepShort(); if(timeLeft <= 0) { clearInterval(inlineTimerInterval); playDoubleBeep(); isResting = false; document.getElementById('inlineClock').innerText = formatSecondsToMS(restSecs); document.getElementById('inlineStatus').innerText = "¡LISTO PARA OTRA SERIE!"; this.innerHTML = `${playSvg} Iniciar Descanso`; this.className = "inline-btn inline-btn-main"; } }, 1000); } else { clearInterval(inlineTimerInterval); isResting = false; document.getElementById('inlineClock').innerText = formatSecondsToMS(restSecs); document.getElementById('inlineStatus').innerText = "Descanso Omitido"; this.innerHTML = `${playSvg} Iniciar Descanso`; this.className = "inline-btn inline-btn-main"; }
+                    if(!isResting) { 
+                        isResting = true; playBeepHigh(); 
+                        targetTimestamp = Date.now() + (restSecs * 1000);
+                        this.innerHTML = `${pauseSvg} Omitir Descanso`; this.className = "inline-btn inline-btn-sec"; document.getElementById('inlineStatus').innerText = "RECUPERACIÓN"; 
+                        
+                        inlineTimerInterval = setInterval(() => { 
+                            const remainingMs = targetTimestamp - Date.now();
+                            const timeLeft = Math.max(0, Math.ceil(remainingMs / 1000));
+                            document.getElementById('inlineClock').innerText = formatSecondsToMS(timeLeft); 
+                            if(timeLeft <= 3 && timeLeft > 0) playBeepShort(); 
+                            if(timeLeft <= 0) { 
+                                clearInterval(inlineTimerInterval); playDoubleBeep(); 
+                                isResting = false; document.getElementById('inlineClock').innerText = formatSecondsToMS(restSecs); 
+                                document.getElementById('inlineStatus').innerText = "¡LISTO PARA OTRA SERIE!"; 
+                                this.innerHTML = `${playSvg} Iniciar Descanso`; this.className = "inline-btn inline-btn-main"; 
+                            } 
+                        }, 200); 
+                    } else { 
+                        clearInterval(inlineTimerInterval); isResting = false; 
+                        document.getElementById('inlineClock').innerText = formatSecondsToMS(restSecs); 
+                        document.getElementById('inlineStatus').innerText = "Descanso Omitido"; 
+                        this.innerHTML = `${playSvg} Iniciar Descanso`; this.className = "inline-btn inline-btn-main"; 
+                    }
                 };
             } 
             else if (ex.type === 'time') {
                 const workSecs = parseTimeStringToSeconds(ex.workTime) || 45; const restSecs = parseTimeStringToSeconds(ex.restTime) || 15; const totalRounds = parseInt(ex.rounds) || 3;
                 timerArea.innerHTML = `<div class="inline-timer-status" id="inlineStatus">LISTO PARA INICIAR CIRCUITO</div><div class="inline-timer-display" id="inlineClock">${formatSecondsToMS(workSecs)}</div><div class="inline-timer-sub" id="inlineSub">Ronda 1 de ${totalRounds}</div><div class="inline-btn-group"><button class="inline-btn inline-btn-main" id="btnInlineAction">${playSvg} Empezar</button><button class="inline-btn inline-btn-sec" id="btnInlineReset">${resetSvg}</button></div>`;
-                let isRunning = false; let phase = 'prep'; let timeLeft = 5; let currentRnd = 1;
-                function updateTimeUI() { document.getElementById('inlineClock').innerText = formatSecondsToMS(timeLeft); document.getElementById('inlineSub').innerText = `Ronda ${currentRnd} de ${totalRounds}`; const st = document.getElementById('inlineStatus'); if(phase === 'prep') { st.innerText = "⏳ PREPARACIÓN"; st.style.color = "#888"; } else if(phase === 'work') { st.innerText = "🔥 ¡A TRABAJAR!"; st.style.color = "var(--primary-color)"; } else if(phase === 'rest') { st.innerText = "💧 DESCANSO"; st.style.color = "#00bcd4"; } else if(phase === 'done') { st.innerText = "🎉 ¡COMPLETADO!"; st.style.color = "#4CAF50"; } }
-                document.getElementById('btnInlineAction').onclick = function() { if(!isRunning) { isRunning = true; this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); inlineTimerInterval = setInterval(() => { timeLeft--; if(timeLeft <= 3 && timeLeft > 0) playBeepShort(); if(timeLeft <= 0) { if(phase === 'prep') { phase = 'work'; timeLeft = workSecs; playDoubleBeep(); } else if (phase === 'work') { if(restSecs > 0) { phase = 'rest'; timeLeft = restSecs; playBeepHigh(); } else { advanceRound(); } } else if (phase === 'rest') { advanceRound(); } } updateTimeUI(); }, 1000); } else { isRunning = false; this.innerHTML = `${playSvg} Reanudar`; clearInterval(inlineTimerInterval); } };
-                function advanceRound() { if(currentRnd < totalRounds) { currentRnd++; phase = 'work'; timeLeft = workSecs; playDoubleBeep(); } else { phase = 'done'; isRunning = false; timeLeft = 0; clearInterval(inlineTimerInterval); playDoubleBeep(); document.getElementById('btnInlineAction').innerHTML = "Finalizado"; document.getElementById('btnInlineAction').disabled = true; } }
-                document.getElementById('btnInlineReset').onclick = function() { clearInterval(inlineTimerInterval); isRunning = false; phase = 'prep'; timeLeft = 5; currentRnd = 1; updateTimeUI(); document.getElementById('btnInlineAction').innerHTML = `${playSvg} Empezar`; document.getElementById('btnInlineAction').disabled = false; };
+                let isRunning = false; let phase = 'prep'; let targetTimestamp = 0; let currentRnd = 1; let currentPhaseDuration = 5;
+
+                function updateTimeUI(timeLeft) { 
+                    document.getElementById('inlineClock').innerText = formatSecondsToMS(timeLeft); 
+                    document.getElementById('inlineSub').innerText = `Ronda ${currentRnd} de ${totalRounds}`; 
+                    const st = document.getElementById('inlineStatus'); 
+                    if(phase === 'prep') { st.innerText = "⏳ PREPARACIÓN"; st.style.color = "#888"; } 
+                    else if(phase === 'work') { st.innerText = "🔥 ¡A TRABAJAR!"; st.style.color = "var(--primary-color)"; } 
+                    else if(phase === 'rest') { st.innerText = "💧 DESCANSO"; st.style.color = "#00bcd4"; } 
+                    else if(phase === 'done') { st.innerText = "🎉 ¡COMPLETADO!"; st.style.color = "#4CAF50"; } 
+                }
+
+                document.getElementById('btnInlineAction').onclick = function() { 
+                    if(!isRunning) { 
+                        isRunning = true; this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); 
+                        if(!targetTimestamp) {
+                            phase = 'prep'; currentPhaseDuration = 5; targetTimestamp = Date.now() + (5 * 1000);
+                        }
+                        
+                        inlineTimerInterval = setInterval(() => { 
+                            const remainingMs = targetTimestamp - Date.now();
+                            const timeLeft = Math.max(0, Math.ceil(remainingMs / 1000));
+
+                            if(timeLeft <= 3 && timeLeft > 0) playBeepShort(); 
+                            if(timeLeft <= 0) { 
+                                if(phase === 'prep') { 
+                                    phase = 'work'; currentPhaseDuration = workSecs; targetTimestamp = Date.now() + (workSecs * 1000); playDoubleBeep(); 
+                                } else if (phase === 'work') { 
+                                    if(restSecs > 0) { 
+                                        phase = 'rest'; currentPhaseDuration = restSecs; targetTimestamp = Date.now() + (restSecs * 1000); playBeepHigh(); 
+                                    } else { advanceRound(); } 
+                                } else if (phase === 'rest') { 
+                                    advanceRound(); 
+                                } 
+                            }
+                            updateTimeUI(Math.max(0, Math.ceil((targetTimestamp - Date.now()) / 1000))); 
+                        }, 200); 
+                    } else { 
+                        isRunning = false; this.innerHTML = `${playSvg} Reanudar`; clearInterval(inlineTimerInterval); 
+                    } 
+                };
+
+                function advanceRound() { 
+                    if(currentRnd < totalRounds) { 
+                        currentRnd++; phase = 'work'; currentPhaseDuration = workSecs; targetTimestamp = Date.now() + (workSecs * 1000); playDoubleBeep(); 
+                    } else { 
+                        phase = 'done'; isRunning = false; clearInterval(inlineTimerInterval); playDoubleBeep(); 
+                        document.getElementById('btnInlineAction').innerHTML = "Finalizado"; document.getElementById('btnInlineAction').disabled = true; 
+                    } 
+                }
+
+                document.getElementById('btnInlineReset').onclick = function() { 
+                    clearInterval(inlineTimerInterval); isRunning = false; phase = 'prep'; targetTimestamp = 0; currentRnd = 1; updateTimeUI(5); 
+                    document.getElementById('btnInlineAction').innerHTML = `${playSvg} Empezar`; document.getElementById('btnInlineAction').disabled = false; 
+                };
             }
             else if (ex.type === 'distance') {
                 const restSecs = parseTimeStringToSeconds(ex.distRest) || 30;
                 timerArea.innerHTML = `<div class="inline-timer-status" id="inlineStatus">CRONÓMETRO DE RECORRIDO</div><div class="inline-timer-display" id="inlineClock" style="font-family: monospace;">00:00.00</div><div class="inline-btn-group" style="margin-bottom: 10px;"><button class="inline-btn inline-btn-main" id="btnInlineAction">${playSvg} Iniciar</button><button class="inline-btn inline-btn-sec" id="btnInlineReset">${resetSvg}</button></div><div class="inline-btn-group" style="border-top: 1px solid #333; padding-top:15px; flex-wrap: wrap;"><button class="inline-btn inline-btn-log" id="btnLogLap">+ Registrar Tiempo</button><button class="inline-btn inline-btn-sec" id="btnStartRest" style="flex:2;">Tomar Descanso (${restSecs}s)</button></div>`;
-                let startTime = 0; let elapsedTime = 0; let isRunning = false;
-                function updateStopwatchUI() { document.getElementById('inlineClock').innerText = formatMSMToStopwatch(elapsedTime); }
-                document.getElementById('btnInlineAction').onclick = function() { if(!isRunning) { isRunning = true; startTime = Date.now() - elapsedTime; this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); document.getElementById('inlineStatus').innerText = "EN MOVIMIENTO..."; inlineStopwatchInterval = setInterval(() => { elapsedTime = Date.now() - startTime; updateStopwatchUI(); }, 10); } else { isRunning = false; clearInterval(inlineStopwatchInterval); this.innerHTML = `${playSvg} Reanudar`; document.getElementById('inlineStatus').innerText = "PAUSADO"; } };
-                document.getElementById('btnInlineReset').onclick = function() { isRunning = false; clearInterval(inlineStopwatchInterval); elapsedTime = 0; updateStopwatchUI(); document.getElementById('btnInlineAction').innerHTML = `${playSvg} Iniciar`; document.getElementById('inlineStatus').innerText = "CRONÓMETRO DE RECORRIDO"; };
+                let startTime = 0; let accumulatedTime = 0; let isRunning = false;
+                
+                function updateStopwatchUI() { document.getElementById('inlineClock').innerText = formatMSMToStopwatch(accumulatedTime); }
+                
+                document.getElementById('btnInlineAction').onclick = function() { 
+                    if(!isRunning) { 
+                        isRunning = true; startTime = Date.now() - accumulatedTime; 
+                        this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); document.getElementById('inlineStatus').innerText = "EN MOVIMIENTO..."; 
+                        inlineStopwatchInterval = setInterval(() => { accumulatedTime = Date.now() - startTime; updateStopwatchUI(); }, 50); 
+                    } else { 
+                        isRunning = false; clearInterval(inlineStopwatchInterval); 
+                        this.innerHTML = `${playSvg} Reanudar`; document.getElementById('inlineStatus').innerText = "PAUSADO"; 
+                    } 
+                };
+
+                document.getElementById('btnInlineReset').onclick = function() { 
+                    isRunning = false; clearInterval(inlineStopwatchInterval); accumulatedTime = 0; updateStopwatchUI(); 
+                    document.getElementById('btnInlineAction').innerHTML = `${playSvg} Iniciar`; document.getElementById('inlineStatus').innerText = "CRONÓMETRO DE RECORRIDO"; 
+                };
+
                 document.getElementById('btnLogLap').onclick = function() { let currentDisplay = document.getElementById('inlineClock').innerText; openProgressModal(null, null, ex.title, currentDisplay); };
+                
                 let restRunning = false; let restInterval = null;
-                document.getElementById('btnStartRest').onclick = function() { if(isRunning) document.getElementById('btnInlineAction').click(); if(!restRunning) { restRunning = true; let rTime = restSecs; playBeepHigh(); this.innerText = `Descansando... ${rTime}s`; restInterval = setInterval(() => { rTime--; this.innerText = `Descansando... ${rTime}s`; if(rTime <= 3 && rTime > 0) playBeepShort(); if(rTime <= 0) { clearInterval(restInterval); restRunning = false; playDoubleBeep(); this.innerText = `Tomar Descanso (${restSecs}s)`; alert("¡Descanso terminado!"); } }, 1000); } else { clearInterval(restInterval); restRunning = false; this.innerText = `Tomar Descanso (${restSecs}s)`; } };
+                document.getElementById('btnStartRest').onclick = function() { 
+                    if(isRunning) document.getElementById('btnInlineAction').click(); 
+                    if(!restRunning) { 
+                        restRunning = true; playBeepHigh(); 
+                        let targetRestTimestamp = Date.now() + (restSecs * 1000);
+                        this.innerText = `Descansando... ${restSecs}s`; 
+                        
+                        restInterval = setInterval(() => { 
+                            let rTime = Math.max(0, Math.ceil((targetRestTimestamp - Date.now()) / 1000));
+                            this.innerText = `Descansando... ${rTime}s`; 
+                            if(rTime <= 3 && rTime > 0) playBeepShort(); 
+                            if(rTime <= 0) { 
+                                clearInterval(restInterval); restRunning = false; playDoubleBeep(); 
+                                this.innerText = `Tomar Descanso (${restSecs}s)`; alert("¡Descanso terminado!"); 
+                            } 
+                        }, 200); 
+                    } else { 
+                        clearInterval(restInterval); restRunning = false; this.innerText = `Tomar Descanso (${restSecs}s)`; 
+                    } 
+                };
             }
         }
 
         function nextTrainerStep() { if (trainerIndex < currentExercisesList.length - 1) { trainerIndex++; renderTrainerStep(); } else { alert("¡Felicidades! Has completado el entrenamiento."); exitTrainerMode(); } }
         function prevTrainerStep() { if (trainerIndex > 0) { trainerIndex--; renderTrainerStep(); } }
 
-        // --- SISTEMA DE PROGRESO ---
+        // --- SISTEMA DE PROGRESO Y GRÁFICAS ---
         let globalProgressRecords = []; let currentChartExercise = '';
         function openProgressModal(editIndex = null, existingData = null, defaultExercise = null, defaultVal = '') {
             const select = document.getElementById('progExerciseSelect'); select.innerHTML = ''; const trackableExercises = allUserExercises.filter(e => e.trackProgress);
@@ -558,17 +693,123 @@
             document.getElementById('btnStartTrainer').addEventListener('click', startTrainerMode); document.getElementById('btnAddExercise').addEventListener('click', openExerciseModal); document.getElementById('btnExitTrainer').addEventListener('click', exitTrainerMode); document.getElementById('btnPrevTrainer').addEventListener('click', prevTrainerStep); document.getElementById('btnNextTrainer').addEventListener('click', nextTrainerStep); document.getElementById('btnOpenProgress').addEventListener('click', () => openProgressModal()); document.getElementById('btnCloseProgressModal').addEventListener('click', closeProgressModal); document.getElementById('btnSaveProgress').addEventListener('click', saveProgressRecord); document.getElementById('timer-bubble').addEventListener('click', toggleTimerModal); document.getElementById('btnCloseTimer').addEventListener('click', toggleTimerModal); document.getElementById('tabHiitBtn').addEventListener('click', () => switchTimerTab('hiit')); document.getElementById('tabRestBtn').addEventListener('click', () => switchTimerTab('rest')); document.getElementById('mainActionBtn').addEventListener('click', startPauseTimer); document.getElementById('btnResetTimer').addEventListener('click', resetTimer); document.getElementById('exType').addEventListener('change', toggleTypeInputs); document.getElementById('btnCloseExerciseModal').addEventListener('click', closeExerciseModal); document.getElementById('btnSaveExercise').addEventListener('click', saveExercise);
         });
 
-        // TEMPORIZADOR GLOBAL (Floating Bubble)
+        // TEMPORIZADOR GLOBAL FLOTANTE CON TIMESTAMP ABSOLUTO
         let timerInterval = null, isGRunning = false, isGPaused = false;
+        let globalTargetTimestamp = 0; let globalPauseRemaining = 0;
+
         function updateTimerButtonIcon() { const iconEl = document.getElementById('mainBtnIcon'); if (isGRunning && !isGPaused) { iconEl.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; } else { iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>'; } }
         function toggleTimerModal() { const modal = document.getElementById('timer-modal'); modal.style.display = (modal.style.display === 'block') ? 'none' : 'block'; if(modal.style.display === 'block' && currentTimerMode === 'rest') updateRestDisplayInit(); }
         function switchTimerTab(mode) { if(isGRunning || isGPaused) { clearInterval(timerInterval); isGRunning = false; isGPaused = false; updateTimerButtonIcon(); } currentTimerMode = mode; document.getElementById('hiitSection').style.display = (mode === 'hiit') ? 'block' : 'none'; document.getElementById('restSection').style.display = (mode === 'rest') ? 'block' : 'none'; document.getElementById('tabHiitBtn').classList.toggle('active', mode === 'hiit'); document.getElementById('tabRestBtn').classList.toggle('active', mode === 'rest'); document.getElementById('timerModalTitle').textContent = (mode === 'hiit') ? "Temporizador HIIT" : "Descanso Entre Series"; if(mode === 'rest') updateRestDisplayInit(); }
-        let currentTimerMode = 'hiit'; let currentPhase = 'prep', timeLeft = 10, currentRound = 1, maxRounds = 3, workDuration = 45, restDuration = 15, restTimeLeft = 60;
-        function updateRestDisplayInit() { const val = parseInt(document.getElementById('quickRestTime').value) || 60; restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val; let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60; document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; document.getElementById('quickStatusText').textContent = "Descanso entre series"; }
-        function updateDisplay() { if(currentTimerMode === 'hiit') { const statusEl = document.getElementById('timerStatusText'); const clockEl = document.getElementById('timerClockDisplay'); document.getElementById('timerRoundsDisplay').textContent = `Ronda ${currentRound} de ${maxRounds}`; let m = Math.floor(timeLeft / 60), s = timeLeft % 60, ft = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; if(currentPhase === 'prep') { statusEl.textContent = "⏳ Preparación"; clockEl.textContent = ft; } else if(currentPhase === 'round_announcement') { statusEl.textContent = ""; clockEl.textContent = `¡RONDA ${currentRound}!`; } else if(currentPhase === 'work') { statusEl.textContent = "🔥 ¡Trabajo!"; clockEl.textContent = ft; } else { statusEl.textContent = "💧 Descanso"; clockEl.textContent = ft; } } else { let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60; document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; } }
-        function startPauseTimer() { if(currentTimerMode === 'rest') { if (!isGRunning && !isGPaused) { const val = parseInt(document.getElementById('quickRestTime').value) || 60; restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val; isGRunning = true; isGPaused = false; playBeepHigh(); } else { isGPaused = !isGPaused; } updateTimerButtonIcon(); if(timerInterval) clearInterval(timerInterval); timerInterval = setInterval(() => { if (isGRunning && !isGPaused) { if (restTimeLeft > 0) { restTimeLeft--; if (restTimeLeft <= 3) playBeepShort(); updateDisplay(); } else { clearInterval(timerInterval); isGRunning = false; playDoubleBeep(); document.getElementById('quickStatusText').textContent = "¡Tiempo terminado! 🎉"; updateTimerButtonIcon(); } } }, 1000); return; } if (!isGRunning && !isGPaused) { workDuration = (document.getElementById('workUnit').value === 'min') ? parseInt(document.getElementById('workTime').value)*60 : parseInt(document.getElementById('workTime').value); restDuration = (document.getElementById('restUnit').value === 'min') ? parseInt(document.getElementById('restTime').value)*60 : parseInt(document.getElementById('restTime').value); maxRounds = parseInt(document.getElementById('totalRounds').value) || 3; currentPhase = 'prep'; timeLeft = 10; currentRound = 1; isGRunning = true; isGPaused = false; playBeepHigh(); } else { isGPaused = !isGPaused; } updateTimerButtonIcon(); updateDisplay(); if(timerInterval) clearInterval(timerInterval); timerInterval = setInterval(() => { if (isGRunning && !isGPaused) { if (timeLeft > 0) { timeLeft--; if (currentPhase !== 'round_announcement' && timeLeft <= 3) playBeepShort(); updateDisplay(); } else { if (currentPhase === 'prep') { currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); } else if (currentPhase === 'round_announcement') { currentPhase = 'work'; timeLeft = workDuration; playBeepHigh(); updateDisplay(); } else if (currentPhase === 'work') { if (restDuration > 0) { currentPhase = 'rest'; timeLeft = restDuration; playBeepShort(); updateDisplay(); } else { nextRoundProgression(); } } else if (currentPhase === 'rest') { nextRoundProgression(); } } } }, 1000); }
-        function nextRoundProgression() { if (currentRound < maxRounds) { currentRound++; currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); } else { clearInterval(timerInterval); isGRunning = false; playDoubleBeep(); document.getElementById('timerStatusText').textContent = "¡Completado! 🎉"; updateTimerButtonIcon(); } }
-        function resetTimer() { clearInterval(timerInterval); isGRunning = false; isGPaused = false; updateTimerButtonIcon(); if(currentTimerMode === 'rest') { updateRestDisplayInit(); return; } timeLeft = 10; currentPhase = 'prep'; currentRound = 1; document.getElementById('timerStatusText').textContent = "Listo para empezar"; updateDisplay(); }
+        let currentTimerMode = 'hiit'; let currentPhase = 'prep', currentRound = 1, maxRounds = 3, workDuration = 45, restDuration = 15;
+
+        function updateRestDisplayInit() { 
+            const val = parseInt(document.getElementById('quickRestTime').value) || 60; 
+            restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val; 
+            let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60; 
+            document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; 
+            document.getElementById('quickStatusText').textContent = "Descanso entre series"; 
+        }
+
+        let restTimeLeft = 60;
+        function updateDisplay(timeLeftVal) { 
+            if(currentTimerMode === 'hiit') { 
+                const statusEl = document.getElementById('timerStatusText'); const clockEl = document.getElementById('timerClockDisplay'); document.getElementById('timerRoundsDisplay').textContent = `Ronda ${currentRound} de ${maxRounds}`; 
+                let m = Math.floor(timeLeftVal / 60), s = timeLeftVal % 60, ft = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; 
+                if(currentPhase === 'prep') { statusEl.textContent = "⏳ Preparación"; clockEl.textContent = ft; } 
+                else if(currentPhase === 'round_announcement') { statusEl.textContent = ""; clockEl.textContent = `¡RONDA ${currentRound}!`; } 
+                else if(currentPhase === 'work') { statusEl.textContent = "🔥 ¡Trabajo!"; clockEl.textContent = ft; } 
+                else { statusEl.textContent = "💧 Descanso"; clockEl.textContent = ft; } 
+            } else { 
+                let m = Math.floor(timeLeftVal / 60), s = timeLeftVal % 60; 
+                document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; 
+            } 
+        }
+
+        function startPauseTimer() {
+            if (currentTimerMode === 'rest') {
+                if (!isGRunning && !isGPaused) {
+                    const val = parseInt(document.getElementById('quickRestTime').value) || 60;
+                    restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val;
+                    globalTargetTimestamp = Date.now() + (restTimeLeft * 1000);
+                    isGRunning = true; isGPaused = false; playBeepHigh();
+                } else if (isGRunning && !isGPaused) {
+                    isGPaused = true; globalPauseRemaining = Math.max(0, globalTargetTimestamp - Date.now());
+                } else if (isGRunning && isGPaused) {
+                    isGPaused = false; globalTargetTimestamp = Date.now() + globalPauseRemaining;
+                }
+                updateTimerButtonIcon();
+                if(timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(() => {
+                    if (isGRunning && !isGPaused) {
+                        let currentRestLeft = Math.max(0, Math.ceil((globalTargetTimestamp - Date.now()) / 1000));
+                        if (currentRestLeft > 0) {
+                            if (currentRestLeft <= 3) playBeepShort();
+                            updateDisplay(currentRestLeft);
+                        } else {
+                            clearInterval(timerInterval); isGRunning = false; playDoubleBeep();
+                            document.getElementById('quickStatusText').textContent = "¡Tiempo terminado! 🎉";
+                            updateTimerButtonIcon();
+                        }
+                    }
+                }, 200);
+                return;
+            }
+
+            // HIIT MODE
+            if (!isGRunning && !isGPaused) {
+                workDuration = (document.getElementById('workUnit').value === 'min') ? parseInt(document.getElementById('workTime').value)*60 : parseInt(document.getElementById('workTime').value);
+                restDuration = (document.getElementById('restUnit').value === 'min') ? parseInt(document.getElementById('restTime').value)*60 : parseInt(document.getElementById('restTime').value);
+                maxRounds = parseInt(document.getElementById('totalRounds').value) || 3;
+                currentPhase = 'prep'; currentRound = 1;
+                globalTargetTimestamp = Date.now() + (10 * 1000); // 10s prep
+                isGRunning = true; isGPaused = false; playBeepHigh();
+            } else if (isGRunning && !isGPaused) {
+                isGPaused = true; globalPauseRemaining = Math.max(0, globalTargetTimestamp - Date.now());
+            } else if (isGRunning && isGPaused) {
+                isGPaused = false; globalTargetTimestamp = Date.now() + globalPauseRemaining;
+            }
+
+            updateTimerButtonIcon();
+            if(timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (isGRunning && !isGPaused) {
+                    let timeLeft = Math.max(0, Math.ceil((globalTargetTimestamp - Date.now()) / 1000));
+                    if (timeLeft > 0) {
+                        if (currentPhase !== 'round_announcement' && timeLeft <= 3) playBeepShort();
+                        updateDisplay(timeLeft);
+                    } else {
+                        // Transición de fases basada en duración exacta
+                        if (currentPhase === 'prep') {
+                            currentPhase = 'work'; globalTargetTimestamp = Date.now() + (workDuration * 1000); playBeepHigh(); updateDisplay(workDuration);
+                        } else if (currentPhase === 'work') {
+                            if (restDuration > 0) {
+                                currentPhase = 'rest'; globalTargetTimestamp = Date.now() + (restDuration * 1000); playBeepShort(); updateDisplay(restDuration);
+                            } else {
+                                nextRoundProgression();
+                            }
+                        } else if (currentPhase === 'rest') {
+                            nextRoundProgression();
+                        }
+                    }
+                }
+            }, 200);
+        }
+
+        function nextRoundProgression() {
+            if (currentRound < maxRounds) {
+                currentRound++; currentPhase = 'work'; globalTargetTimestamp = Date.now() + (workDuration * 1000); playDoubleBeep(); updateDisplay(workDuration);
+            } else {
+                clearInterval(timerInterval); isGRunning = false; playDoubleBeep();
+                document.getElementById('timerStatusText').textContent = "¡Completado! 🎉";
+                updateTimerButtonIcon();
+            }
+        }
+
+        function resetTimer() { 
+            clearInterval(timerInterval); isGRunning = false; isGPaused = false; updateTimerButtonIcon(); 
+            if(currentTimerMode === 'rest') { updateRestDisplayInit(); return; } 
+            currentPhase = 'prep'; currentRound = 1; document.getElementById('timerStatusText').textContent = "Listo para empezar"; updateDisplay(10); 
+        }
     </script>
 </body>
 </html>
