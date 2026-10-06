@@ -49,6 +49,7 @@
         .exercise-card.active .card-hidden-content { display: block; }
         .exercise-img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background-color: #111; border: 1px solid #444; }
         .card-instructions { font-size: 0.82rem; color: #ccc; line-height: 1.4; margin: 0; }
+        .card-tips { font-size: 0.78rem; color: #e87c3e; background: #111; padding: 8px; border-radius: 6px; border-left: 3px solid #e87c3e; margin-top: 8px; }
         
         .card-actions { display: flex; gap: 12px; margin-top: 15px; border-top: 1px solid #383838; padding-top: 12px; }
         .btn-small { background: none; border: none; color: #888; font-size: 0.75rem; font-weight: 800; cursor: pointer; text-transform: uppercase; padding: 0; letter-spacing: 0.5px; }
@@ -63,10 +64,11 @@
         .form-control { width: 100%; background-color: #050505; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; box-sizing: border-box; }
         .form-control:focus { outline: none; border-color: var(--primary-color); }
         
-        /* Skills / Etiquetas múltiples de músculos */
-        .skills-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
-        .skill-tag { background-color: #050505; border: 1px solid #444; color: #aaa; padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
-        .skill-tag.selected { background-color: var(--primary-color); color: #050505; border-color: var(--primary-color); }
+        /* Skills / Etiquetas múltiples de músculos (Estilo Curriculum con botón X) */
+        .skills-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; background: #050505; border: 1px solid #444; padding: 8px; border-radius: 8px; min-height: 42px; align-items: center; }
+        .skill-badge { background-color: var(--primary-color); color: #050505; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; text-transform: uppercase; }
+        .skill-badge span { cursor: pointer; font-size: 0.85rem; font-weight: 900; }
+        .skill-badge span:hover { color: #fff; }
 
         .checkbox-group { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.85rem; color: #fff; font-weight: 600; margin-top: 10px; }
         .checkbox-group input { width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; }
@@ -189,6 +191,7 @@
             <p class="card-details" id="tDetails">DETALLES</p>
             <img id="tImg" class="exercise-img" src="" alt="Ejercicio" style="display:none; margin-top:10px;">
             <p class="card-instructions" id="tInstructions" style="background:#111; padding:12px; border-radius:8px; border:1px solid #333; margin-top:10px;"></p>
+            <div id="tTips" class="card-tips" style="display:none;"></div>
             
             <div id="trainerTimerArea"></div>
 
@@ -216,7 +219,6 @@
                 <button class="btn-small" id="btnOpenProgress" style="color: var(--primary-color); border: 1px solid #444; padding: 6px 10px; border-radius: 6px;">+ Nueva Serie</button>
             </div>
             
-            <!-- Indicador de Volumen Semanal -->
             <div id="volumeMetricsContainer" style="background: #111; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 15px; font-size: 0.8rem;">
                 <div style="font-weight: 700; color: var(--primary-color); text-transform: uppercase; margin-bottom: 6px;">📊 Volumen Semanal por Músculo</div>
                 <div id="volumeStatsList" style="color: #ccc;">Calculando series efectivas...</div>
@@ -285,17 +287,14 @@
                 <h3 style="color:var(--primary-color); margin:0;">Calculadora de RM</h3>
                 <button class="btn-small" id="btnToggleRMHelp" style="background:var(--primary-color); color:#050505; width:24px; height:24px; border-radius:50%; font-weight:800;">?</button>
             </div>
-
-            <!-- Panel de Ayuda RM -->
             <div id="rmHelpBox" style="display:none; background:#111; border:1px solid var(--primary-color); border-radius:8px; padding:12px; margin-bottom:15px; font-size:0.75rem; line-height:1.4; color:#ccc;">
                 <strong style="color:var(--primary-color);">💡 ¿Qué es el RM (Repetición Máxima)?</strong><br>
                 Es el <strong>peso máximo</strong> con el que puedes hacer <strong>una sola repetición</strong> perfecta de un ejercicio.<br><br>
-                Como levantar tu máximo peso directo es agotador, la app lo <strong>calcula de forma inteligente</strong> usando un peso que domines varias veces (ej. 8 o 10 reps).<br><br>
+                La app lo <strong>calcula de forma inteligente</strong> usando un peso que domines varias veces.<br><br>
                 <strong style="color:var(--primary-color);">📊 ¿Para qué sirve?</strong><br>
                 • Te indica qué peso usar según tu objetivo diario.<br>
                 • Te ayuda a medir tu volumen semanal para saber si creces o te excedes.
             </div>
-
             <div class="form-group"><label>Ejercicio</label><input type="text" id="rmExerciseName" class="form-control" placeholder="Ej. Press de Banca"></div>
             <div class="form-group"><div class="input-group-flex"><div><label>Peso Levantado (KG)</label><input type="number" id="rmWeight" class="form-control" placeholder="Ej. 60"></div><div><label>Repeticiones hechas</label><input type="number" id="rmReps" class="form-control" placeholder="Ej. 8"></div></div></div>
             <div id="rmResultDisplay" style="background:#111; border:1px solid #333; padding:12px; border-radius:8px; text-align:center; margin-bottom:15px; font-size:0.9rem; font-weight:700; color:var(--primary-color);">Ingresa tus datos para calcular tu RM</div>
@@ -303,37 +302,43 @@
         </div>
     </div>
 
-    <!-- MODAL AGREGAR EJERCICIO INTELIGENTE -->
+    <!-- MODAL AGREGAR EJERCICIO INTELIGENTE CON CATÁLOGO MASIVO E INSTRUCCIONES -->
     <div class="modal-overlay" id="exerciseModal">
         <div class="modal-box">
             <h3 style="color:var(--primary-color); margin-top:0;" id="modalFormTitle">Agregar Ejercicio</h3>
             <input type="hidden" id="exId">
             
-            <div class="form-group"><label>1. Sección de Entrenamiento</label><select id="exSection" class="form-control"><option value="calentamiento">Calentamiento</option><option value="fuerza" selected>Bloque Principal / Fuerza</option><option value="estiramiento">Estiramiento / Calm</option></select></div>
+            <div class="form-group"><label>1. Sección de Entrenamiento</label><select id="exSection" class="form-control" onchange="updateExerciseCatalog()"><option value="calentamiento">Calentamiento</option><option value="fuerza" selected>Bloque Principal / Fuerza</option><option value="estiramiento">Estiramiento / Calm</option></select></div>
             
+            <!-- Selector de Músculos tipo Curriculum (Skills) -->
             <div class="form-group">
-                <label>2. Grupos Musculares (Selección múltiple)</label>
-                <div class="skills-container" id="muscleSkillsContainer">
-                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Pecho">Pecho</div>
-                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Espalda">Espalda</div>
-                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Cuádriceps">Cuádriceps</div>
-                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Isquios">Isquios</div>
-                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Hombros">Hombros</div>
-                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Bíceps">Bíceps</div>
-                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Tríceps">Tríceps</div>
-                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Abdomen">Abdomen</div>
-                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Glúteos">Glúteos</div>
-                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Cardio Global">Cardio Global</div>
-                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Otro">Otro</div>
+                <label>2. Grupos Musculares (Agregar)</label>
+                <div class="input-group-flex">
+                    <select id="muscleSelectDropdown" class="form-control">
+                        <option value="Pecho">Pecho</option>
+                        <option value="Espalda">Espalda</option>
+                        <option value="Cuádriceps">Cuádriceps</option>
+                        <option value="Isquios">Isquios</option>
+                        <option value="Hombros">Hombros</option>
+                        <option value="Bíceps">Bíceps</option>
+                        <option value="Tríceps">Tríceps</option>
+                        <option value="Abdomen">Abdomen</option>
+                        <option value="Glúteos">Glúteos</option>
+                        <option value="Cardio Global">Cardio Global</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    <button type="button" class="btn-save" style="width: 100px; padding: 0;" onclick="addMuscleSkillTag()">+ Añadir</button>
                 </div>
+                <div class="skills-container" id="muscleSkillsContainer" style="margin-top: 8px;"></div>
             </div>
 
             <div class="form-group"><label>3. Disciplina / Actividad</label><select id="exDiscipline" class="form-control" onchange="updateExerciseCatalog()"><option value="gimnasio" selected>Gimnasio</option><option value="bicicleta">Bicicleta</option><option value="natacion">Natación</option><option value="atletismo">Atletismo / Correr</option><option value="funcional">Funcional</option><option value="pilates">Pilates</option><option value="otro">Otro</option></select></div>
 
-            <div class="form-group"><label>4. Ejercicio Recomendado / Catálogo</label><select id="exCatalogSelect" class="form-control" onchange="onCatalogSelectChange()"></select></div>
+            <div class="form-group"><label>4. Catálogo de Ejercicios</label><select id="exCatalogSelect" class="form-control" onchange="onCatalogSelectChange()"></select></div>
 
             <div class="form-group" id="manualTitleGroup" style="display:none;"><label>Nombre Personalizado</label><input type="text" id="exTitle" class="form-control" placeholder="Ej. Ejercicio único..."></div>
             <div class="form-group"><label>Subtítulo / Especialidad</label><input type="text" id="exSubtitle" class="form-control" placeholder="Ej. Ritmo moderado, Sprints..."></div>
+            
             <div class="form-group"><label>5. Tipo de Métrica</label><select id="exType" class="form-control"><option value="reps">Series y Repeticiones</option><option value="time">Por Tiempo / Intervalos</option><option value="distance">Por Distancia / Vueltas</option></select></div>
             
             <div class="form-group" id="repsInputs">
@@ -369,7 +374,8 @@
                 </div>
             </div>
 
-            <div class="form-group"><label>Instrucciones Adicionales</label><textarea id="exInstructions" class="form-control" rows="3" placeholder="Descripción técnica, respiración..."></textarea></div>
+            <div class="form-group"><label>Instrucciones de Ejecución</label><textarea id="exInstructions" class="form-control" rows="3" placeholder="Se precargará automáticamente..."></textarea></div>
+            <div class="form-group"><label>Puntos a Tomar en Cuenta (Tips técnicos)</label><textarea id="exTips" class="form-control" rows="2" placeholder="Errores comunes, postura, respiración..."></textarea></div>
             <div class="form-group"><label>Foto (Opcional)</label><input type="file" id="exImageInput" class="form-control" accept="image/*"></div>
             <div class="form-group"><label class="checkbox-group"><input type="checkbox" id="exTrackProgress">📈 Registrar progreso y RM para este ejercicio</label></div>
             <div class="modal-buttons"><button class="btn-cancel" id="btnCloseExerciseModal">Cancelar</button><button class="btn-save" id="btnSaveExercise">Guardar</button></div>
@@ -426,37 +432,129 @@
                         const card = document.createElement('div'); card.className = 'exercise-card'; card.onclick = function() { this.classList.toggle('active'); };
                         let trackBadge = ex.trackProgress ? `<span style="font-size:0.65rem; background:${currentThemeColor}; color:#050505; padding:2px 6px; border-radius:4px; font-weight:800; margin-left:8px;">CON PROGRESO</span>` : '';
                         let musclesBadge = ex.muscles && ex.muscles.length ? `<div style="font-size:0.7rem; color:#888; margin-top:2px;">Músculos: ${ex.muscles.join(', ')}</div>` : '';
-                        card.innerHTML = `<div class="card-title">${ex.title} ${trackBadge}</div><div class="card-subtitle">${ex.subtitle || ''}</div>${musclesBadge}<div class="card-details">${ex.details || ''}</div><div class="card-hidden-content">${ex.image ? `<img src="${ex.image}" class="exercise-img">` : ''}<p class="card-instructions">${ex.instructions || 'Sin instrucciones adicionales.'}</p></div><div class="card-actions"><button class="btn-small" onclick="event.stopPropagation(); editExercise('${ex.id}')">Editar</button><button class="btn-small btn-delete" onclick="event.stopPropagation(); deleteExercise('${ex.id}')">Eliminar</button></div>`;
+                        let tipsBlock = ex.tips ? `<div class="card-tips">💡 <b>Tips:</b> ${ex.tips}</div>` : '';
+                        card.innerHTML = `<div class="card-title">${ex.title} ${trackBadge}</div><div class="card-subtitle">${ex.subtitle || ''}</div>${musclesBadge}<div class="card-details">${ex.details || ''}</div><div class="card-hidden-content">${ex.image ? `<img src="${ex.image}" class="exercise-img">` : ''}<p class="card-instructions"><b>Instrucciones:</b> ${ex.instructions || 'Sin instrucciones.'}</p>${tipsBlock}</div><div class="card-actions"><button class="btn-small" onclick="event.stopPropagation(); editExercise('${ex.id}')">Editar</button><button class="btn-small btn-delete" onclick="event.stopPropagation(); deleteExercise('${ex.id}')">Eliminar</button></div>`;
                         sections[key].el.appendChild(card);
                     });
                 }
             });
         }
 
-        // CATÁLOGO INTELIGENTE DE EJERCICIOS Y HABILIDADES DE MÚSCULOS
-        const exerciseCatalogs = {
-            gimnasio: ["Press de Banca", "Sentadilla con Barra", "Peso Muerto", "Dominadas", "Curl de Bíceps", "Extensiones de Tríceps", "Elevaciones Laterales", "Prensa de Piernas"],
-            bicicleta: ["Ciclismo Estacionario", "Intervalos de Alta Intensidad (HIIT Bike)", "Ruta Libre / Simulación"],
-            natacion: ["Crol / Estilo Libre", "Espalda", "Pecho / Braza", "Mariposa", "Series con Tabla"],
-            atletismo: ["Sprints de 100m", "Trote Continuo", "Intervalos de Velocidad", "Carrera en Pendiente"],
-            funcional: ["Burpees", "Kettlebell Swing", "Battle Ropes", "Saltos al Cajón", "Plancha Abdominal"],
-            pilates: ["The Hundred", "Roll Up", "Single Leg Stretch", "Plank Series", "Puente de Glúteos"]
+        // CATÁLOGO MASIVO INTELIGENTE CON INSTRUCCIONES Y TIPS AUTOMÁTICOS
+        const massiveCatalog = {
+            calentamiento: {
+                gimnasio: [
+                    { name: "Movilidad Articular de Hombros", inst: "Realiza círculos amplios con los brazos hacia adelante y hacia atrás de forma controlada.", tips: "Mantén el abdomen contraído y no apresures el movimiento." },
+                    { name: "Sentadillas sin Peso (Air Squats)", inst: "Baja la cadera manteniendo los talones pegados al suelo y el pecho erguido.", tips: "Ideal para lubricar rodillas y activar cuádriceps y glúteos." },
+                    { name: "Gato - Vaca (Movilidad de columna)", inst: "En posición de cuatro puntos, arquea la espalda hacia arriba (gato) y luego hacia abajo (vaca).", tips: "Excelente para liberar tensión en la espalda baja antes de entrenar." }
+                ],
+                atletismo: [
+                    { name: "Trote Suave en Lugar", inst: "Eleva ligeramente las rodillas manteniendo un ritmo aeróbico bajo.", tips: "Sirve para elevar la temperatura corporal progresivamente." },
+                    { name: "Desplantes Dinámicos", inst: "Da un paso al frente bajando la cadera de forma alterna.", tips: "Mantén el torso recto y la rodilla trasera cerca del suelo sin golpear." }
+                ],
+                natacion: [
+                    { name: "Círculos de Brazos en Seco", inst: "Simula brazadas de crol y espalda de pie fuera del agua.", tips: "Activa los manguitos rotadores y previene lesiones de hombro." }
+                ],
+                funcional: [
+                    { name: "Plancha Abdominal de Activación", inst: "Mantén el cuerpo en línea recta apoyado sobre antebrazos y puntas de pies.", tips: "Aprieta glúteos y abdomen para proteger la zona lumbar." }
+                ]
+            },
+            fuerza: {
+                gimnasio: [
+                    { name: "Press de Banca", inst: "Acostado en banco plano, baja la barra de forma controlada hacia el pecho medio y empuja hacia arriba.", tips: "Retrae las escápulas y apoya firmemente los pies en el suelo." },
+                    { name: "Sentadilla con Barra", inst: "Coloca la barra sobre la parte alta de la espalda, baja la cadera flexionando rodillas y cadera.", tips: "Evita que las rodillas colapsen hacia adentro al subir." },
+                    { name: "Peso Muerto", inst: "Toma la barra del suelo con agarre firme, extiende cadera y rodillas hasta quedar completamente erguido.", tips: "Mantén la espalda completamente neutra en todo momento." },
+                    { name: "Dominadas", inst: "Colgado de la barra, eleva el pecho hasta que tu barbilla supere la altura de las manos.", tips: "Inicia el movimiento llevando los codos hacia abajo y atrás." },
+                    { name: "Curl de Bíceps con Mancuernas", inst: "De pie, flexiona los codos elevando las mancuernas hacia los hombros sin balancear el cuerpo.", tips: "Controla la fase de bajada (excéntrica) de forma lenta." }
+                ],
+                bicicleta: [
+                    { name: "Ciclismo Estacionario Base", inst: "Mantén una cadencia constante de pedaleo con resistencia moderada.", tips: "Ajusta el asiento a la altura de tu cadera para proteger tus rodillas." },
+                    { name: "HIIT en Bicicleta", inst: "Alterna 30 segundos de sprint máximo con 60 segundos de pedaleo suave.", tips: "Mantén la espalda firme y respira de forma rítmica." }
+                ],
+                natacion: [
+                    { name: "Crol / Estilo Libre", inst: "Nado continuo alternando brazadas con respiración bilateral y patada constante.", tips: "Gira el cuerpo completo en cada brazada, no solo el cuello." },
+                    { name: "Estilo Pecho / Braza", inst: "Movimiento simultáneo de brazos en semicírculo y patada de rana.", tips: "Coordina la respiración sacando el mentón al frente justo al presionar." }
+                ],
+                atletismo: [
+                    { name: "Sprints de 100 Metros", inst: "Corre a máxima velocidad explosiva en línea recta.", tips: "Mantén la vista al frente y braceo enérgico." },
+                    { name: "Fartlek (Cambios de ritmo)", inst: "Alterna tramos de trote suave con carreras rápidas sin detenerte.", tips: "Escucha a tu cuerpo para regular la intensidad." }
+                ],
+                funcional: [
+                    { name: "Burpees", inst: "Desde de pie, baja a plancha, haz una lagartija, recoge las piernas y salta con aplauso arriba.", tips: "Mantén el abdomen firme para evitar arquear la espalda al bajar." },
+                    { name: "Kettlebell Swing", inst: "Impulsa la pesa rusa desde la cadera usando la potencia de glúteos e isquios.", tips: "El movimiento nace de la cadera, no de los brazos." }
+                ],
+                pilates: [
+                    { name: "The Hundred", inst: "Acostado boca arriba, eleva piernas y hombros bombeando los brazos firmemente.", tips: "Mantén la zona lumbar completamente pegada al mat." }
+                ]
+            },
+            estiramiento: {
+                gimnasio: [
+                    { name: "Estiramiento de Pecho en Pared", inst: "Apoya el antebrazo en una pared y gira el torso suavemente hacia el lado contrario.", tips: "Mantén el hombro abajo y relajado." },
+                    { name: "Estiramiento de Isquiotibiales", inst: "Sentado en el suelo con una pierna extendida, inclina el tronco al frente desde la cadera.", tips: "No forces la espalda; busca llevar el pecho hacia el muslo." }
+                ],
+                atletismo: [
+                    { name: "Estiramiento de Cuádriceps de Pie", inst: "Toma tu empeine por detrás llevando el talón hacia el glúteo.", tips: "Mantén las rodillas juntas y contrae el abdomen para no arquear la espalda." },
+                    { name: "Estiramiento de Gemelos", inst: "Apoya las manos en una pared, atrasa una pierna estirada con el talón apoyado en el suelo.", tips: "Siente el alivio en la pantorrilla sin hacer rebotes bruscos." }
+                ],
+                funcional: [
+                    { name: "Postura del Niño (Yoga)", inst: "Arrodillado, lleva los glúteos hacia los talones y estira los brazos al frente sobre el suelo.", tips: "Respira profundo y relaja toda la columna vertebral." }
+                ]
+            }
         };
 
-        function toggleMuscleSkill(el) { el.classList.toggle('selected'); }
+        // GESTIÓN DE SKILLS DE MÚSCULOS (Añadir y Quitar)
+        let selectedMuscleList = [];
+        function addMuscleSkillTag() {
+            const select = document.getElementById('muscleSelectDropdown');
+            const val = select.value;
+            if(!selectedMuscleList.includes(val)) {
+                selectedMuscleList.push(val);
+                renderMuscleTags();
+            }
+        }
+        function removeMuscleSkillTag(muscle) {
+            selectedMuscleList = selectedMuscleList.filter(m => m !== muscle);
+            renderMuscleTags();
+        }
+        function renderMuscleTags() {
+            const container = document.getElementById('muscleSkillsContainer');
+            container.innerHTML = '';
+            if(selectedMuscleList.length === 0) {
+                container.innerHTML = '<span style="color:#666; font-size:0.75rem;">Sin músculos seleccionados</span>';
+                return;
+            }
+            selectedMuscleList.forEach(m => {
+                const badge = document.createElement('div');
+                badge.className = 'skill-badge';
+                badge.innerHTML = `${m} <span onclick="removeMuscleSkillTag('${m}')">×</span>`;
+                container.appendChild(badge);
+            });
+        }
 
         function updateExerciseCatalog() {
+            const section = document.getElementById('exSection').value;
             const discipline = document.getElementById('exDiscipline').value;
             const select = document.getElementById('exCatalogSelect');
             select.innerHTML = '';
+            
             if (discipline === 'otro') {
                 select.innerHTML = '<option value="otro">Otro (Escribir manual)</option>';
                 document.getElementById('manualTitleGroup').style.display = 'block';
+                document.getElementById('exInstructions').value = '';
+                document.getElementById('exTips').value = '';
                 return;
             }
+
             document.getElementById('manualTitleGroup').style.display = 'none';
-            const list = exerciseCatalogs[discipline] || [];
-            list.forEach(ex => select.add(new Option(ex, ex)));
+            const catBySection = massiveCatalog[section] || {};
+            const list = catBySection[discipline] || [{ name: "Ejercicio General", inst: "Ejecuta con buena técnica.", tips: "Mantén control." }];
+            
+            list.forEach(item => {
+                const opt = new Option(item.name, item.name);
+                opt.dataset.inst = item.inst;
+                opt.dataset.tips = item.tips;
+                select.add(opt);
+            });
             select.add(new Option('Otro (Personalizado)', 'otro'));
             onCatalogSelectChange();
         }
@@ -466,8 +564,15 @@
             const manualGroup = document.getElementById('manualTitleGroup');
             if (select.value === 'otro') {
                 manualGroup.style.display = 'block';
+                document.getElementById('exInstructions').value = '';
+                document.getElementById('exTips').value = '';
             } else {
                 manualGroup.style.display = 'none';
+                const selectedOpt = select.options[select.selectedIndex];
+                if(selectedOpt && selectedOpt.dataset.inst) {
+                    document.getElementById('exInstructions').value = selectedOpt.dataset.inst;
+                    document.getElementById('exTips').value = selectedOpt.dataset.tips || '';
+                }
             }
         }
 
@@ -503,9 +608,11 @@
             document.getElementById('exId').value = ''; 
             document.getElementById('exSection').value = 'fuerza';
             document.getElementById('exDiscipline').value = 'gimnasio';
+            selectedMuscleList = ["Pecho"];
+            renderMuscleTags();
             updateExerciseCatalog();
-            document.querySelectorAll('#muscleSkillsContainer .skill-tag').forEach(t => t.classList.remove('selected'));
-            document.getElementById('exSubtitle').value = ''; document.getElementById('exInstructions').value = ''; if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = ''; 
+            document.getElementById('exSubtitle').value = ''; 
+            if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = ''; 
             document.getElementById('exSeries').value = '3'; document.getElementById('exReps').value = '10'; document.getElementById('exRepsRest').value = '60'; document.getElementById('exRepsRestUnit').value = 's';
             document.getElementById('exWorkTime').value = '45'; document.getElementById('exWorkUnit').value = 's'; document.getElementById('exRestTime').value = '15'; document.getElementById('exRestUnit').value = 's'; document.getElementById('exRounds').value = '3'; 
             document.getElementById('exDistance').value = ''; document.getElementById('exLaps').value = ''; document.getElementById('exDistRest').value = '30'; document.getElementById('exDistRestUnit').value = 's';
@@ -518,8 +625,6 @@
             const manualTitle = document.getElementById('exTitle').value.trim();
             const title = (catalogVal === 'otro') ? manualTitle : catalogVal;
             if (!title) { alert("Ingresa un nombre para el ejercicio"); return; }
-
-            const selectedMuscles = Array.from(document.querySelectorAll('#muscleSkillsContainer .skill-tag.selected')).map(t => t.dataset.muscle);
 
             const exId = document.getElementById('exId').value || 'ex_' + Date.now(); const existing = currentExercisesList.find(e => e.id === exId); const imageToSave = currentImageBase64 || (existing ? existing.image : null); const type = document.getElementById('exType').value; const trackProgress = document.getElementById('exTrackProgress').checked;
             
@@ -537,7 +642,7 @@
             else if (type === 'distance') { let distStr = distVal ? `${distVal}` : 'Distancia'; let lapsStr = lapsVal ? `${lapsVal}x ` : ''; let restStr = distRestVal ? ` • Desc: ${distRestVal}` : ''; finalDetailsStr = `${lapsStr}${distStr}${restStr}`; } 
             else { let workPart = workTimeVal ? `${workTimeVal} trabajo` : ''; let restPart = restTimeVal ? `${restTimeVal} desc` : ''; let roundsPart = roundsVal ? `${roundsVal}x` : ''; finalDetailsStr = [roundsPart, [workPart, restPart].filter(Boolean).join(' / ')].filter(Boolean).join(' • ') || 'Por tiempo'; }
 
-            const exerciseData = { id: exId, userId: activeProfileId, day: currentDay, section: document.getElementById('exSection').value, title, muscles: selectedMuscles, subtitle: document.getElementById('exSubtitle').value.trim(), type, series: seriesVal, reps: repsVal, repsRest: repsRestVal, workTime: workTimeVal, restTime: restTimeVal, rounds: roundsVal, distance: distVal, laps: lapsVal, distRest: distRestVal, details: finalDetailsStr, instructions: document.getElementById('exInstructions').value.trim(), image: imageToSave, trackProgress: trackProgress };
+            const exerciseData = { id: exId, userId: activeProfileId, day: currentDay, section: document.getElementById('exSection').value, title, muscles: selectedMuscleList, subtitle: document.getElementById('exSubtitle').value.trim(), type, series: seriesVal, reps: repsVal, repsRest: repsRestVal, workTime: workTimeVal, restTime: restTimeVal, rounds: roundsVal, distance: distVal, laps: lapsVal, distRest: distRestVal, details: finalDetailsStr, instructions: document.getElementById('exInstructions').value.trim(), tips: document.getElementById('exTips').value.trim(), image: imageToSave, trackProgress: trackProgress };
             const tx = db.transaction("exercises", "readwrite"); tx.objectStore("exercises").put(exerciseData); tx.oncomplete = function() { closeExerciseModal(); loadExercises(); };
         }
 
@@ -554,11 +659,12 @@
                     document.getElementById('manualTitleGroup').style.display = 'block';
                     document.getElementById('exTitle').value = ex.title;
                 }
-                document.querySelectorAll('#muscleSkillsContainer .skill-tag').forEach(t => {
-                    if (ex.muscles && ex.muscles.includes(t.dataset.muscle)) t.classList.add('selected');
-                    else t.classList.remove('selected');
-                });
-                document.getElementById('exSubtitle').value = ex.subtitle || ''; document.getElementById('exInstructions').value = ex.instructions || ''; document.getElementById('exType').value = ex.type || 'reps'; 
+                selectedMuscleList = ex.muscles || [];
+                renderMuscleTags();
+                document.getElementById('exSubtitle').value = ex.subtitle || ''; 
+                document.getElementById('exInstructions').value = ex.instructions || ''; 
+                document.getElementById('exTips').value = ex.tips || ''; 
+                document.getElementById('exType').value = ex.type || 'reps'; 
                 document.getElementById('exSeries').value = ex.series || ''; document.getElementById('exReps').value = ex.reps || ''; 
                 document.getElementById('exRounds').value = ex.rounds || ''; 
                 document.getElementById('exDistance').value = ex.distance || ''; document.getElementById('exLaps').value = ex.laps || ''; 
@@ -567,7 +673,7 @@
         }
         function deleteExercise(id) { if (confirm("¿Seguro de que deseas eliminar este ejercicio?")) { const tx = db.transaction("exercises", "readwrite"); tx.objectStore("exercises").delete(id); tx.oncomplete = function() { loadExercises(); }; } }
 
-        // MÓDULO CALCULADORA DE RM
+        // CALCULADORA DE RM
         document.getElementById('btnOpenRMModal').onclick = () => document.getElementById('rmModal').style.display = 'flex';
         document.getElementById('btnCloseRMModal').onclick = () => document.getElementById('rmModal').style.display = 'none';
         document.getElementById('btnToggleRMHelp').onclick = () => {
@@ -582,12 +688,11 @@
                 resEl.textContent = "Por favor ingresa valores válidos.";
                 return;
             }
-            // Fórmula Epley estándar: RM = Peso * (1 + Reps / 30)
             const rm = Math.round(weight * (1 + reps / 30));
             resEl.textContent = `¡Tu RM estimado es de aprox. ${rm} KG!`;
         };
 
-        // CÁLCULO DE VOLUMEN SEMANAL (Series por músculo)
+        // CÁLCULO DE VOLUMEN SEMANAL
         function calculateWeeklyVolume() {
             if (!db) return;
             const tx = db.transaction("exercises", "readonly");
@@ -607,7 +712,7 @@
                 }
                 let html = '<div style="display: flex; flex-direction: column; gap: 4px;">';
                 for (const [muscle, totalSeries] of Object.entries(counts)) {
-                    let levelColor = "#4CAF50"; // Óptimo
+                    let levelColor = "#4CAF50"; 
                     let levelText = "Óptimo (10-20s)";
                     if (totalSeries < 10) { levelColor = "#FFC107"; levelText = "Bajo (<10s)"; }
                     else if (totalSeries > 22) { levelColor = "#FF5722"; levelText = "Alto (>22s)"; }
@@ -618,7 +723,7 @@
             };
         }
 
-        // MODO ENTRENADOR Y TIMESTAMPS
+        // MODO ENTRENADOR
         function parseTimeStringToSeconds(str) {
             if (!str) return 0;
             str = str.toLowerCase().trim();
@@ -639,7 +744,11 @@
         function clearInlineTimers() { if(inlineTimerInterval) clearInterval(inlineTimerInterval); if(inlineStopwatchInterval) clearInterval(inlineStopwatchInterval); }
 
         function renderTrainerStep() { 
-            clearInlineTimers(); const ex = currentExercisesList[trainerIndex]; document.getElementById('trainerCounter').innerText = `Ejercicio ${trainerIndex + 1} de ${currentExercisesList.length}`; document.getElementById('tTitle').innerText = ex.title; document.getElementById('tSubtitle').innerText = ex.subtitle || ''; document.getElementById('tDetails').innerText = ex.details || ''; document.getElementById('tInstructions').innerText = ex.instructions || 'Sin instrucciones adicionales.'; const imgEl = document.getElementById('tImg'); if (ex.image) { imgEl.src = ex.image; imgEl.style.display = 'block'; } else { imgEl.style.display = 'none'; } 
+            clearInlineTimers(); const ex = currentExercisesList[trainerIndex]; document.getElementById('trainerCounter').innerText = `Ejercicio ${trainerIndex + 1} de ${currentExercisesList.length}`; document.getElementById('tTitle').innerText = ex.title; document.getElementById('tSubtitle').innerText = ex.subtitle || ''; document.getElementById('tDetails').innerText = ex.details || ''; document.getElementById('tInstructions').innerText = ex.instructions || 'Sin instrucciones adicionales.'; 
+            const tipsEl = document.getElementById('tTips');
+            if(ex.tips) { tipsEl.innerHTML = `💡 <b>Tips:</b> ${ex.tips}`; tipsEl.style.display = 'block'; } else { tipsEl.style.display = 'none'; }
+
+            const imgEl = document.getElementById('tImg'); if (ex.image) { imgEl.src = ex.image; imgEl.style.display = 'block'; } else { imgEl.style.display = 'none'; } 
             const timerArea = document.getElementById('trainerTimerArea'); timerArea.innerHTML = '';
 
             const playSvg = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
