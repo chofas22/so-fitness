@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rutina - Fitness App</title>
+    <title>Rutina y RM - Fitness App</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300&display=swap');
 
@@ -35,6 +35,7 @@
         .action-btn svg { width: 16px; height: 16px; fill: currentColor; }
         .btn-trainer { background: var(--primary-gradient); color: #050505; }
         .btn-add { background-color: var(--card-inner); color: #fff; border: 1px solid #444; }
+        .btn-rm { background-color: #1a2a1a; color: #4CAF50; border: 1px solid #4CAF50; }
         .action-btn:hover { transform: scale(1.02); }
 
         .section-title { color: #ffffff; font-size: 1rem; font-weight: 700; margin: 25px 0 15px 0; border-left: 4px solid var(--primary-color); padding-left: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -61,6 +62,12 @@
         .form-group label { display: block; font-size: 0.75rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
         .form-control { width: 100%; background-color: #050505; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; box-sizing: border-box; }
         .form-control:focus { outline: none; border-color: var(--primary-color); }
+        
+        /* Skills / Etiquetas múltiples de músculos */
+        .skills-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
+        .skill-tag { background-color: #050505; border: 1px solid #444; color: #aaa; padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
+        .skill-tag.selected { background-color: var(--primary-color); color: #050505; border-color: var(--primary-color); }
+
         .checkbox-group { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.85rem; color: #fff; font-weight: 600; margin-top: 10px; }
         .checkbox-group input { width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; }
         .input-group-flex { display: flex; gap: 10px; }
@@ -80,7 +87,7 @@
         .nav-step-btn.primary { background-color: var(--primary-color); color: #050505; border-color: var(--primary-color); }
         .nav-step-btn:hover { opacity: 0.8; }
 
-        /* TIMERS INTECRADOS EN MODO ENTRENADOR CON ICONOS VECTORIALES */
+        /* TIMERS EN MODO ENTRENADOR */
         #trainerTimerArea { margin-top: 20px; background-color: #0d0d0d; border: 1px solid #333; border-radius: 12px; padding: 15px; text-align: center; }
         .inline-timer-display { font-size: 2.5rem; font-weight: 800; color: #fff; margin: 10px 0; font-variant-numeric: tabular-nums; }
         .inline-timer-status { font-size: 0.8rem; color: var(--primary-color); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 5px; }
@@ -120,7 +127,7 @@
         .btn-main { background-color: var(--primary-color); color: #050505; flex: 1; }
         .btn-reset-icon { background-color: var(--card-inner); border: 1px solid #444; color: #fff; width: 48px; flex-shrink: 0; border-radius: 8px; }
 
-        /* SECCIÓN PROGRESO */
+        /* SECCIÓN PROGRESO Y VOLUMEN */
         .progress-section { background-color: var(--card-bg); border: 1px solid #333; border-radius: 12px; padding: 15px; margin-top: 25px; }
         .chart-container { background-color: #111; border: 1px solid #333; border-radius: 8px; padding: 12px; text-align: center; position: relative; margin-bottom: 15px; }
         .chart-filters-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
@@ -130,7 +137,7 @@
         #chartTooltip { position: absolute; background-color: var(--card-inner); color: #fff; padding: 8px 12px; border: 1px solid var(--primary-color); border-radius: 8px; font-size: 0.75rem; pointer-events: none; display: none; z-index: 100; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.6); transform: translate(-50%, -100%); margin-top: -24px; }
         #chartTooltip strong { color: var(--primary-color); font-size: 0.8rem; }
 
-        /* HISTORIAL DESPLEGABLE */
+        /* HISTORIAL */
         .history-toggle-btn { width: 100%; background-color: var(--card-inner); border: 1px solid #444; color: #fff; padding: 12px; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 5px; }
         .history-toggle-btn:hover { border-color: var(--primary-color); }
         .history-date-header { font-family: 'Montserrat', sans-serif; font-style: italic; font-weight: 300; font-size: 0.9rem; color: #aaa; margin: 20px 0 10px 0; border-bottom: 1px dashed #333; padding-bottom: 5px; text-align: left; }
@@ -162,6 +169,9 @@
         <div class="action-buttons-grid">
             <button class="action-btn btn-trainer" id="btnStartTrainer">
                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Modo Entrenador
+            </button>
+            <button class="action-btn btn-rm" id="btnOpenRMModal">
+                🏋️‍♂️ Calculadora RM
             </button>
             <button class="action-btn btn-add" id="btnAddExercise">
                 + Ejercicio
@@ -199,13 +209,19 @@
             </div>
         </div>
 
-        <!-- SECCIÓN PROGRESO -->
+        <!-- SECCIÓN PROGRESO Y VOLUMEN SEMANAL -->
         <div class="progress-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="margin: 0; font-size: 0.9rem; color: var(--primary-color); text-transform: uppercase;">📈 Rendimiento</h3>
+                <h3 style="margin: 0; font-size: 0.9rem; color: var(--primary-color); text-transform: uppercase;">📈 Rendimiento y Volumen</h3>
                 <button class="btn-small" id="btnOpenProgress" style="color: var(--primary-color); border: 1px solid #444; padding: 6px 10px; border-radius: 6px;">+ Nueva Serie</button>
             </div>
             
+            <!-- Indicador de Volumen Semanal -->
+            <div id="volumeMetricsContainer" style="background: #111; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 15px; font-size: 0.8rem;">
+                <div style="font-weight: 700; color: var(--primary-color); text-transform: uppercase; margin-bottom: 6px;">📊 Volumen Semanal por Músculo</div>
+                <div id="volumeStatsList" style="color: #ccc;">Calculando series efectivas...</div>
+            </div>
+
             <div class="chart-container">
                 <div class="chart-filters-grid">
                     <select id="chartExerciseSelect" class="form-control" onchange="onExerciseChange()"></select>
@@ -256,28 +272,76 @@
             <div class="timer-display"><div class="timer-status" id="timerStatusText">Listo</div><div class="timer-clock" id="timerClockDisplay">00:45</div><div class="timer-rounds-info" id="timerRoundsDisplay">Ronda 1 de 3</div></div>
         </div>
         <div id="restSection" style="display: none;">
-            <div class="timer-inputs-grid"><div class="timer-row"><label>Tiempo Descanso</label><div class="timer-input-wrapper"><input type="number" id="quickRestTime" value="60" min="1" id="quickRestInput"><select id="quickRestUnit" onchange="onQuickRestUnitChange()"><option value="sec" selected>seg</option><option value="min">min</option></select></div></div></div>
+            <div class="timer-inputs-grid"><div class="timer-row"><label>Tiempo Descanso</label><div class="timer-input-wrapper"><input type="number" id="quickRestTime" value="60" min="1"><select id="quickRestUnit" onchange="onQuickRestUnitChange()"><option value="sec" selected>seg</option><option value="min">min</option></select></div></div></div>
             <div class="timer-display"><div class="timer-status" id="quickStatusText">Descanso</div><div class="timer-clock" id="quickClockDisplay">01:00</div><div class="timer-rounds-info" id="quickSubText">Listo</div></div>
         </div>
         <div class="timer-actions"><button class="timer-btn btn-main" id="mainActionBtn"><svg id="mainBtnIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><button class="timer-btn btn-reset-icon" id="btnResetTimer"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button></div>
     </div>
 
-    <!-- MODAL AGREGAR EJERCICIO -->
+    <!-- MODAL CALCULADORA DE RM -->
+    <div class="modal-overlay" id="rmModal">
+        <div class="modal-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="color:var(--primary-color); margin:0;">Calculadora de RM</h3>
+                <button class="btn-small" id="btnToggleRMHelp" style="background:var(--primary-color); color:#050505; width:24px; height:24px; border-radius:50%; font-weight:800;">?</button>
+            </div>
+
+            <!-- Panel de Ayuda RM -->
+            <div id="rmHelpBox" style="display:none; background:#111; border:1px solid var(--primary-color); border-radius:8px; padding:12px; margin-bottom:15px; font-size:0.75rem; line-height:1.4; color:#ccc;">
+                <strong style="color:var(--primary-color);">💡 ¿Qué es el RM (Repetición Máxima)?</strong><br>
+                Es el <strong>peso máximo</strong> con el que puedes hacer <strong>una sola repetición</strong> perfecta de un ejercicio.<br><br>
+                Como levantar tu máximo peso directo es agotador, la app lo <strong>calcula de forma inteligente</strong> usando un peso que domines varias veces (ej. 8 o 10 reps).<br><br>
+                <strong style="color:var(--primary-color);">📊 ¿Para qué sirve?</strong><br>
+                • Te indica qué peso usar según tu objetivo diario.<br>
+                • Te ayuda a medir tu volumen semanal para saber si creces o te excedes.
+            </div>
+
+            <div class="form-group"><label>Ejercicio</label><input type="text" id="rmExerciseName" class="form-control" placeholder="Ej. Press de Banca"></div>
+            <div class="form-group"><div class="input-group-flex"><div><label>Peso Levantado (KG)</label><input type="number" id="rmWeight" class="form-control" placeholder="Ej. 60"></div><div><label>Repeticiones hechas</label><input type="number" id="rmReps" class="form-control" placeholder="Ej. 8"></div></div></div>
+            <div id="rmResultDisplay" style="background:#111; border:1px solid #333; padding:12px; border-radius:8px; text-align:center; margin-bottom:15px; font-size:0.9rem; font-weight:700; color:var(--primary-color);">Ingresa tus datos para calcular tu RM</div>
+            <div class="modal-buttons"><button class="btn-cancel" id="btnCloseRMModal">Cerrar</button><button class="btn-save" id="btnCalculateRM">Calcular RM</button></div>
+        </div>
+    </div>
+
+    <!-- MODAL AGREGAR EJERCICIO INTELIGENTE -->
     <div class="modal-overlay" id="exerciseModal">
         <div class="modal-box">
             <h3 style="color:var(--primary-color); margin-top:0;" id="modalFormTitle">Agregar Ejercicio</h3>
             <input type="hidden" id="exId">
-            <div class="form-group"><label>Sección</label><select id="exSection" class="form-control"><option value="calentamiento">1. Calentamiento</option><option value="fuerza" selected>2. Fuerza / Bloque Principal</option><option value="estiramiento">3. Estiramiento / Calm</option></select></div>
-            <div class="form-group"><label>Nombre del Ejercicio</label><input type="text" id="exTitle" class="form-control" placeholder="Ej. Sentadillas Goblet"></div>
-            <div class="form-group"><label>Subtítulo / Especialidad</label><input type="text" id="exSubtitle" class="form-control" placeholder="Ej. Cuádriceps, Estilo Libre, Sprints..."></div>
-            <div class="form-group"><label>Tipo de Ejercicio</label><select id="exType" class="form-control"><option value="reps">Series y Repeticiones</option><option value="time">Por Tiempo / Intervalos</option><option value="distance">Por Distancia / Vueltas</option></select></div>
+            
+            <div class="form-group"><label>1. Sección de Entrenamiento</label><select id="exSection" class="form-control"><option value="calentamiento">Calentamiento</option><option value="fuerza" selected>Bloque Principal / Fuerza</option><option value="estiramiento">Estiramiento / Calm</option></select></div>
+            
+            <div class="form-group">
+                <label>2. Grupos Musculares (Selección múltiple)</label>
+                <div class="skills-container" id="muscleSkillsContainer">
+                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Pecho">Pecho</div>
+                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Espalda">Espalda</div>
+                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Cuádriceps">Cuádriceps</div>
+                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Isquios">Isquios</div>
+                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Hombros">Hombros</div>
+                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Bíceps">Bíceps</div>
+                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Tríceps">Tríceps</div>
+                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Abdomen">Abdomen</div>
+                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Glúteos">Glúteos</div>
+                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Cardio Global">Cardio Global</div>
+                    <div class="skill-tag" onclick="toggleMuscleSkill(this)" data-muscle="Otro">Otro</div>
+                </div>
+            </div>
+
+            <div class="form-group"><label>3. Disciplina / Actividad</label><select id="exDiscipline" class="form-control" onchange="updateExerciseCatalog()"><option value="gimnasio" selected>Gimnasio</option><option value="bicicleta">Bicicleta</option><option value="natacion">Natación</option><option value="atletismo">Atletismo / Correr</option><option value="funcional">Funcional</option><option value="pilates">Pilates</option><option value="otro">Otro</option></select></div>
+
+            <div class="form-group"><label>4. Ejercicio Recomendado / Catálogo</label><select id="exCatalogSelect" class="form-control" onchange="onCatalogSelectChange()"></select></div>
+
+            <div class="form-group" id="manualTitleGroup" style="display:none;"><label>Nombre Personalizado</label><input type="text" id="exTitle" class="form-control" placeholder="Ej. Ejercicio único..."></div>
+            <div class="form-group"><label>Subtítulo / Especialidad</label><input type="text" id="exSubtitle" class="form-control" placeholder="Ej. Ritmo moderado, Sprints..."></div>
+            <div class="form-group"><label>5. Tipo de Métrica</label><select id="exType" class="form-control"><option value="reps">Series y Repeticiones</option><option value="time">Por Tiempo / Intervalos</option><option value="distance">Por Distancia / Vueltas</option></select></div>
             
             <div class="form-group" id="repsInputs">
                 <label>Configuración de Series</label>
                 <div class="input-group-flex" style="margin-bottom: 8px;"><input type="number" id="exSeries" class="form-control" placeholder="Series (Ej. 3)"><input type="number" id="exReps" class="form-control" placeholder="Reps (Ej. 12)"></div>
                 <div class="time-input-group">
-                    <input type="number" id="exRepsRest" class="form-control" placeholder="Descanso">
-                    <select id="exRepsRestUnit" class="form-control" style="width: 80px;" onchange="onModalUnitChange('exRepsRest', this)"><option value="s">seg</option><option value="m">min</option></select>
+                    <input type="number" id="exRepsRest" class="form-control" placeholder="Descanso" value="60">
+                    <select id="exRepsRestUnit" class="form-control" style="width: 80px;" onchange="onModalUnitChange('exRepsRest', this)"><option value="s" selected>seg</option><option value="m">min</option></select>
                 </div>
             </div>
 
@@ -285,29 +349,29 @@
                 <label>Configuración de Intervalos</label>
                 <div class="input-group-flex" style="margin-bottom: 8px;">
                     <div class="time-input-group">
-                        <input type="number" id="exWorkTime" class="form-control" placeholder="Trabajo">
-                        <select id="exWorkUnit" class="form-control" style="width: 65px; padding: 5px;" onchange="onModalUnitChange('exWorkTime', this)"><option value="s">seg</option><option value="m">min</option></select>
+                        <input type="number" id="exWorkTime" class="form-control" placeholder="Trabajo" value="45">
+                        <select id="exWorkUnit" class="form-control" style="width: 65px; padding: 5px;" onchange="onModalUnitChange('exWorkTime', this)"><option value="s" selected>seg</option><option value="m">min</option></select>
                     </div>
                     <div class="time-input-group">
-                        <input type="number" id="exRestTime" class="form-control" placeholder="Descanso">
-                        <select id="exRestUnit" class="form-control" style="width: 65px; padding: 5px;" onchange="onModalUnitChange('exRestTime', this)"><option value="s">seg</option><option value="m">min</option></select>
+                        <input type="number" id="exRestTime" class="form-control" placeholder="Descanso" value="15">
+                        <select id="exRestUnit" class="form-control" style="width: 65px; padding: 5px;" onchange="onModalUnitChange('exRestTime', this)"><option value="s" selected>seg</option><option value="m">min</option></select>
                     </div>
                 </div>
-                <input type="number" id="exRounds" class="form-control" placeholder="Rondas (Ej. 3)">
+                <input type="number" id="exRounds" class="form-control" placeholder="Rondas (Ej. 3)" value="3">
             </div>
 
             <div class="form-group" id="distanceInputs" style="display: none;">
                 <label>Configuración de Distancia</label>
                 <div class="input-group-flex" style="margin-bottom: 8px;"><input type="text" id="exDistance" class="form-control" placeholder="Distancia (Ej. 100m, 5km)"><input type="number" id="exLaps" class="form-control" placeholder="Vueltas (Ej. 4)"></div>
                 <div class="time-input-group">
-                    <input type="number" id="exDistRest" class="form-control" placeholder="Descanso">
-                    <select id="exDistRestUnit" class="form-control" style="width: 80px;" onchange="onModalUnitChange('exDistRest', this)"><option value="s">seg</option><option value="m">min</option></select>
+                    <input type="number" id="exDistRest" class="form-control" placeholder="Descanso" value="30">
+                    <select id="exDistRestUnit" class="form-control" style="width: 80px;" onchange="onModalUnitChange('exDistRest', this)"><option value="s" selected>seg</option><option value="m">min</option></select>
                 </div>
             </div>
 
-            <div class="form-group"><label>Instrucciones Adicionales</label><textarea id="exInstructions" class="form-control" rows="3" placeholder="Descripción técnica, ritmo, respiración..."></textarea></div>
+            <div class="form-group"><label>Instrucciones Adicionales</label><textarea id="exInstructions" class="form-control" rows="3" placeholder="Descripción técnica, respiración..."></textarea></div>
             <div class="form-group"><label>Foto (Opcional)</label><input type="file" id="exImageInput" class="form-control" accept="image/*"></div>
-            <div class="form-group"><label class="checkbox-group"><input type="checkbox" id="exTrackProgress">📈 Registrar progreso para este ejercicio</label></div>
+            <div class="form-group"><label class="checkbox-group"><input type="checkbox" id="exTrackProgress">📈 Registrar progreso y RM para este ejercicio</label></div>
             <div class="modal-buttons"><button class="btn-cancel" id="btnCloseExerciseModal">Cancelar</button><button class="btn-save" id="btnSaveExercise">Guardar</button></div>
         </div>
     </div>
@@ -347,7 +411,7 @@
         request.onsuccess = function(e) { db = e.target.result; loadExercises(); loadProgressRecords(); };
 
         let currentExercisesList = []; let allUserExercises = [];
-        function loadExercises() { if (!db) return; const tx = db.transaction("exercises", "readonly"); const store = tx.objectStore("exercises"); const req = store.getAll(); req.onsuccess = function() { const allExercises = req.result || []; allUserExercises = allExercises.filter(ex => ex.userId === activeProfileId); currentExercisesList = allUserExercises.filter(ex => ex.day === currentDay); renderExercises(); }; }
+        function loadExercises() { if (!db) return; const tx = db.transaction("exercises", "readonly"); const store = tx.objectStore("exercises"); const req = store.getAll(); req.onsuccess = function() { const allExercises = req.result || []; allUserExercises = allExercises.filter(ex => ex.userId === activeProfileId); currentExercisesList = allUserExercises.filter(ex => ex.day === currentDay); renderExercises(); calculateWeeklyVolume(); }; }
 
         function renderExercises() {
             const calList = document.getElementById('calentamientoList'); const fueList = document.getElementById('fuerzaList'); const estList = document.getElementById('estiramientoList'); const emptyState = document.getElementById('emptyState');
@@ -361,14 +425,52 @@
                     items.forEach(ex => {
                         const card = document.createElement('div'); card.className = 'exercise-card'; card.onclick = function() { this.classList.toggle('active'); };
                         let trackBadge = ex.trackProgress ? `<span style="font-size:0.65rem; background:${currentThemeColor}; color:#050505; padding:2px 6px; border-radius:4px; font-weight:800; margin-left:8px;">CON PROGRESO</span>` : '';
-                        card.innerHTML = `<div class="card-title">${ex.title} ${trackBadge}</div><div class="card-subtitle">${ex.subtitle || ''}</div><div class="card-details">${ex.details || ''}</div><div class="card-hidden-content">${ex.image ? `<img src="${ex.image}" class="exercise-img">` : ''}<p class="card-instructions">${ex.instructions || 'Sin instrucciones adicionales.'}</p></div><div class="card-actions"><button class="btn-small" onclick="event.stopPropagation(); editExercise('${ex.id}')">Editar</button><button class="btn-small btn-delete" onclick="event.stopPropagation(); deleteExercise('${ex.id}')">Eliminar</button></div>`;
+                        let musclesBadge = ex.muscles && ex.muscles.length ? `<div style="font-size:0.7rem; color:#888; margin-top:2px;">Músculos: ${ex.muscles.join(', ')}</div>` : '';
+                        card.innerHTML = `<div class="card-title">${ex.title} ${trackBadge}</div><div class="card-subtitle">${ex.subtitle || ''}</div>${musclesBadge}<div class="card-details">${ex.details || ''}</div><div class="card-hidden-content">${ex.image ? `<img src="${ex.image}" class="exercise-img">` : ''}<p class="card-instructions">${ex.instructions || 'Sin instrucciones adicionales.'}</p></div><div class="card-actions"><button class="btn-small" onclick="event.stopPropagation(); editExercise('${ex.id}')">Editar</button><button class="btn-small btn-delete" onclick="event.stopPropagation(); deleteExercise('${ex.id}')">Eliminar</button></div>`;
                         sections[key].el.appendChild(card);
                     });
                 }
             });
         }
 
-        // LÓGICA MODAL EJERCICIOS Y CORRECCIÓN DE UNIDADES (MIN / SEG)
+        // CATÁLOGO INTELIGENTE DE EJERCICIOS Y HABILIDADES DE MÚSCULOS
+        const exerciseCatalogs = {
+            gimnasio: ["Press de Banca", "Sentadilla con Barra", "Peso Muerto", "Dominadas", "Curl de Bíceps", "Extensiones de Tríceps", "Elevaciones Laterales", "Prensa de Piernas"],
+            bicicleta: ["Ciclismo Estacionario", "Intervalos de Alta Intensidad (HIIT Bike)", "Ruta Libre / Simulación"],
+            natacion: ["Crol / Estilo Libre", "Espalda", "Pecho / Braza", "Mariposa", "Series con Tabla"],
+            atletismo: ["Sprints de 100m", "Trote Continuo", "Intervalos de Velocidad", "Carrera en Pendiente"],
+            funcional: ["Burpees", "Kettlebell Swing", "Battle Ropes", "Saltos al Cajón", "Plancha Abdominal"],
+            pilates: ["The Hundred", "Roll Up", "Single Leg Stretch", "Plank Series", "Puente de Glúteos"]
+        };
+
+        function toggleMuscleSkill(el) { el.classList.toggle('selected'); }
+
+        function updateExerciseCatalog() {
+            const discipline = document.getElementById('exDiscipline').value;
+            const select = document.getElementById('exCatalogSelect');
+            select.innerHTML = '';
+            if (discipline === 'otro') {
+                select.innerHTML = '<option value="otro">Otro (Escribir manual)</option>';
+                document.getElementById('manualTitleGroup').style.display = 'block';
+                return;
+            }
+            document.getElementById('manualTitleGroup').style.display = 'none';
+            const list = exerciseCatalogs[discipline] || [];
+            list.forEach(ex => select.add(new Option(ex, ex)));
+            select.add(new Option('Otro (Personalizado)', 'otro'));
+            onCatalogSelectChange();
+        }
+
+        function onCatalogSelectChange() {
+            const select = document.getElementById('exCatalogSelect');
+            const manualGroup = document.getElementById('manualTitleGroup');
+            if (select.value === 'otro') {
+                manualGroup.style.display = 'block';
+            } else {
+                manualGroup.style.display = 'none';
+            }
+        }
+
         let currentImageBase64 = null;
         document.getElementById('exImageInput')?.addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { currentImageBase64 = event.target.result; }; reader.readAsDataURL(file); } });
         
@@ -379,18 +481,12 @@
             document.getElementById('distanceInputs').style.display = (type === 'distance') ? 'block' : 'none'; 
         }
 
-        // Conversión inteligente automática de valores al cambiar seg <-> min en los inputs
         function onModalUnitChange(inputId, selectEl) {
             const input = document.getElementById(inputId);
             let val = parseInt(input.value);
             if(isNaN(val)) return;
-            if(selectEl.value === 'm') {
-                // De segundos a minutos (ej. 60s -> 1m, si no es divisible exacto lo dejamos redondeado o limpio)
-                input.value = Math.max(1, Math.round(val / 60));
-            } else {
-                // De minutos a segundos (ej. 1m -> 60s)
-                input.value = val * 60;
-            }
+            if(selectEl.value === 'm') { input.value = Math.max(1, Math.round(val / 60)); } 
+            else { input.value = val * 60; }
         }
 
         function onQuickRestUnitChange() {
@@ -398,17 +494,19 @@
             const select = document.getElementById('quickRestUnit');
             let val = parseInt(input.value);
             if(isNaN(val)) return;
-            if(select.value === 'min') {
-                input.value = Math.max(1, Math.round(val / 60));
-            } else {
-                input.value = val * 60;
-            }
+            if(select.value === 'min') { input.value = Math.max(1, Math.round(val / 60)); } 
+            else { input.value = val * 60; }
             updateRestDisplayInit();
         }
 
         function openExerciseModal() { 
-            document.getElementById('exId').value = ''; document.getElementById('exTitle').value = ''; document.getElementById('exSubtitle').value = ''; document.getElementById('exInstructions').value = ''; if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = ''; 
-            document.getElementById('exSeries').value = ''; document.getElementById('exReps').value = ''; document.getElementById('exRepsRest').value = '60'; document.getElementById('exRepsRestUnit').value = 's';
+            document.getElementById('exId').value = ''; 
+            document.getElementById('exSection').value = 'fuerza';
+            document.getElementById('exDiscipline').value = 'gimnasio';
+            updateExerciseCatalog();
+            document.querySelectorAll('#muscleSkillsContainer .skill-tag').forEach(t => t.classList.remove('selected'));
+            document.getElementById('exSubtitle').value = ''; document.getElementById('exInstructions').value = ''; if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = ''; 
+            document.getElementById('exSeries').value = '3'; document.getElementById('exReps').value = '10'; document.getElementById('exRepsRest').value = '60'; document.getElementById('exRepsRestUnit').value = 's';
             document.getElementById('exWorkTime').value = '45'; document.getElementById('exWorkUnit').value = 's'; document.getElementById('exRestTime').value = '15'; document.getElementById('exRestUnit').value = 's'; document.getElementById('exRounds').value = '3'; 
             document.getElementById('exDistance').value = ''; document.getElementById('exLaps').value = ''; document.getElementById('exDistRest').value = '30'; document.getElementById('exDistRestUnit').value = 's';
             document.getElementById('exType').value = 'reps'; document.getElementById('exTrackProgress').checked = false; toggleTypeInputs(); currentImageBase64 = null; document.getElementById('modalFormTitle').innerText = "Agregar Ejercicio"; document.getElementById('exerciseModal').style.display = 'flex'; 
@@ -416,7 +514,13 @@
         function closeExerciseModal() { document.getElementById('exerciseModal').style.display = 'none'; }
         
         function saveExercise() {
-            const title = document.getElementById('exTitle').value.trim(); if (!title) { alert("Ingresa un nombre para el ejercicio"); return; }
+            const catalogVal = document.getElementById('exCatalogSelect').value;
+            const manualTitle = document.getElementById('exTitle').value.trim();
+            const title = (catalogVal === 'otro') ? manualTitle : catalogVal;
+            if (!title) { alert("Ingresa un nombre para el ejercicio"); return; }
+
+            const selectedMuscles = Array.from(document.querySelectorAll('#muscleSkillsContainer .skill-tag.selected')).map(t => t.dataset.muscle);
+
             const exId = document.getElementById('exId').value || 'ex_' + Date.now(); const existing = currentExercisesList.find(e => e.id === exId); const imageToSave = currentImageBase64 || (existing ? existing.image : null); const type = document.getElementById('exType').value; const trackProgress = document.getElementById('exTrackProgress').checked;
             
             let rRestV = document.getElementById('exRepsRest').value; let repsRestVal = rRestV ? rRestV + document.getElementById('exRepsRestUnit').value : '';
@@ -433,41 +537,94 @@
             else if (type === 'distance') { let distStr = distVal ? `${distVal}` : 'Distancia'; let lapsStr = lapsVal ? `${lapsVal}x ` : ''; let restStr = distRestVal ? ` • Desc: ${distRestVal}` : ''; finalDetailsStr = `${lapsStr}${distStr}${restStr}`; } 
             else { let workPart = workTimeVal ? `${workTimeVal} trabajo` : ''; let restPart = restTimeVal ? `${restTimeVal} desc` : ''; let roundsPart = roundsVal ? `${roundsVal}x` : ''; finalDetailsStr = [roundsPart, [workPart, restPart].filter(Boolean).join(' / ')].filter(Boolean).join(' • ') || 'Por tiempo'; }
 
-            const exerciseData = { id: exId, userId: activeProfileId, day: currentDay, section: document.getElementById('exSection').value, title, subtitle: document.getElementById('exSubtitle').value.trim(), type, series: seriesVal, reps: repsVal, repsRest: repsRestVal, workTime: workTimeVal, restTime: restTimeVal, rounds: roundsVal, distance: distVal, laps: lapsVal, distRest: distRestVal, details: finalDetailsStr, instructions: document.getElementById('exInstructions').value.trim(), image: imageToSave, trackProgress: trackProgress };
+            const exerciseData = { id: exId, userId: activeProfileId, day: currentDay, section: document.getElementById('exSection').value, title, muscles: selectedMuscles, subtitle: document.getElementById('exSubtitle').value.trim(), type, series: seriesVal, reps: repsVal, repsRest: repsRestVal, workTime: workTimeVal, restTime: restTimeVal, rounds: roundsVal, distance: distVal, laps: lapsVal, distRest: distRestVal, details: finalDetailsStr, instructions: document.getElementById('exInstructions').value.trim(), image: imageToSave, trackProgress: trackProgress };
             const tx = db.transaction("exercises", "readwrite"); tx.objectStore("exercises").put(exerciseData); tx.oncomplete = function() { closeExerciseModal(); loadExercises(); };
-        }
-
-        function setTimeInput(inputId, unitId, savedValue) {
-            if(!savedValue) { document.getElementById(inputId).value = ''; document.getElementById(unitId).value = 's'; return; }
-            let num = parseInt(savedValue);
-            let isMin = savedValue.toLowerCase().includes('m');
-            document.getElementById(inputId).value = num || '';
-            document.getElementById(unitId).value = isMin ? 'm' : 's';
         }
 
         function editExercise(id) { 
             const ex = currentExercisesList.find(e => e.id === id); 
             if (ex) { 
-                document.getElementById('exId').value = ex.id; document.getElementById('exSection').value = ex.section; document.getElementById('exTitle').value = ex.title; document.getElementById('exSubtitle').value = ex.subtitle || ''; document.getElementById('exInstructions').value = ex.instructions || ''; document.getElementById('exType').value = ex.type || 'reps'; 
+                document.getElementById('exId').value = ex.id; 
+                document.getElementById('exSection').value = ex.section;
+                document.getElementById('exDiscipline').value = 'gimnasio';
+                updateExerciseCatalog();
+                document.getElementById('exCatalogSelect').value = ex.title;
+                if(document.getElementById('exCatalogSelect').value !== ex.title) {
+                    document.getElementById('exCatalogSelect').value = 'otro';
+                    document.getElementById('manualTitleGroup').style.display = 'block';
+                    document.getElementById('exTitle').value = ex.title;
+                }
+                document.querySelectorAll('#muscleSkillsContainer .skill-tag').forEach(t => {
+                    if (ex.muscles && ex.muscles.includes(t.dataset.muscle)) t.classList.add('selected');
+                    else t.classList.remove('selected');
+                });
+                document.getElementById('exSubtitle').value = ex.subtitle || ''; document.getElementById('exInstructions').value = ex.instructions || ''; document.getElementById('exType').value = ex.type || 'reps'; 
                 document.getElementById('exSeries').value = ex.series || ''; document.getElementById('exReps').value = ex.reps || ''; 
                 document.getElementById('exRounds').value = ex.rounds || ''; 
                 document.getElementById('exDistance').value = ex.distance || ''; document.getElementById('exLaps').value = ex.laps || ''; 
-                setTimeInput('exRepsRest', 'exRepsRestUnit', ex.repsRest);
-                setTimeInput('exWorkTime', 'exWorkUnit', ex.workTime);
-                setTimeInput('exRestTime', 'exRestUnit', ex.restTime);
-                setTimeInput('exDistRest', 'exDistRestUnit', ex.distRest);
                 document.getElementById('exTrackProgress').checked = !!ex.trackProgress; toggleTypeInputs(); currentImageBase64 = ex.image || null; document.getElementById('modalFormTitle').innerText = "Editar Ejercicio"; document.getElementById('exerciseModal').style.display = 'flex'; 
             } 
         }
         function deleteExercise(id) { if (confirm("¿Seguro de que deseas eliminar este ejercicio?")) { const tx = db.transaction("exercises", "readwrite"); tx.objectStore("exercises").delete(id); tx.oncomplete = function() { loadExercises(); }; } }
 
-        // MODO ENTRENADOR Y CORRECCIÓN DE SEGUNDO PLANO (TIMESTAMPS ABSOLUTOS)
+        // MÓDULO CALCULADORA DE RM
+        document.getElementById('btnOpenRMModal').onclick = () => document.getElementById('rmModal').style.display = 'flex';
+        document.getElementById('btnCloseRMModal').onclick = () => document.getElementById('rmModal').style.display = 'none';
+        document.getElementById('btnToggleRMHelp').onclick = () => {
+            const h = document.getElementById('rmHelpBox');
+            h.style.display = (h.style.display === 'none') ? 'block' : 'none';
+        };
+        document.getElementById('btnCalculateRM').onclick = () => {
+            const weight = parseFloat(document.getElementById('rmWeight').value);
+            const reps = parseInt(document.getElementById('rmReps').value);
+            const resEl = document.getElementById('rmResultDisplay');
+            if(isNaN(weight) || isNaN(reps) || weight <= 0 || reps <= 0) {
+                resEl.textContent = "Por favor ingresa valores válidos.";
+                return;
+            }
+            // Fórmula Epley estándar: RM = Peso * (1 + Reps / 30)
+            const rm = Math.round(weight * (1 + reps / 30));
+            resEl.textContent = `¡Tu RM estimado es de aprox. ${rm} KG!`;
+        };
+
+        // CÁLCULO DE VOLUMEN SEMANAL (Series por músculo)
+        function calculateWeeklyVolume() {
+            if (!db) return;
+            const tx = db.transaction("exercises", "readonly");
+            tx.objectStore("exercises").getAll().onsuccess = (e) => {
+                const all = (e.target.result || []).filter(ex => ex.userId === activeProfileId);
+                const counts = {};
+                all.forEach(ex => {
+                    const sCount = parseInt(ex.series) || (ex.type === 'reps' ? 3 : 1);
+                    if (ex.muscles && ex.muscles.length) {
+                        ex.muscles.forEach(m => { counts[m] = (counts[m] || 0) + sCount; });
+                    }
+                });
+                const statsList = document.getElementById('volumeStatsList');
+                if (Object.keys(counts).length === 0) {
+                    statsList.innerHTML = "Sin datos de músculos registrados esta semana.";
+                    return;
+                }
+                let html = '<div style="display: flex; flex-direction: column; gap: 4px;">';
+                for (const [muscle, totalSeries] of Object.entries(counts)) {
+                    let levelColor = "#4CAF50"; // Óptimo
+                    let levelText = "Óptimo (10-20s)";
+                    if (totalSeries < 10) { levelColor = "#FFC107"; levelText = "Bajo (<10s)"; }
+                    else if (totalSeries > 22) { levelColor = "#FF5722"; levelText = "Alto (>22s)"; }
+                    html += `<div style="display: flex; justify-content: space-between;"><span><b>${muscle}:</b> ${totalSeries} series</span><span style="color:${levelColor}; font-weight:700;">${levelText}</span></div>`;
+                }
+                html += '</div>';
+                statsList.innerHTML = html;
+            };
+        }
+
+        // MODO ENTRENADOR Y TIMESTAMPS
         function parseTimeStringToSeconds(str) {
             if (!str) return 0;
             str = str.toLowerCase().trim();
             let num = parseInt(str) || 0;
             if (str.includes('m')) return num * 60;
-            return num; // Por defecto segundos
+            return num;
         }
         function formatSecondsToMS(totalSeconds) { const m = Math.floor(totalSeconds / 60); const s = totalSeconds % 60; return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`; }
         function formatMSMToStopwatch(ms) { const date = new Date(ms); const m = String(date.getUTCMinutes()).padStart(2, '0'); const s = String(date.getUTCSeconds()).padStart(2, '0'); const msStr = String(Math.floor(date.getUTCMilliseconds() / 10)).padStart(2, '0'); return `${m}:${s}.${msStr}`; }
@@ -498,7 +655,6 @@
                         isResting = true; playBeepHigh(); 
                         targetTimestamp = Date.now() + (restSecs * 1000);
                         this.innerHTML = `${pauseSvg} Omitir Descanso`; this.className = "inline-btn inline-btn-sec"; document.getElementById('inlineStatus').innerText = "RECUPERACIÓN"; 
-                        
                         inlineTimerInterval = setInterval(() => { 
                             const remainingMs = targetTimestamp - Date.now();
                             const timeLeft = Math.max(0, Math.ceil(remainingMs / 1000));
@@ -522,7 +678,7 @@
             else if (ex.type === 'time') {
                 const workSecs = parseTimeStringToSeconds(ex.workTime) || 45; const restSecs = parseTimeStringToSeconds(ex.restTime) || 15; const totalRounds = parseInt(ex.rounds) || 3;
                 timerArea.innerHTML = `<div class="inline-timer-status" id="inlineStatus">LISTO PARA INICIAR CIRCUITO</div><div class="inline-timer-display" id="inlineClock">${formatSecondsToMS(workSecs)}</div><div class="inline-timer-sub" id="inlineSub">Ronda 1 de ${totalRounds}</div><div class="inline-btn-group"><button class="inline-btn inline-btn-main" id="btnInlineAction">${playSvg} Empezar</button><button class="inline-btn inline-btn-sec" id="btnInlineReset">${resetSvg}</button></div>`;
-                let isRunning = false; let phase = 'prep'; let targetTimestamp = 0; let currentRnd = 1; let currentPhaseDuration = 5;
+                let isRunning = false; let phase = 'prep'; let targetTimestamp = 0; let currentRnd = 1;
 
                 function updateTimeUI(timeLeft) { 
                     document.getElementById('inlineClock').innerText = formatSecondsToMS(timeLeft); 
@@ -537,92 +693,42 @@
                 document.getElementById('btnInlineAction').onclick = function() { 
                     if(!isRunning) { 
                         isRunning = true; this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); 
-                        if(!targetTimestamp) {
-                            phase = 'prep'; currentPhaseDuration = 5; targetTimestamp = Date.now() + (5 * 1000);
-                        }
-                        
+                        if(!targetTimestamp) { phase = 'prep'; targetTimestamp = Date.now() + (5 * 1000); }
                         inlineTimerInterval = setInterval(() => { 
                             const remainingMs = targetTimestamp - Date.now();
                             const timeLeft = Math.max(0, Math.ceil(remainingMs / 1000));
-
                             if(timeLeft <= 3 && timeLeft > 0) playBeepShort(); 
                             if(timeLeft <= 0) { 
-                                if(phase === 'prep') { 
-                                    phase = 'work'; currentPhaseDuration = workSecs; targetTimestamp = Date.now() + (workSecs * 1000); playDoubleBeep(); 
-                                } else if (phase === 'work') { 
-                                    if(restSecs > 0) { 
-                                        phase = 'rest'; currentPhaseDuration = restSecs; targetTimestamp = Date.now() + (restSecs * 1000); playBeepHigh(); 
-                                    } else { advanceRound(); } 
-                                } else if (phase === 'rest') { 
-                                    advanceRound(); 
-                                } 
+                                if(phase === 'prep') { phase = 'work'; targetTimestamp = Date.now() + (workSecs * 1000); playDoubleBeep(); } 
+                                else if (phase === 'work') { if(restSecs > 0) { phase = 'rest'; targetTimestamp = Date.now() + (restSecs * 1000); playBeepHigh(); } else { advanceRound(); } } 
+                                else if (phase === 'rest') { advanceRound(); } 
                             }
                             updateTimeUI(Math.max(0, Math.ceil((targetTimestamp - Date.now()) / 1000))); 
                         }, 200); 
-                    } else { 
-                        isRunning = false; this.innerHTML = `${playSvg} Reanudar`; clearInterval(inlineTimerInterval); 
-                    } 
+                    } else { isRunning = false; this.innerHTML = `${playSvg} Reanudar`; clearInterval(inlineTimerInterval); } 
                 };
-
                 function advanceRound() { 
-                    if(currentRnd < totalRounds) { 
-                        currentRnd++; phase = 'work'; currentPhaseDuration = workSecs; targetTimestamp = Date.now() + (workSecs * 1000); playDoubleBeep(); 
-                    } else { 
-                        phase = 'done'; isRunning = false; clearInterval(inlineTimerInterval); playDoubleBeep(); 
-                        document.getElementById('btnInlineAction').innerHTML = "Finalizado"; document.getElementById('btnInlineAction').disabled = true; 
-                    } 
+                    if(currentRnd < totalRounds) { currentRnd++; phase = 'work'; targetTimestamp = Date.now() + (workSecs * 1000); playDoubleBeep(); } 
+                    else { phase = 'done'; isRunning = false; clearInterval(inlineTimerInterval); playDoubleBeep(); document.getElementById('btnInlineAction').innerHTML = "Finalizado"; document.getElementById('btnInlineAction').disabled = true; } 
                 }
-
-                document.getElementById('btnInlineReset').onclick = function() { 
-                    clearInterval(inlineTimerInterval); isRunning = false; phase = 'prep'; targetTimestamp = 0; currentRnd = 1; updateTimeUI(5); 
-                    document.getElementById('btnInlineAction').innerHTML = `${playSvg} Empezar`; document.getElementById('btnInlineAction').disabled = false; 
-                };
+                document.getElementById('btnInlineReset').onclick = function() { clearInterval(inlineTimerInterval); isRunning = false; phase = 'prep'; targetTimestamp = 0; currentRnd = 1; updateTimeUI(5); document.getElementById('btnInlineAction').innerHTML = `${playSvg} Empezar`; document.getElementById('btnInlineAction').disabled = false; };
             }
             else if (ex.type === 'distance') {
                 const restSecs = parseTimeStringToSeconds(ex.distRest) || 30;
                 timerArea.innerHTML = `<div class="inline-timer-status" id="inlineStatus">CRONÓMETRO DE RECORRIDO</div><div class="inline-timer-display" id="inlineClock" style="font-family: monospace;">00:00.00</div><div class="inline-btn-group" style="margin-bottom: 10px;"><button class="inline-btn inline-btn-main" id="btnInlineAction">${playSvg} Iniciar</button><button class="inline-btn inline-btn-sec" id="btnInlineReset">${resetSvg}</button></div><div class="inline-btn-group" style="border-top: 1px solid #333; padding-top:15px; flex-wrap: wrap;"><button class="inline-btn inline-btn-log" id="btnLogLap">+ Registrar Tiempo</button><button class="inline-btn inline-btn-sec" id="btnStartRest" style="flex:2;">Tomar Descanso (${restSecs}s)</button></div>`;
                 let startTime = 0; let accumulatedTime = 0; let isRunning = false;
-                
                 function updateStopwatchUI() { document.getElementById('inlineClock').innerText = formatMSMToStopwatch(accumulatedTime); }
-                
                 document.getElementById('btnInlineAction').onclick = function() { 
-                    if(!isRunning) { 
-                        isRunning = true; startTime = Date.now() - accumulatedTime; 
-                        this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); document.getElementById('inlineStatus').innerText = "EN MOVIMIENTO..."; 
-                        inlineStopwatchInterval = setInterval(() => { accumulatedTime = Date.now() - startTime; updateStopwatchUI(); }, 50); 
-                    } else { 
-                        isRunning = false; clearInterval(inlineStopwatchInterval); 
-                        this.innerHTML = `${playSvg} Reanudar`; document.getElementById('inlineStatus').innerText = "PAUSADO"; 
-                    } 
+                    if(!isRunning) { isRunning = true; startTime = Date.now() - accumulatedTime; this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); document.getElementById('inlineStatus').innerText = "EN MOVIMIENTO..."; inlineStopwatchInterval = setInterval(() => { accumulatedTime = Date.now() - startTime; updateStopwatchUI(); }, 50); } 
+                    else { isRunning = false; clearInterval(inlineStopwatchInterval); this.innerHTML = `${playSvg} Reanudar`; document.getElementById('inlineStatus').innerText = "PAUSADO"; } 
                 };
-
-                document.getElementById('btnInlineReset').onclick = function() { 
-                    isRunning = false; clearInterval(inlineStopwatchInterval); accumulatedTime = 0; updateStopwatchUI(); 
-                    document.getElementById('btnInlineAction').innerHTML = `${playSvg} Iniciar`; document.getElementById('inlineStatus').innerText = "CRONÓMETRO DE RECORRIDO"; 
-                };
-
+                document.getElementById('btnInlineReset').onclick = function() { isRunning = false; clearInterval(inlineStopwatchInterval); accumulatedTime = 0; updateStopwatchUI(); document.getElementById('btnInlineAction').innerHTML = `${playSvg} Iniciar`; document.getElementById('inlineStatus').innerText = "CRONÓMETRO DE RECORRIDO"; };
                 document.getElementById('btnLogLap').onclick = function() { let currentDisplay = document.getElementById('inlineClock').innerText; openProgressModal(null, null, ex.title, currentDisplay); };
-                
                 let restRunning = false; let restInterval = null;
                 document.getElementById('btnStartRest').onclick = function() { 
                     if(isRunning) document.getElementById('btnInlineAction').click(); 
-                    if(!restRunning) { 
-                        restRunning = true; playBeepHigh(); 
-                        let targetRestTimestamp = Date.now() + (restSecs * 1000);
-                        this.innerText = `Descansando... ${restSecs}s`; 
-                        
-                        restInterval = setInterval(() => { 
-                            let rTime = Math.max(0, Math.ceil((targetRestTimestamp - Date.now()) / 1000));
-                            this.innerText = `Descansando... ${rTime}s`; 
-                            if(rTime <= 3 && rTime > 0) playBeepShort(); 
-                            if(rTime <= 0) { 
-                                clearInterval(restInterval); restRunning = false; playDoubleBeep(); 
-                                this.innerText = `Tomar Descanso (${restSecs}s)`; alert("¡Descanso terminado!"); 
-                            } 
-                        }, 200); 
-                    } else { 
-                        clearInterval(restInterval); restRunning = false; this.innerText = `Tomar Descanso (${restSecs}s)`; 
-                    } 
+                    if(!restRunning) { restRunning = true; playBeepHigh(); let targetRestTimestamp = Date.now() + (restSecs * 1000); this.innerText = `Descansando... ${restSecs}s`; restInterval = setInterval(() => { let rTime = Math.max(0, Math.ceil((targetRestTimestamp - Date.now()) / 1000)); this.innerText = `Descansando... ${rTime}s`; if(rTime <= 3 && rTime > 0) playBeepShort(); if(rTime <= 0) { clearInterval(restInterval); restRunning = false; playDoubleBeep(); this.innerText = `Tomar Descanso (${restSecs}s)`; alert("¡Descanso terminado!"); } }, 200); } 
+                    else { clearInterval(restInterval); restRunning = false; this.innerText = `Tomar Descanso (${restSecs}s)`; } 
                 };
             }
         }
@@ -630,7 +736,7 @@
         function nextTrainerStep() { if (trainerIndex < currentExercisesList.length - 1) { trainerIndex++; renderTrainerStep(); } else { alert("¡Felicidades! Has completado el entrenamiento."); exitTrainerMode(); } }
         function prevTrainerStep() { if (trainerIndex > 0) { trainerIndex--; renderTrainerStep(); } }
 
-        // --- SISTEMA DE PROGRESO Y GRÁFICAS ---
+        // PROGRESO Y GRÁFICAS
         let globalProgressRecords = []; let currentChartExercise = '';
         function openProgressModal(editIndex = null, existingData = null, defaultExercise = null, defaultVal = '') {
             const select = document.getElementById('progExerciseSelect'); select.innerHTML = ''; const trackableExercises = allUserExercises.filter(e => e.trackProgress);
@@ -755,13 +861,12 @@
                 return;
             }
 
-            // HIIT MODE
             if (!isGRunning && !isGPaused) {
                 workDuration = (document.getElementById('workUnit').value === 'min') ? parseInt(document.getElementById('workTime').value)*60 : parseInt(document.getElementById('workTime').value);
                 restDuration = (document.getElementById('restUnit').value === 'min') ? parseInt(document.getElementById('restTime').value)*60 : parseInt(document.getElementById('restTime').value);
                 maxRounds = parseInt(document.getElementById('totalRounds').value) || 3;
                 currentPhase = 'prep'; currentRound = 1;
-                globalTargetTimestamp = Date.now() + (10 * 1000); // 10s prep
+                globalTargetTimestamp = Date.now() + (10 * 1000);
                 isGRunning = true; isGPaused = false; playBeepHigh();
             } else if (isGRunning && !isGPaused) {
                 isGPaused = true; globalPauseRemaining = Math.max(0, globalTargetTimestamp - Date.now());
@@ -778,15 +883,12 @@
                         if (currentPhase !== 'round_announcement' && timeLeft <= 3) playBeepShort();
                         updateDisplay(timeLeft);
                     } else {
-                        // Transición de fases basada en duración exacta
                         if (currentPhase === 'prep') {
                             currentPhase = 'work'; globalTargetTimestamp = Date.now() + (workDuration * 1000); playBeepHigh(); updateDisplay(workDuration);
                         } else if (currentPhase === 'work') {
                             if (restDuration > 0) {
                                 currentPhase = 'rest'; globalTargetTimestamp = Date.now() + (restDuration * 1000); playBeepShort(); updateDisplay(restDuration);
-                            } else {
-                                nextRoundProgression();
-                            }
+                            } else { nextRoundProgression(); }
                         } else if (currentPhase === 'rest') {
                             nextRoundProgression();
                         }
