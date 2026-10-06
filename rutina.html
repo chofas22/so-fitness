@@ -25,60 +25,23 @@
             justify-content: center;
         }
 
-        .app-container {
-            max-width: 450px;
-            width: 100%;
-        }
+        .app-container { max-width: 450px; width: 100%; }
 
         .back-btn {
-            display: inline-block;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-transform: uppercase;
+            display: inline-block; color: var(--primary-color); text-decoration: none;
+            font-size: 0.85rem; font-weight: 700; margin-bottom: 15px; text-transform: uppercase;
         }
-
         .back-btn:hover { text-decoration: underline; }
 
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 15px 0;
-            border-bottom: 1px solid #222;
-        }
+        .header { text-align: center; margin-bottom: 20px; padding: 15px 0; border-bottom: 1px solid #222; }
+        .header h2 { font-size: 1.1rem; font-weight: 700; margin: 0; color: #ffffff; letter-spacing: 2px; text-transform: uppercase; }
+        .header h1 { font-size: 2.2rem; font-weight: 800; margin: 5px 0 0 0; color: var(--primary-color); text-transform: uppercase; }
 
-        .header h2 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 0;
-            color: #ffffff;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .header h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin: 5px 0 0 0;
-            color: var(--primary-color);
-            text-transform: uppercase;
-        }
-
-        /* BANNER DE RACHA */
         .streak-banner {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a1a10 100%);
-            border: 1px solid var(--primary-color);
-            border-radius: 12px;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(232, 124, 62, 0.15);
+            border: 1px solid var(--primary-color); border-radius: 12px; padding: 12px 15px; margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(232, 124, 62, 0.15);
         }
-
         .streak-info span { font-size: 0.7rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; display: block; }
         .streak-info h4 { margin: 2px 0 0 0; font-size: 1rem; color: var(--primary-color); font-weight: 800; }
         .streak-badge { font-size: 1.5rem; }
@@ -87,8 +50,7 @@
         .action-btn {
             flex: 1; padding: 12px; border-radius: 12px; font-family: 'Montserrat', sans-serif;
             font-weight: 800; font-size: 0.8rem; text-transform: uppercase; cursor: pointer;
-            border: none; display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: transform 0.2s;
+            border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s;
         }
         .action-btn svg { width: 16px; height: 16px; fill: currentColor; }
         .btn-trainer { background: var(--primary-gradient); color: #050505; }
@@ -100,7 +62,6 @@
             border-left: 4px solid var(--primary-color); padding-left: 10px; text-transform: uppercase; letter-spacing: 0.5px;
         }
 
-        /* TARJETAS EJERCICIO */
         .exercise-card {
             background-color: var(--card-inner); border: 1px solid #444; border-radius: 12px;
             padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); position: relative;
@@ -182,25 +143,19 @@
         .progress-table tr:hover td { background-color: rgba(232, 124, 62, 0.05); }
 
         .chart-container { background-color: #111; border: 1px solid #333; border-radius: 8px; padding: 12px; text-align: center; position: relative; }
+        .chart-filters-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .chart-filters-grid > select { flex: 1; min-width: 120px; font-size: 0.75rem; padding: 6px; }
+        
         .chart-title { font-size: 0.75rem; color: var(--primary-color); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
         canvas { width: 100% !important; height: 140px !important; cursor: crosshair; }
         
         /* TOOLTIP PARA LA GRÁFICA */
         #chartTooltip {
-            position: absolute;
-            background-color: var(--card-inner);
-            color: #fff;
-            padding: 8px 12px;
-            border: 1px solid var(--primary-color);
-            border-radius: 8px;
-            font-size: 0.75rem;
-            pointer-events: none;
-            display: none;
-            z-index: 100;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-            transform: translate(-50%, -100%);
-            margin-top: -10px; /* Para que quede justo arriba del punto */
+            position: absolute; background-color: var(--card-inner); color: #fff;
+            padding: 8px 12px; border: 1px solid var(--primary-color); border-radius: 8px;
+            font-size: 0.75rem; pointer-events: none; display: none; z-index: 100;
+            text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            transform: translate(-50%, -100%); margin-top: -24px;
         }
         #chartTooltip strong { color: var(--primary-color); font-size: 0.8rem; }
     </style>
@@ -215,7 +170,6 @@
             <h1 id="dayHeaderTitle">RUTINA</h1>
         </div>
 
-        <!-- BANNER DE RACHAS -->
         <div class="streak-banner">
             <div class="streak-info">
                 <span>Racha de Entrenamiento</span>
@@ -239,15 +193,11 @@
                 <span class="trainer-counter" id="trainerCounter">Ejercicio 1</span>
                 <button class="exit-trainer-btn" id="btnExitTrainer">✕ Salir</button>
             </div>
-            
             <h3 class="card-title" id="tTitle" style="font-size: 1.3rem;">TÍTULO</h3>
             <p class="card-subtitle" id="tSubtitle">SUBTÍTULO</p>
             <p class="card-details" id="tDetails">DETALLES</p>
-            
             <img id="tImg" class="exercise-img" src="" alt="Ejercicio" style="display:none;">
-            
             <p class="card-instructions" id="tInstructions" style="background:#111; padding:12px; border-radius:8px; border:1px solid #333;"></p>
-
             <div class="trainer-nav-buttons">
                 <button class="nav-step-btn" id="btnPrevTrainer">← Anterior</button>
                 <button class="nav-step-btn primary" id="btnNextTrainer">Siguiente →</button>
@@ -286,11 +236,11 @@
                 </tbody>
             </table>
 
-            <!-- GRÁFICA DE EVOLUCIÓN -->
+            <!-- GRÁFICA DE EVOLUCIÓN AVANZADA -->
             <div class="chart-container">
-                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                    <select id="chartExerciseSelect" class="form-control" style="font-size: 0.75rem; padding: 6px;" onchange="onChartFilterChange()"></select>
-                    <select id="chartSerieSelect" class="form-control" style="font-size: 0.75rem; padding: 6px; width: 130px;" onchange="onChartFilterChange()">
+                <div class="chart-filters-grid">
+                    <select id="chartExerciseSelect" class="form-control" onchange="onExerciseChange()"></select>
+                    <select id="chartSerieSelect" class="form-control" onchange="onChartFilterChange()">
                         <option value="all">Todas las series</option>
                         <option value="1">Serie 1</option>
                         <option value="2">Serie 2</option>
@@ -299,9 +249,18 @@
                         <option value="5">Serie 5</option>
                     </select>
                 </div>
-                <div class="chart-title" id="chartTitle">Selecciona un ejercicio y serie</div>
+                <div class="chart-filters-grid">
+                    <select id="chartTimeView" class="form-control" onchange="onTimeViewChange()">
+                        <option value="mes" selected>Por Mes</option>
+                        <option value="ano">Por Año</option>
+                        <option value="dia">Por Día</option>
+                    </select>
+                    <select id="chartTimeContext" class="form-control" onchange="onChartFilterChange()">
+                        <!-- Se llena dinámicamente según la vista seleccionada -->
+                    </select>
+                </div>
+                <div class="chart-title" id="chartTitle">Selecciona un ejercicio y fecha</div>
                 
-                <!-- Contenedor Relativo para que el Tooltip flote encima -->
                 <div style="position: relative;">
                     <canvas id="progressCanvas"></canvas>
                     <div id="chartTooltip"></div>
@@ -312,9 +271,7 @@
 
     <!-- TEMPORIZADOR FLOTANTE -->
     <div id="timer-bubble" title="Abrir Temporizador">
-        <svg viewBox="0 0 24 24">
-            <path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
     </div>
 
     <div id="timer-modal">
@@ -351,7 +308,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="timer-display">
                 <div class="timer-status" id="timerStatusText">Listo para empezar</div>
                 <div class="timer-clock" id="timerClockDisplay">00:45</div>
@@ -369,7 +325,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="timer-display">
                 <div class="timer-status" id="quickStatusText">Descanso entre series</div>
                 <div class="timer-clock" id="quickClockDisplay">01:00</div>
@@ -378,7 +333,6 @@
         </div>
 
         <div class="timer-actions">
-            <!-- El icono cambia dinámicamente entre Play y Pause -->
             <button class="timer-btn btn-main" id="mainActionBtn"><svg id="mainBtnIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
             <button class="timer-btn btn-reset-icon" id="btnResetTimer"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
         </div>
@@ -435,14 +389,12 @@
                 <label>Foto (Opcional)</label>
                 <input type="file" id="exImageInput" class="form-control" accept="image/*">
             </div>
-
             <div class="form-group">
                 <label class="checkbox-group">
                     <input type="checkbox" id="exTrackProgress">
                     📈 Registrar progreso de peso (KG) para este ejercicio
                 </label>
             </div>
-
             <div class="modal-buttons">
                 <button class="btn-cancel" id="btnCloseExerciseModal">Cancelar</button>
                 <button class="btn-save" id="btnSaveExercise">Guardar</button>
@@ -457,9 +409,7 @@
             <input type="hidden" id="progIndexEdit" value="">
             <div class="form-group">
                 <label>Ejercicio con Seguimiento</label>
-                <select id="progExerciseSelect" class="form-control">
-                    <!-- Se llena automáticamente -->
-                </select>
+                <select id="progExerciseSelect" class="form-control"></select>
             </div>
             <div class="form-group">
                 <label>Fecha</label>
@@ -508,7 +458,6 @@
         }
         document.getElementById('dayHeaderTitle').innerText = currentDay.toUpperCase();
 
-        // Rachas
         function updateStreak() {
             const streakData = JSON.parse(localStorage.getItem('user_streaks')) || {};
             const userStreak = streakData[activeProfileId] || { count: 0, lastDate: '' };
@@ -574,11 +523,7 @@
                 emptyState.style.display = 'none';
             }
 
-            const sections = {
-                calentamiento: { el: calList, title: "1. Calentamiento" },
-                fuerza: { el: fueList, title: "2. Bloque Principal" },
-                estiramiento: { el: estList, title: "3. Estiramientos" }
-            };
+            const sections = { calentamiento: { el: calList, title: "1. Calentamiento" }, fuerza: { el: fueList, title: "2. Bloque Principal" }, estiramiento: { el: estList, title: "3. Estiramientos" } };
 
             Object.keys(sections).forEach(key => {
                 const items = currentExercisesList.filter(ex => ex.section === key);
@@ -615,17 +560,14 @@
         }
 
         let currentImageBase64 = null;
-        const imageInputEl = document.getElementById('exImageInput');
-        if(imageInputEl) {
-            imageInputEl.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) { currentImageBase64 = event.target.result; };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
+        document.getElementById('exImageInput')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) { currentImageBase64 = event.target.result; };
+                reader.readAsDataURL(file);
+            }
+        });
 
         function toggleTypeInputs() {
             const type = document.getElementById('exType').value;
@@ -634,15 +576,11 @@
         }
 
         function openExerciseModal() {
-            document.getElementById('exId').value = '';
-            document.getElementById('exTitle').value = '';
-            document.getElementById('exSubtitle').value = '';
-            document.getElementById('exInstructions').value = '';
+            document.getElementById('exId').value = ''; document.getElementById('exTitle').value = '';
+            document.getElementById('exSubtitle').value = ''; document.getElementById('exInstructions').value = '';
             if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = '';
-            document.getElementById('exType').value = 'reps';
-            document.getElementById('exTrackProgress').checked = false;
-            toggleTypeInputs();
-            currentImageBase64 = null;
+            document.getElementById('exType').value = 'reps'; document.getElementById('exTrackProgress').checked = false;
+            toggleTypeInputs(); currentImageBase64 = null;
             document.getElementById('modalFormTitle').innerText = "Agregar Ejercicio";
             document.getElementById('exerciseModal').style.display = 'flex';
         }
@@ -659,57 +597,39 @@
             const trackProgress = document.getElementById('exTrackProgress').checked;
 
             let finalDetailsStr = "";
-            let seriesVal = document.getElementById('exSeries').value;
-            let repsVal = document.getElementById('exReps').value;
-            let workTimeVal = document.getElementById('exWorkTime').value;
-            let restTimeVal = document.getElementById('exRestTime').value;
+            let seriesVal = document.getElementById('exSeries').value; let repsVal = document.getElementById('exReps').value;
+            let workTimeVal = document.getElementById('exWorkTime').value; let restTimeVal = document.getElementById('exRestTime').value;
             let roundsVal = document.getElementById('exRounds').value;
 
-            if (type === 'reps') {
-                finalDetailsStr = `${seriesVal || 0} Series x ${repsVal || 0} Repeticiones`;
-            } else {
-                let workPart = workTimeVal ? `${workTimeVal} trabajo` : '';
-                let restPart = restTimeVal ? `${restTimeVal} descanso` : '';
+            if (type === 'reps') { finalDetailsStr = `${seriesVal || 0} Series x ${repsVal || 0} Repeticiones`; } 
+            else {
+                let workPart = workTimeVal ? `${workTimeVal} trabajo` : ''; let restPart = restTimeVal ? `${restTimeVal} descanso` : '';
                 let roundsPart = roundsVal ? `${roundsVal}` : '';
                 finalDetailsStr = [roundsPart, [workPart, restPart].filter(Boolean).join(' / ')].filter(Boolean).join(' • ') || 'Por tiempo';
             }
 
             const exerciseData = {
-                id: exId, userId: activeProfileId, day: currentDay,
-                section: document.getElementById('exSection').value,
-                title, subtitle: document.getElementById('exSubtitle').value.trim(),
-                type, series: seriesVal, reps: repsVal, workTime: workTimeVal, restTime: restTimeVal, rounds: roundsVal,
-                details: finalDetailsStr, instructions: document.getElementById('exInstructions').value.trim(), image: imageToSave,
-                trackProgress: trackProgress
+                id: exId, userId: activeProfileId, day: currentDay, section: document.getElementById('exSection').value,
+                title, subtitle: document.getElementById('exSubtitle').value.trim(), type, series: seriesVal, reps: repsVal, workTime: workTimeVal, restTime: restTimeVal, rounds: roundsVal,
+                details: finalDetailsStr, instructions: document.getElementById('exInstructions').value.trim(), image: imageToSave, trackProgress: trackProgress
             };
 
             const tx = db.transaction("exercises", "readwrite");
             tx.objectStore("exercises").put(exerciseData);
-            tx.oncomplete = function() { 
-                closeExerciseModal(); 
-                loadExercises(); 
-            };
+            tx.oncomplete = function() { closeExerciseModal(); loadExercises(); };
         }
 
         function editExercise(id) {
             const ex = currentExercisesList.find(e => e.id === id);
             if (ex) {
-                document.getElementById('exId').value = ex.id;
-                document.getElementById('exSection').value = ex.section;
-                document.getElementById('exTitle').value = ex.title;
-                document.getElementById('exSubtitle').value = ex.subtitle || '';
-                document.getElementById('exInstructions').value = ex.instructions || '';
-                document.getElementById('exType').value = ex.type || 'reps';
-                document.getElementById('exSeries').value = ex.series || '';
-                document.getElementById('exReps').value = ex.reps || '';
-                document.getElementById('exWorkTime').value = ex.workTime || '';
-                document.getElementById('exRestTime').value = ex.restTime || '';
-                document.getElementById('exRounds').value = ex.rounds || '';
-                document.getElementById('exTrackProgress').checked = !!ex.trackProgress;
-                toggleTypeInputs();
-                currentImageBase64 = ex.image || null;
-                document.getElementById('modalFormTitle').innerText = "Editar Ejercicio";
-                document.getElementById('exerciseModal').style.display = 'flex';
+                document.getElementById('exId').value = ex.id; document.getElementById('exSection').value = ex.section;
+                document.getElementById('exTitle').value = ex.title; document.getElementById('exSubtitle').value = ex.subtitle || '';
+                document.getElementById('exInstructions').value = ex.instructions || ''; document.getElementById('exType').value = ex.type || 'reps';
+                document.getElementById('exSeries').value = ex.series || ''; document.getElementById('exReps').value = ex.reps || '';
+                document.getElementById('exWorkTime').value = ex.workTime || ''; document.getElementById('exRestTime').value = ex.restTime || '';
+                document.getElementById('exRounds').value = ex.rounds || ''; document.getElementById('exTrackProgress').checked = !!ex.trackProgress;
+                toggleTypeInputs(); currentImageBase64 = ex.image || null;
+                document.getElementById('modalFormTitle').innerText = "Editar Ejercicio"; document.getElementById('exerciseModal').style.display = 'flex';
             }
         }
 
@@ -721,62 +641,44 @@
             }
         }
 
-        // --- PROGRESO DETALLADO POR SERIE, FECHA, PESO Y REPS ---
+        // --- SISTEMA DE PROGRESO Y GRÁFICAS AVANZADO ---
+        let globalProgressRecords = [];
+        let currentChartExercise = '';
+
         function openProgressModal(editIndex = null, existingData = null) {
             const select = document.getElementById('progExerciseSelect');
             select.innerHTML = '';
-
             const trackableExercises = allUserExercises.filter(e => e.trackProgress);
 
             if (trackableExercises.length === 0) {
-                const opt = document.createElement('option');
-                opt.value = '';
-                opt.textContent = 'No hay ejercicios marcados para progreso';
-                select.appendChild(opt);
+                select.appendChild(new Option('No hay ejercicios marcados', ''));
             } else {
-                const uniqueNames = [...new Set(trackableExercises.map(e => e.title))];
-                uniqueNames.forEach(name => {
-                    const opt = document.createElement('option');
-                    opt.value = name;
-                    opt.textContent = name;
-                    select.appendChild(opt);
-                });
+                [...new Set(trackableExercises.map(e => e.title))].forEach(name => select.appendChild(new Option(name, name)));
             }
 
             if (editIndex !== null && existingData) {
-                document.getElementById('progModalTitle').textContent = "Editar Serie";
-                select.value = existingData.exercise;
-                document.getElementById('progDate').value = existingData.date;
-                document.getElementById('progSerieNum').value = existingData.serie;
-                document.getElementById('progWeight').value = existingData.weight;
-                document.getElementById('progReps').value = existingData.reps;
+                document.getElementById('progModalTitle').textContent = "Editar Serie"; select.value = existingData.exercise;
+                document.getElementById('progDate').value = existingData.date; document.getElementById('progSerieNum').value = existingData.serie;
+                document.getElementById('progWeight').value = existingData.weight; document.getElementById('progReps').value = existingData.reps;
                 document.getElementById('progIndexEdit').value = editIndex;
             } else {
                 document.getElementById('progModalTitle').textContent = "Registrar Serie de Carga";
                 document.getElementById('progDate').value = new Date().toISOString().slice(0, 10);
-                document.getElementById('progSerieNum').value = '1';
-                document.getElementById('progWeight').value = '';
-                document.getElementById('progReps').value = '';
-                document.getElementById('progIndexEdit').value = '';
+                document.getElementById('progSerieNum').value = '1'; document.getElementById('progWeight').value = '';
+                document.getElementById('progReps').value = ''; document.getElementById('progIndexEdit').value = '';
             }
-
             document.getElementById('progressModal').style.display = 'flex';
         }
 
         function closeProgressModal() { document.getElementById('progressModal').style.display = 'none'; }
 
         function saveProgressRecord() {
-            const exerciseName = document.getElementById('progExerciseSelect').value;
-            const dateVal = document.getElementById('progDate').value;
-            const serieVal = parseInt(document.getElementById('progSerieNum').value) || 1;
-            const weightVal = parseFloat(document.getElementById('progWeight').value);
-            const repsVal = parseInt(document.getElementById('progReps').value);
-            const editIdx = document.getElementById('progIndexEdit').value;
+            const exerciseName = document.getElementById('progExerciseSelect').value; const dateVal = document.getElementById('progDate').value;
+            const serieVal = parseInt(document.getElementById('progSerieNum').value) || 1; const weightVal = parseFloat(document.getElementById('progWeight').value);
+            const repsVal = parseInt(document.getElementById('progReps').value); const editIdx = document.getElementById('progIndexEdit').value;
 
-            if (!exerciseName) { alert("Selecciona un ejercicio válido."); return; }
-            if (!dateVal) { alert("Ingresa la fecha."); return; }
-            if (isNaN(weightVal)) { alert("Ingresa un peso válido."); return; }
-            if (isNaN(repsVal)) { alert("Ingresa las repeticiones."); return; }
+            if (!exerciseName) { alert("Selecciona un ejercicio válido."); return; } if (!dateVal) { alert("Ingresa la fecha."); return; }
+            if (isNaN(weightVal)) { alert("Ingresa un peso válido."); return; } if (isNaN(repsVal)) { alert("Ingresa las repeticiones."); return; }
 
             const tx = db.transaction("progress", "readwrite");
             const store = tx.objectStore("progress");
@@ -784,36 +686,17 @@
             const getReq = store.get(recordId);
 
             getReq.onsuccess = function() {
-                let record = getReq.result || {
-                    id: recordId,
-                    userId: activeProfileId,
-                    exercise: exerciseName,
-                    history: []
-                };
-
+                let record = getReq.result || { id: recordId, userId: activeProfileId, exercise: exerciseName, history: [] };
                 const newEntry = { date: dateVal, serie: serieVal, weight: weightVal, reps: repsVal };
 
-                if (editIdx !== "") {
-                    record.history[parseInt(editIdx)] = newEntry;
-                } else {
-                    record.history.push(newEntry);
-                }
+                if (editIdx !== "") { record.history[parseInt(editIdx)] = newEntry; } 
+                else { record.history.push(newEntry); }
 
-                // Asegurar que el historial en la base de datos quede ordenado por fecha
                 record.history.sort((a, b) => new Date(a.date) - new Date(b.date));
-
                 store.put(record);
-                tx.oncomplete = function() {
-                    closeProgressModal();
-                    loadProgressRecords();
-                    updateChartSelectors();
-                    drawChart(exerciseName, document.getElementById('chartSerieSelect').value);
-                };
+                tx.oncomplete = function() { closeProgressModal(); loadProgressRecords(); };
             };
         }
-
-        let globalProgressRecords = [];
-        let currentChartExercise = '';
 
         function loadProgressRecords() {
             if (!db) return;
@@ -830,79 +713,90 @@
                 if (globalProgressRecords.length === 0 || globalProgressRecords.every(r => r.history.length === 0)) {
                     tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #666; font-size: 0.8rem;">Sin registros de progreso aún.</td></tr>';
                     document.getElementById('chartTitle').textContent = "Selecciona un ejercicio para ver su gráfica";
-                    clearCanvas();
-                    updateChartSelectors();
-                    return;
+                    clearCanvas(); updateChartSelectors(); return;
                 }
 
-                globalProgressRecords.forEach((r) => {
-                    r.history.forEach((h, idx) => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td><strong style="color:${currentThemeColor}">${r.exercise}</strong><br><span style="font-size:0.68rem; color:#aaa;">${h.date}</span></td>
-                            <td>Serie ${h.serie}</td>
-                            <td><strong>${h.weight} KG</strong> x ${h.reps} reps</td>
-                            <td>
-                                <button class="btn-small" onclick="editProgressRecord('${r.exercise}', ${idx})">✏️</button>
-                                <button class="btn-small btn-delete" onclick="deleteProgressRecord('${r.exercise}', ${idx})">🗑️️</button>
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
+                // Generar tabla histórica (solo los más recientes)
+                let allHistoryEntries = [];
+                globalProgressRecords.forEach((r) => { r.history.forEach((h, idx) => allHistoryEntries.push({ exercise: r.exercise, index: idx, ...h })); });
+                allHistoryEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                allHistoryEntries.forEach((h) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong style="color:${currentThemeColor}">${h.exercise}</strong><br><span style="font-size:0.68rem; color:#aaa;">${h.date}</span></td>
+                        <td>Serie ${h.serie}</td>
+                        <td><strong>${h.weight} KG</strong> x ${h.reps} reps</td>
+                        <td>
+                            <button class="btn-small" onclick="editProgressRecord('${h.exercise}', ${h.index})">✏️</button>
+                            <button class="btn-small btn-delete" onclick="deleteProgressRecord('${h.exercise}', ${h.index})">🗑</button>
+                        </td>`;
+                    tbody.appendChild(tr);
                 });
 
                 updateChartSelectors();
-                const serieVal = document.getElementById('chartSerieSelect').value;
-                const targetEx = currentChartExercise || globalProgressRecords[0].exercise;
-                drawChart(targetEx, serieVal);
             };
         }
+
+        // ACTUALIZACIÓN DINÁMICA DE FILTROS DE GRÁFICA
+        const monthNamesMap = {'01':'Ene', '02':'Feb', '03':'Mar', '04':'Abr', '05':'May', '06':'Jun', '07':'Jul', '08':'Ago', '09':'Sep', '10':'Oct', '11':'Nov', '12':'Dic'};
+        const monthNamesFull = {'01':'Enero', '02':'Febrero', '03':'Marzo', '04':'Abril', '05':'Mayo', '06':'Junio', '07':'Julio', '08':'Agosto', '09':'Septiembre', '10':'Octubre', '11':'Noviembre', '12':'Diciembre'};
 
         function updateChartSelectors() {
             const selectEx = document.getElementById('chartExerciseSelect');
             if (!selectEx) return;
-            selectEx.innerHTML = '';
             
-            const uniqueNames = [];
-            globalProgressRecords.forEach(r => {
-                if (!uniqueNames.includes(r.exercise)) uniqueNames.push(r.exercise);
-            });
-
+            const uniqueNames = [...new Set(globalProgressRecords.map(r => r.exercise))];
             if (uniqueNames.length === 0) {
-                selectEx.innerHTML = '<option value="">Sin ejercicios con registros</option>';
+                selectEx.innerHTML = '<option value="">Sin registros</option>';
                 return;
             }
 
+            selectEx.innerHTML = '';
             uniqueNames.forEach(name => {
-                const opt = document.createElement('option');
-                opt.value = name;
-                opt.textContent = name;
+                const opt = new Option(name, name);
                 if (name === currentChartExercise) opt.selected = true;
                 selectEx.appendChild(opt);
             });
 
-            if (!currentChartExercise && uniqueNames.length > 0) {
-                currentChartExercise = uniqueNames[0];
-                selectEx.value = currentChartExercise;
-            }
+            if (!currentChartExercise && uniqueNames.length > 0) { currentChartExercise = uniqueNames[0]; selectEx.value = currentChartExercise; }
+            onExerciseChange();
         }
 
-        function onChartFilterChange() {
+        function onExerciseChange() {
             currentChartExercise = document.getElementById('chartExerciseSelect').value;
-            const serieVal = document.getElementById('chartSerieSelect').value;
-            if (currentChartExercise) {
-                drawChart(currentChartExercise, serieVal);
-            }
+            updateTimeContextSelectors();
+            drawChart();
         }
 
-        function editProgressRecord(exerciseName, index) {
-            const record = globalProgressRecords.find(r => r.exercise === exerciseName);
-            if (record && record.history[index]) {
-                openProgressModal(index, {
-                    exercise: exerciseName,
-                    ...record.history[index]
-                });
-            }
+        function onTimeViewChange() { updateTimeContextSelectors(); drawChart(); }
+        function onChartFilterChange() { drawChart(); }
+
+        function updateTimeContextSelectors() {
+            const timeView = document.getElementById('chartTimeView').value;
+            const selectCtx = document.getElementById('chartTimeContext');
+            selectCtx.innerHTML = '';
+            
+            const record = globalProgressRecords.find(r => r.exercise === currentChartExercise);
+            if (!record || !record.history.length) { selectCtx.innerHTML = '<option value="">Sin datos</option>'; return; }
+
+            const uniqueVals = new Set();
+            record.history.forEach(h => {
+                if (timeView === 'ano') uniqueVals.add(h.date.substring(0, 4)); // YYYY
+                else if (timeView === 'mes') uniqueVals.add(h.date.substring(0, 7)); // YYYY-MM
+                else if (timeView === 'dia') uniqueVals.add(h.date); // YYYY-MM-DD
+            });
+
+            const sortedVals = Array.from(uniqueVals).sort((a,b) => b.localeCompare(a)); // Más recientes primero
+
+            sortedVals.forEach(val => {
+                const opt = document.createElement('option');
+                opt.value = val;
+                if (timeView === 'ano') { opt.textContent = val; } 
+                else if (timeView === 'mes') { const [y, m] = val.split('-'); opt.textContent = `${monthNamesFull[m]} ${y}`; } 
+                else { opt.textContent = val; }
+                selectCtx.appendChild(opt);
+            });
         }
 
         function deleteProgressRecord(exerciseName, index) {
@@ -917,138 +811,159 @@
                     if (record && record.history) {
                         record.history.splice(index, 1);
                         store.put(record);
-                        tx.oncomplete = function() {
-                            loadProgressRecords();
-                        };
+                        tx.oncomplete = function() { loadProgressRecords(); };
                     }
                 };
             }
         }
 
         function clearCanvas() {
-            const canvas = document.getElementById('progressCanvas');
-            const ctx = canvas.getContext('2d');
+            const canvas = document.getElementById('progressCanvas'); const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
         let chartRenderedPoints = []; // Para detectar el hover
 
-        function drawChart(exerciseName, serieFilter = 'all') {
-            currentChartExercise = exerciseName;
+        function drawChart() {
+            const exerciseName = document.getElementById('chartExerciseSelect').value;
+            const serieFilter = document.getElementById('chartSerieSelect').value;
+            const timeView = document.getElementById('chartTimeView').value;
+            const timeContext = document.getElementById('chartTimeContext').value;
+
             const record = globalProgressRecords.find(r => r.exercise === exerciseName);
             const titleEl = document.getElementById('chartTitle');
             const canvas = document.getElementById('progressCanvas');
             const ctx = canvas.getContext('2d');
             chartRenderedPoints = []; 
 
-            canvas.width = canvas.parentElement.clientWidth - 24;
-            canvas.height = 140;
+            canvas.width = canvas.parentElement.clientWidth - 24; canvas.height = 140;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (!record || !record.history || record.history.length === 0) {
-                titleEl.textContent = `Gráfica: ${exerciseName} (Sin datos)`;
-                return;
+            if (!record || !record.history || record.history.length === 0 || !timeContext) {
+                titleEl.textContent = `Gráfica: Sin datos disponibles`; return;
             }
 
             let history = record.history;
-            if (serieFilter !== 'all') {
-                history = history.filter(h => String(h.serie) === String(serieFilter));
-            }
-
-            // ASEGURAR ORDEN CRONOLÓGICO PARA LA GRÁFICA
+            if (serieFilter !== 'all') { history = history.filter(h => String(h.serie) === String(serieFilter)); }
             history.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            let serieLabelText = serieFilter === 'all' ? 'Todas las series' : `Serie ${serieFilter}`;
-            titleEl.textContent = `${exerciseName} — ${serieLabelText}`;
+            // Filtrado y Agrupación según la vista
+            let finalPoints = [];
 
-            if (history.length === 0) {
-                ctx.fillStyle = '#888';
-                ctx.font = '11px Montserrat';
-                ctx.textAlign = 'center';
-                ctx.fillText("No hay registros para esta serie", canvas.width / 2, canvas.height / 2);
+            if (timeView === 'ano') {
+                const yearRecords = history.filter(h => h.date.startsWith(timeContext));
+                const monthlyData = {};
+                yearRecords.forEach(h => {
+                    const month = h.date.substring(5, 7);
+                    if (!monthlyData[month]) monthlyData[month] = { sumW: 0, sumR: 0, count: 0 };
+                    monthlyData[month].sumW += parseFloat(h.weight);
+                    monthlyData[month].sumR += parseInt(h.reps);
+                    monthlyData[month].count++;
+                });
+                
+                Object.keys(monthlyData).sort().forEach(m => {
+                    const d = monthlyData[m];
+                    const avgW = parseFloat((d.sumW / d.count).toFixed(1));
+                    const avgR = Math.round(d.sumR / d.count);
+                    finalPoints.push({
+                        label: monthNamesMap[m],
+                        weight: avgW, reps: avgR,
+                        tooltipTitle: `Promedio ${monthNamesMap[m]} ${timeContext}`
+                    });
+                });
+                titleEl.textContent = `Desempeño Año ${timeContext}`;
+
+            } else if (timeView === 'mes') {
+                const monthRecords = history.filter(h => h.date.startsWith(timeContext));
+                monthRecords.forEach(h => {
+                    finalPoints.push({
+                        label: h.date.substring(8, 10), // Día del mes
+                        weight: parseFloat(h.weight), reps: h.reps,
+                        tooltipTitle: `${h.date} (Serie ${h.serie})`
+                    });
+                });
+                const [y, m] = timeContext.split('-');
+                titleEl.textContent = `Progreso en ${monthNamesFull[m]} ${y}`;
+
+            } else if (timeView === 'dia') {
+                const dayRecords = history.filter(h => h.date === timeContext);
+                dayRecords.forEach(h => {
+                    finalPoints.push({
+                        label: `S${h.serie}`,
+                        weight: parseFloat(h.weight), reps: h.reps,
+                        tooltipTitle: `${h.date} - Serie ${h.serie}`
+                    });
+                });
+                titleEl.textContent = `Series registradas el ${timeContext}`;
+            }
+
+            if (serieFilter !== 'all') titleEl.textContent += ` — Serie ${serieFilter}`;
+            else titleEl.textContent += ` — Todas las series`;
+
+            if (finalPoints.length === 0) {
+                ctx.fillStyle = '#888'; ctx.font = '11px Montserrat'; ctx.textAlign = 'center';
+                ctx.fillText("No hay registros para este filtro", canvas.width / 2, canvas.height / 2);
                 return;
             }
 
-            const weights = history.map(h => h.weight);
-            const maxW = Math.max(...weights, 10);
-            const minW = Math.min(...weights, 0);
-            const padding = 30;
-            const chartW = canvas.width - padding * 2;
-            const chartH = canvas.height - padding * 2;
+            const weights = finalPoints.map(p => p.weight);
+            const maxW = Math.max(...weights, 10); const minW = Math.min(...weights, 0);
+            const padding = 30; const chartW = canvas.width - padding * 2; const chartH = canvas.height - padding * 2;
 
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(padding, padding);
-            ctx.lineTo(padding, canvas.height - padding);
-            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            // Dibuja los ejes
+            ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.beginPath();
+            ctx.moveTo(padding, padding); ctx.lineTo(padding, canvas.height - padding); ctx.lineTo(canvas.width - padding, canvas.height - padding);
             ctx.stroke();
 
-            const stepX = history.length > 1 ? chartW / (history.length - 1) : chartW;
+            const stepX = finalPoints.length > 1 ? chartW / (finalPoints.length - 1) : chartW / 2;
 
-            // Línea continua
-            ctx.strokeStyle = currentThemeColor;
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-
-            history.forEach((h, i) => {
-                const x = padding + (i * stepX);
-                const y = canvas.height - padding - ((h.weight - minW) / (maxW - minW || 1)) * chartH;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-                
-                // Guardar coordenadas para el Tooltip
-                chartRenderedPoints.push({ x, y, date: h.date, weight: h.weight, reps: h.reps });
+            // Dibuja la línea de evolución
+            ctx.strokeStyle = currentThemeColor; ctx.lineWidth = 3; ctx.beginPath();
+            finalPoints.forEach((pt, i) => {
+                const x = finalPoints.length > 1 ? padding + (i * stepX) : canvas.width / 2;
+                const y = canvas.height - padding - ((pt.weight - minW) / (maxW - minW || 1)) * chartH;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                chartRenderedPoints.push({ x, y, weight: pt.weight, reps: pt.reps, tooltipTitle: pt.tooltipTitle, label: pt.label });
             });
             ctx.stroke();
 
-            // Dibujar los puntos sobre la línea
+            // Dibuja los puntos y los textos de información estática
             chartRenderedPoints.forEach(pt => {
-                ctx.fillStyle = currentThemeColor;
-                ctx.beginPath();
-                ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.fillStyle = currentThemeColor; ctx.beginPath(); ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2); ctx.fill();
 
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
-                ctx.fill();
+                // ETIQUETAS DEL EJE X
+                ctx.fillStyle = '#888'; ctx.font = '9px Montserrat'; ctx.textAlign = 'center';
+                ctx.fillText(pt.label, pt.x, canvas.height - 10);
+
+                // TEXTO FIJO ARRIBA DEL PUNTO
+                ctx.fillStyle = '#fff'; ctx.font = '9px Montserrat';
+                ctx.fillText(`${pt.weight}kg (${pt.reps}r)`, pt.x, pt.y - 12);
             });
         }
 
-        // TOOLTIP INTERACTIVO PARA LA GRÁFICA
+        // EVENTOS DEL TOOLTIP INTERACTIVO
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('progressCanvas');
             const tooltip = document.getElementById('chartTooltip');
 
             canvas.addEventListener('mousemove', (e) => {
                 const rect = canvas.getBoundingClientRect();
-                const mouseX = e.clientX - rect.left;
-                const mouseY = e.clientY - rect.top;
+                const mouseX = e.clientX - rect.left; const mouseY = e.clientY - rect.top;
 
                 let hoveredPoint = null;
                 for (let pt of chartRenderedPoints) {
-                    const dx = mouseX - pt.x;
-                    const dy = mouseY - pt.y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 12) { // Rango de detección del cursor
-                        hoveredPoint = pt;
-                        break;
-                    }
+                    const dx = mouseX - pt.x; const dy = mouseY - pt.y;
+                    if (Math.sqrt(dx * dx + dy * dy) < 14) { hoveredPoint = pt; break; }
                 }
 
                 if (hoveredPoint) {
-                    tooltip.style.display = 'block';
-                    tooltip.style.left = hoveredPoint.x + 'px';
-                    tooltip.style.top = hoveredPoint.y + 'px';
-                    tooltip.innerHTML = `<strong>${hoveredPoint.date}</strong><br>${hoveredPoint.weight} KG x ${hoveredPoint.reps} reps`;
-                } else {
-                    tooltip.style.display = 'none';
-                }
+                    tooltip.style.display = 'block'; tooltip.style.left = hoveredPoint.x + 'px'; tooltip.style.top = hoveredPoint.y + 'px';
+                    tooltip.innerHTML = `<strong>${hoveredPoint.tooltipTitle}</strong><br>${hoveredPoint.weight} KG x ${hoveredPoint.reps} reps`;
+                } else { tooltip.style.display = 'none'; }
             });
 
-            canvas.addEventListener('mouseleave', () => {
-                tooltip.style.display = 'none';
-            });
+            canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
         });
 
         // MODO ENTRENADOR
@@ -1056,125 +971,68 @@
         function startTrainerMode() {
             if (currentExercisesList.length === 0) { alert("Primero debes agregar al menos un ejercicio."); return; }
             trainerIndex = 0;
-            document.getElementById('mainContentContainer').style.display = 'none';
-            document.querySelector('.action-buttons-grid').style.display = 'none';
-            document.getElementById('trainer-mode-container').style.display = 'block';
-            renderTrainerStep();
+            document.getElementById('mainContentContainer').style.display = 'none'; document.querySelector('.action-buttons-grid').style.display = 'none';
+            document.getElementById('trainer-mode-container').style.display = 'block'; renderTrainerStep();
         }
         function exitTrainerMode() {
-            document.getElementById('trainer-mode-container').style.display = 'none';
-            document.getElementById('mainContentContainer').style.display = 'block';
+            document.getElementById('trainer-mode-container').style.display = 'none'; document.getElementById('mainContentContainer').style.display = 'block';
             document.querySelector('.action-buttons-grid').style.display = 'flex';
         }
         function renderTrainerStep() {
             const ex = currentExercisesList[trainerIndex];
             document.getElementById('trainerCounter').innerText = `Ejercicio ${trainerIndex + 1} de ${currentExercisesList.length}`;
-            document.getElementById('tTitle').innerText = ex.title;
-            document.getElementById('tSubtitle').innerText = ex.subtitle || '';
-            document.getElementById('tDetails').innerText = ex.details || '';
-            document.getElementById('tInstructions').innerText = ex.instructions || 'Sin instrucciones adicionales.';
+            document.getElementById('tTitle').innerText = ex.title; document.getElementById('tSubtitle').innerText = ex.subtitle || '';
+            document.getElementById('tDetails').innerText = ex.details || ''; document.getElementById('tInstructions').innerText = ex.instructions || 'Sin instrucciones adicionales.';
             const imgEl = document.getElementById('tImg');
             if (ex.image) { imgEl.src = ex.image; imgEl.style.display = 'block'; } else { imgEl.style.display = 'none'; }
         }
-        function nextTrainerStep() {
-            if (trainerIndex < currentExercisesList.length - 1) { trainerIndex++; renderTrainerStep(); }
-            else { alert("¡Felicidades! Has completado el entrenamiento."); exitTrainerMode(); }
-        }
+        function nextTrainerStep() { if (trainerIndex < currentExercisesList.length - 1) { trainerIndex++; renderTrainerStep(); } else { alert("¡Felicidades! Has completado el entrenamiento."); exitTrainerMode(); } }
         function prevTrainerStep() { if (trainerIndex > 0) { trainerIndex--; renderTrainerStep(); } }
 
         // TEMPORIZADOR DUAL
         let audioCtx = null;
         function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
         function playTone(freq, dur) {
-            try {
-                initAudio();
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.frequency.value = freq;
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(); osc.stop(audioCtx.currentTime + dur);
-            } catch (e) {}
+            try { initAudio(); if (audioCtx.state === 'suspended') audioCtx.resume(); const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.frequency.value = freq; gain.gain.setValueAtTime(0.15, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + dur); } catch (e) {}
         }
-        function playBeepShort() { playTone(600, 0.15); }
-        function playBeepHigh() { playTone(880, 0.25); }
-        function playDoubleBeep() { playTone(880, 0.15); setTimeout(() => playTone(1200, 0.25), 180); }
+        function playBeepShort() { playTone(600, 0.15); } function playBeepHigh() { playTone(880, 0.25); } function playDoubleBeep() { playTone(880, 0.15); setTimeout(() => playTone(1200, 0.25), 180); }
 
-        let currentTimerMode = 'hiit';
-        let timerInterval = null, isRunning = false, isPaused = false;
+        let currentTimerMode = 'hiit'; let timerInterval = null, isRunning = false, isPaused = false;
         let currentPhase = 'prep', timeLeft = 10, currentRound = 1, maxRounds = 3, workDuration = 45, restDuration = 15, restTimeLeft = 60;
 
-        function updateTimerButtonIcon() {
-            const iconEl = document.getElementById('mainBtnIcon');
-            if (isRunning && !isPaused) {
-                // Icono de Pausa
-                iconEl.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
-            } else {
-                // Icono de Play
-                iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>';
-            }
-        }
-
-        function toggleTimerModal() {
-            const modal = document.getElementById('timer-modal');
-            modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
-            if(modal.style.display === 'block' && currentTimerMode === 'rest') updateRestDisplayInit();
-        }
+        function updateTimerButtonIcon() { const iconEl = document.getElementById('mainBtnIcon'); if (isRunning && !isPaused) { iconEl.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; } else { iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>'; } }
+        function toggleTimerModal() { const modal = document.getElementById('timer-modal'); modal.style.display = (modal.style.display === 'block') ? 'none' : 'block'; if(modal.style.display === 'block' && currentTimerMode === 'rest') updateRestDisplayInit(); }
 
         function switchTimerTab(mode) {
             if(isRunning || isPaused) { clearInterval(timerInterval); isRunning = false; isPaused = false; updateTimerButtonIcon(); }
             currentTimerMode = mode;
-            document.getElementById('hiitSection').style.display = (mode === 'hiit') ? 'block' : 'none';
-            document.getElementById('restSection').style.display = (mode === 'rest') ? 'block' : 'none';
-            document.getElementById('tabHiitBtn').classList.toggle('active', mode === 'hiit');
-            document.getElementById('tabRestBtn').classList.toggle('active', mode === 'rest');
+            document.getElementById('hiitSection').style.display = (mode === 'hiit') ? 'block' : 'none'; document.getElementById('restSection').style.display = (mode === 'rest') ? 'block' : 'none';
+            document.getElementById('tabHiitBtn').classList.toggle('active', mode === 'hiit'); document.getElementById('tabRestBtn').classList.toggle('active', mode === 'rest');
             document.getElementById('timerModalTitle').textContent = (mode === 'hiit') ? "Temporizador HIIT" : "Descanso Entre Series";
             if(mode === 'rest') updateRestDisplayInit();
         }
 
         function updateRestDisplayInit() {
-            const val = parseInt(document.getElementById('quickRestTime').value) || 60;
-            restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val;
-            let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60;
-            document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            const val = parseInt(document.getElementById('quickRestTime').value) || 60; restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val;
+            let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60; document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
             document.getElementById('quickStatusText').textContent = "Descanso entre series";
         }
 
         function updateDisplay() {
             if(currentTimerMode === 'hiit') {
-                const statusEl = document.getElementById('timerStatusText');
-                const clockEl = document.getElementById('timerClockDisplay');
+                const statusEl = document.getElementById('timerStatusText'); const clockEl = document.getElementById('timerClockDisplay');
                 document.getElementById('timerRoundsDisplay').textContent = `Ronda ${currentRound} de ${maxRounds}`;
                 let m = Math.floor(timeLeft / 60), s = timeLeft % 60, ft = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-                if(currentPhase === 'prep') { statusEl.textContent = "⏳ Preparación"; clockEl.textContent = ft; }
-                else if(currentPhase === 'round_announcement') { statusEl.textContent = ""; clockEl.textContent = `¡RONDA ${currentRound}!`; }
-                else if(currentPhase === 'work') { statusEl.textContent = "🔥 ¡Trabajo!"; clockEl.textContent = ft; }
-                else { statusEl.textContent = "💧 Descanso"; clockEl.textContent = ft; }
-            } else {
-                let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60;
-                document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            }
+                if(currentPhase === 'prep') { statusEl.textContent = "⏳ Preparación"; clockEl.textContent = ft; } else if(currentPhase === 'round_announcement') { statusEl.textContent = ""; clockEl.textContent = `¡RONDA ${currentRound}!`; } else if(currentPhase === 'work') { statusEl.textContent = "🔥 ¡Trabajo!"; clockEl.textContent = ft; } else { statusEl.textContent = "💧 Descanso"; clockEl.textContent = ft; }
+            } else { let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60; document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
         }
 
         function startPauseTimer() {
             if(currentTimerMode === 'rest') {
-                if (!isRunning && !isPaused) {
-                    const val = parseInt(document.getElementById('quickRestTime').value) || 60;
-                    restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val;
-                    isRunning = true; isPaused = false; playBeepHigh();
-                } else { isPaused = !isPaused; }
-
+                if (!isRunning && !isPaused) { const val = parseInt(document.getElementById('quickRestTime').value) || 60; restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val; isRunning = true; isPaused = false; playBeepHigh(); } else { isPaused = !isPaused; }
                 updateTimerButtonIcon();
-
                 if(timerInterval) clearInterval(timerInterval);
-                timerInterval = setInterval(() => {
-                    if (isRunning && !isPaused) {
-                        if (restTimeLeft > 0) { restTimeLeft--; if (restTimeLeft <= 3) playBeepShort(); updateDisplay(); }
-                        else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('quickStatusText').textContent = "¡Tiempo terminado! 🎉"; updateTimerButtonIcon(); }
-                    }
-                }, 1000);
+                timerInterval = setInterval(() => { if (isRunning && !isPaused) { if (restTimeLeft > 0) { restTimeLeft--; if (restTimeLeft <= 3) playBeepShort(); updateDisplay(); } else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('quickStatusText').textContent = "¡Tiempo terminado! 🎉"; updateTimerButtonIcon(); } } }, 1000);
                 return;
             }
 
@@ -1182,42 +1040,16 @@
                 workDuration = (document.getElementById('workUnit').value === 'min') ? parseInt(document.getElementById('workTime').value)*60 : parseInt(document.getElementById('workTime').value);
                 restDuration = (document.getElementById('restUnit').value === 'min') ? parseInt(document.getElementById('restTime').value)*60 : parseInt(document.getElementById('restTime').value);
                 maxRounds = parseInt(document.getElementById('totalRounds').value) || 3;
-                currentPhase = 'prep'; timeLeft = 10; currentRound = 1;
-                isRunning = true; isPaused = false; playBeepHigh();
+                currentPhase = 'prep'; timeLeft = 10; currentRound = 1; isRunning = true; isPaused = false; playBeepHigh();
             } else { isPaused = !isPaused; }
 
-            updateTimerButtonIcon();
-            updateDisplay();
-
+            updateTimerButtonIcon(); updateDisplay();
             if(timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (isRunning && !isPaused) {
-                    if (timeLeft > 0) { timeLeft--; if (currentPhase !== 'round_announcement' && timeLeft <= 3) playBeepShort(); updateDisplay(); }
-                    else {
-                        if (currentPhase === 'prep') { currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); }
-                        else if (currentPhase === 'round_announcement') { currentPhase = 'work'; timeLeft = workDuration; playBeepHigh(); updateDisplay(); }
-                        else if (currentPhase === 'work') {
-                            if (restDuration > 0) { currentPhase = 'rest'; timeLeft = restDuration; playBeepShort(); updateDisplay(); }
-                            else { nextRoundProgression(); }
-                        } else if (currentPhase === 'rest') { nextRoundProgression(); }
-                    }
-                }
-            }, 1000);
+            timerInterval = setInterval(() => { if (isRunning && !isPaused) { if (timeLeft > 0) { timeLeft--; if (currentPhase !== 'round_announcement' && timeLeft <= 3) playBeepShort(); updateDisplay(); } else { if (currentPhase === 'prep') { currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); } else if (currentPhase === 'round_announcement') { currentPhase = 'work'; timeLeft = workDuration; playBeepHigh(); updateDisplay(); } else if (currentPhase === 'work') { if (restDuration > 0) { currentPhase = 'rest'; timeLeft = restDuration; playBeepShort(); updateDisplay(); } else { nextRoundProgression(); } } else if (currentPhase === 'rest') { nextRoundProgression(); } } } }, 1000);
         }
 
-        function nextRoundProgression() {
-            if (currentRound < maxRounds) { currentRound++; currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); }
-            else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('timerStatusText').textContent = "¡Completado! 🎉"; updateTimerButtonIcon(); }
-        }
-
-        function resetTimer() {
-            clearInterval(timerInterval); isRunning = false; isPaused = false;
-            updateTimerButtonIcon();
-            if(currentTimerMode === 'rest') { updateRestDisplayInit(); return; }
-            timeLeft = 10; currentPhase = 'prep'; currentRound = 1;
-            document.getElementById('timerStatusText').textContent = "Listo para empezar";
-            updateDisplay();
-        }
+        function nextRoundProgression() { if (currentRound < maxRounds) { currentRound++; currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); } else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('timerStatusText').textContent = "¡Completado! 🎉"; updateTimerButtonIcon(); } }
+        function resetTimer() { clearInterval(timerInterval); isRunning = false; isPaused = false; updateTimerButtonIcon(); if(currentTimerMode === 'rest') { updateRestDisplayInit(); return; } timeLeft = 10; currentPhase = 'prep'; currentRound = 1; document.getElementById('timerStatusText').textContent = "Listo para empezar"; updateDisplay(); }
 
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('btnStartTrainer').addEventListener('click', startTrainerMode);
@@ -1225,18 +1057,15 @@
             document.getElementById('btnExitTrainer').addEventListener('click', exitTrainerMode);
             document.getElementById('btnPrevTrainer').addEventListener('click', prevTrainerStep);
             document.getElementById('btnNextTrainer').addEventListener('click', nextTrainerStep);
-            
             document.getElementById('btnOpenProgress').addEventListener('click', () => openProgressModal());
             document.getElementById('btnCloseProgressModal').addEventListener('click', closeProgressModal);
             document.getElementById('btnSaveProgress').addEventListener('click', saveProgressRecord);
-
             document.getElementById('timer-bubble').addEventListener('click', toggleTimerModal);
             document.getElementById('btnCloseTimer').addEventListener('click', toggleTimerModal);
             document.getElementById('tabHiitBtn').addEventListener('click', () => switchTimerTab('hiit'));
             document.getElementById('tabRestBtn').addEventListener('click', () => switchTimerTab('rest'));
             document.getElementById('mainActionBtn').addEventListener('click', startPauseTimer);
             document.getElementById('btnResetTimer').addEventListener('click', resetTimer);
-
             document.getElementById('exType').addEventListener('change', toggleTypeInputs);
             document.getElementById('btnCloseExerciseModal').addEventListener('click', closeExerciseModal);
             document.getElementById('btnSaveExercise').addEventListener('click', saveExercise);
