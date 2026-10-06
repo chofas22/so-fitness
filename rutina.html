@@ -56,15 +56,16 @@
         .btn-small:hover { color: var(--primary-color); }
         .btn-delete:hover { color: #ff4444; }
 
-        /* Modal Generico */
+        /* Modal Generico Corregido para Móvil */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; box-sizing: border-box; }
-        .modal-box { background-color: var(--card-bg); border: 1px solid var(--primary-color); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .modal-box { background-color: var(--card-bg); border: 1px solid var(--primary-color); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; max-height: 80dvh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 20px; }
         .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label { display: block; font-size: 0.75rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
         .form-control { width: 100%; background-color: #050505; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; box-sizing: border-box; }
         .form-control:focus { outline: none; border-color: var(--primary-color); }
+        select:invalid { color: #888; }
         
-        /* Skills / Etiquetas múltiples de músculos (Estilo Curriculum con botón X) */
+        /* Skills / Etiquetas múltiples de músculos */
         .skills-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; background: #050505; border: 1px solid #444; padding: 8px; border-radius: 8px; min-height: 42px; align-items: center; }
         .skill-badge { background-color: var(--primary-color); color: #050505; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; text-transform: uppercase; }
         .skill-badge span { cursor: pointer; font-size: 0.85rem; font-weight: 900; }
@@ -178,7 +179,7 @@
                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Modo Entrenador
             </button>
             <button class="action-btn btn-rm" id="btnOpenRMModal">
-                🏋️‍♂️ Calculadora RM
+                🏋️‍♂️️ Calculadora RM
             </button>
             <button class="action-btn btn-add" id="btnAddExercise">
                 + Ejercicio
@@ -307,19 +308,27 @@
         </div>
     </div>
 
-    <!-- MODAL AGREGAR EJERCICIO INTELIGENTE CON FILTRADO CRUZADO ESTRICTO Y 100 EJERCICIOS -->
+    <!-- MODAL AGREGAR EJERCICIO INTELIGENTE CON OPCIONES VACÍAS POR DEFECTO -->
     <div class="modal-overlay" id="exerciseModal">
         <div class="modal-box">
             <h3 style="color:var(--primary-color); margin-top:0;" id="modalFormTitle">Agregar Ejercicio</h3>
             <input type="hidden" id="exId">
             
-            <div class="form-group"><label>1. Sección de Entrenamiento</label><select id="exSection" class="form-control" onchange="filterCatalogByMusclesAndDiscipline()"><option value="calentamiento">Calentamiento</option><option value="fuerza" selected>Bloque Principal / Fuerza</option><option value="estiramiento">Estiramiento / Calm</option></select></div>
+            <div class="form-group">
+                <label>1. Sección de Entrenamiento</label>
+                <select id="exSection" class="form-control" onchange="filterCatalogByMusclesAndDiscipline()" required>
+                    <option value="" disabled selected>Selecciona tu entrenamiento</option>
+                    <option value="calentamiento">Calentamiento</option>
+                    <option value="fuerza">Bloque Principal / Fuerza</option>
+                    <option value="estiramiento">Estiramiento / Calm</option>
+                </select>
+            </div>
             
-            <!-- Selector de Músculos tipo Curriculum con botón de solo vector + -->
             <div class="form-group">
                 <label>2. Grupos Musculares (Filtrado Cruzado)</label>
                 <div class="input-group-flex">
                     <select id="muscleSelectDropdown" class="form-control">
+                        <option value="" disabled selected>Selecciona músculo</option>
                         <option value="Pecho">Pecho</option>
                         <option value="Espalda">Espalda</option>
                         <option value="Cuádriceps">Cuádriceps</option>
@@ -337,9 +346,26 @@
                 <div class="skills-container" id="muscleSkillsContainer" style="margin-top: 8px;"></div>
             </div>
 
-            <div class="form-group"><label>3. Disciplina / Actividad</label><select id="exDiscipline" class="form-control" onchange="filterCatalogByMusclesAndDiscipline()"><option value="gimnasio" selected>Gimnasio</option><option value="bicicleta">Bicicleta</option><option value="natacion">Natación</option><option value="atletismo">Atletismo / Correr</option><option value="funcional">Funcional</option><option value="pilates">Pilates</option><option value="otro">Otro</option></select></div>
+            <div class="form-group">
+                <label>3. Disciplina / Actividad</label>
+                <select id="exDiscipline" class="form-control" onchange="filterCatalogByMusclesAndDiscipline()" required>
+                    <option value="" disabled selected>Selecciona tu disciplina</option>
+                    <option value="gimnasio">Gimnasio</option>
+                    <option value="bicicleta">Bicicleta</option>
+                    <option value="natacion">Natación</option>
+                    <option value="atletismo">Atletismo / Correr</option>
+                    <option value="funcional">Funcional</option>
+                    <option value="pilates">Pilates</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
 
-            <div class="form-group"><label>4. Catálogo de Ejercicios</label><select id="exCatalogSelect" class="form-control" onchange="onCatalogSelectChange()"></select></div>
+            <div class="form-group">
+                <label>4. Catálogo de Ejercicios</label>
+                <select id="exCatalogSelect" class="form-control" onchange="onCatalogSelectChange()" required>
+                    <option value="" disabled selected>Selecciona tu ejercicio</option>
+                </select>
+            </div>
 
             <div class="form-group" id="manualTitleGroup" style="display:none;"><label>Nombre Personalizado</label><input type="text" id="exTitle" class="form-control" placeholder="Ej. Ejercicio único..."></div>
             <div class="form-group"><label>Subtítulo / Especialidad</label><input type="text" id="exSubtitle" class="form-control" placeholder="Ej. Ritmo moderado, Sprints..."></div>
@@ -599,11 +625,13 @@
         function addMuscleSkillTag() {
             const select = document.getElementById('muscleSelectDropdown');
             const val = select.value;
+            if(!val) return; // Si está en la opción por defecto, no hacer nada
             if(!selectedMuscleList.includes(val)) {
                 selectedMuscleList.push(val);
                 renderMuscleTags();
                 filterCatalogByMusclesAndDiscipline();
             }
+            select.value = ''; // Resetea el select
         }
         function removeMuscleSkillTag(muscle) {
             selectedMuscleList = selectedMuscleList.filter(m => m !== muscle);
@@ -630,7 +658,12 @@
             const section = document.getElementById('exSection').value;
             const discipline = document.getElementById('exDiscipline').value;
             const select = document.getElementById('exCatalogSelect');
-            select.innerHTML = '';
+            
+            // Vaciar y mostrar por defecto
+            select.innerHTML = '<option value="" disabled selected>Selecciona tu ejercicio</option>';
+
+            // Si aún no han seleccionado sección o disciplina, detener aquí
+            if(!section || !discipline) return;
 
             if (discipline === 'otro') {
                 select.innerHTML = '<option value="otro">Otro (Escribir manual)</option>';
@@ -673,6 +706,9 @@
         function onCatalogSelectChange() {
             const select = document.getElementById('exCatalogSelect');
             const manualGroup = document.getElementById('manualTitleGroup');
+            
+            if(!select.value) return; // Si es la opción deshabilitada
+            
             if (select.value === 'otro' || select.value === 'no_encontrado') {
                 if(select.value === 'otro') manualGroup.style.display = 'block';
                 document.getElementById('exInstructions').value = '';
@@ -716,13 +752,21 @@
         }
 
         function openExerciseModal() { 
+            // Reset general del formulario a vacío / valores por defecto
             document.getElementById('exId').value = ''; 
-            document.getElementById('exSection').value = 'fuerza';
-            document.getElementById('exDiscipline').value = 'gimnasio';
+            document.getElementById('exSection').value = ''; 
+            document.getElementById('exDiscipline').value = ''; 
+            document.getElementById('muscleSelectDropdown').value = '';
+            document.getElementById('exCatalogSelect').innerHTML = '<option value="" disabled selected>Selecciona tu ejercicio</option>';
+            
             selectedMuscleList = [];
             renderMuscleTags();
-            filterCatalogByMusclesAndDiscipline();
+            
             document.getElementById('exSubtitle').value = ''; 
+            document.getElementById('exInstructions').value = ''; 
+            document.getElementById('exTips').value = ''; 
+            document.getElementById('manualTitleGroup').style.display = 'none';
+
             if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = ''; 
             document.getElementById('exSeries').value = '3'; document.getElementById('exReps').value = '10'; document.getElementById('exRepsRest').value = '60'; document.getElementById('exRepsRestUnit').value = 's';
             document.getElementById('exWorkTime').value = '45'; document.getElementById('exWorkUnit').value = 's'; document.getElementById('exRestTime').value = '15'; document.getElementById('exRestUnit').value = 's'; document.getElementById('exRounds').value = '3'; 
@@ -732,7 +776,13 @@
         function closeExerciseModal() { document.getElementById('exerciseModal').style.display = 'none'; }
         
         function saveExercise() {
+            // Validar que se hayan seleccionado las opciones
+            if(!document.getElementById('exSection').value) { alert("Por favor, selecciona una Sección de Entrenamiento."); return; }
+            if(!document.getElementById('exDiscipline').value) { alert("Por favor, selecciona una Disciplina."); return; }
+            
             const catalogVal = document.getElementById('exCatalogSelect').value;
+            if(!catalogVal) { alert("Por favor, selecciona un Ejercicio del catálogo."); return; }
+
             const manualTitle = document.getElementById('exTitle').value.trim();
             const title = (catalogVal === 'otro' || catalogVal === 'no_encontrado') ? manualTitle : catalogVal;
             if (!title) { alert("Ingresa un nombre para el ejercicio"); return; }
