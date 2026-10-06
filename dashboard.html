@@ -3,107 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Fitness App</title>
+    <title>Mi Semana - Fitness App</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
 
         :root {
-            --primary-color: #e87c3e;
+            --primary-color: #e87c3e; /* Se actualiza dinámicamente según el perfil */
             --bg-color: #050505;
-            --card-bg: #1a1a1a;
             --card-inner: #2a2a2a;
         }
 
-        body { background-color: var(--bg-color); color: #ffffff; font-family: 'Montserrat', sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .app-container { max-width: 450px; width: 100%; }
+        body {
+            background-color: var(--bg-color);
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #222; padding-bottom: 15px; }
-        .header-info h2 { font-size: 0.9rem; font-weight: 400; margin: 0; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-        .header-info h1 { font-size: 1.8rem; font-weight: 800; margin: 2px 0 0 0; color: var(--primary-color); text-transform: uppercase; }
-        
-        .btn-profile { background: none; border: 1px solid #444; color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s; }
-        .btn-profile:hover { border-color: var(--primary-color); color: var(--primary-color); }
-        .btn-profile svg { width: 20px; height: 20px; fill: currentColor; }
+        .app-container {
+            max-width: 450px;
+            width: 100%;
+        }
 
-        .section-title { font-size: 1rem; font-weight: 700; color: #fff; text-transform: uppercase; border-left: 4px solid var(--primary-color); padding-left: 10px; margin: 25px 0 15px 0; letter-spacing: 0.5px; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 15px;
+        }
 
-        /* Filtro de Días */
-        .days-filter-container { background-color: var(--card-bg); border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 25px; }
-        .days-filter-title { font-size: 0.8rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;}
-        .days-grid-checkboxes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .day-checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #ccc; cursor: pointer; padding: 6px; border-radius: 6px; transition: background 0.2s; }
-        .day-checkbox-label:hover { background-color: #222; color: #fff; }
-        .day-checkbox-label input { accent-color: var(--primary-color); width: 16px; height: 16px; cursor: pointer; }
+        .welcome-text {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-        /* Tarjetas de Días */
-        .active-days-grid { display: flex; flex-direction: column; gap: 12px; }
-        .day-card { background-color: var(--card-bg); border: 1px solid #333; border-radius: 12px; padding: 20px; cursor: pointer; position: relative; transition: transform 0.2s, border-color 0.2s; overflow: hidden; display: flex; justify-content: space-between; align-items: center; }
-        .day-card:hover { border-color: var(--primary-color); transform: translateY(-2px); }
-        .day-card-content h3 { margin: 0; font-size: 1.3rem; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
-        .day-card-content p { margin: 4px 0 0 0; font-size: 0.75rem; color: #888; text-transform: uppercase; font-weight: 600; }
-        .day-card-arrow { color: var(--primary-color); font-weight: 800; font-size: 1.2rem; }
-        
-        /* Botón X para eliminar el día */
-        .delete-day-btn { position: absolute; top: 10px; right: 10px; background-color: rgba(255, 50, 50, 0.1); border: 1px solid rgba(255, 50, 50, 0.3); color: #ff4444; width: 28px; height: 28px; border-radius: 50%; font-size: 0.9rem; font-weight: 800; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s; z-index: 10; padding: 0; }
-        .delete-day-btn:hover { background-color: #ff4444; color: #fff; border-color: #ff4444; transform: scale(1.1); }
+        .greeting {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 5px 0 0 0;
+            text-transform: uppercase;
+        }
 
-        .empty-state { text-align: center; padding: 30px 15px; background-color: var(--card-bg); border: 1px dashed #444; border-radius: 12px; color: #888; font-size: 0.9rem; font-weight: 600; }
+        .logout-btn {
+            background: none;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
 
+        .logout-btn:hover {
+            border-color: var(--primary-color);
+            color: #fff;
+            background-color: rgba(232, 124, 62, 0.1);
+        }
+
+        .actions-top-grid {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .action-top-btn {
+            flex: 1;
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 12px;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-top-btn:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(232, 124, 62, 0.05);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .day-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px 20px 30px 20px; /* Ajuste para espacio de la flecha */
+            margin-bottom: 12px;
+            position: relative; /* Para la X y la flecha absoluta */
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .day-card:hover {
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .day-info h3 {
+            margin: 0 0 4px 0;
+            font-size: 1.6rem;
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .day-info p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #888;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .day-action {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            color: var(--primary-color);
+            font-weight: 900;
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        /* BOTÓN X PARA ELIMINAR */
+        .delete-day-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(255, 50, 50, 0.1);
+            border: 1px solid rgba(255, 50, 50, 0.3);
+            color: #ff4444;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            font-weight: 800;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 10;
+            padding: 0;
+        }
+        .delete-day-btn:hover {
+            background-color: #ff4444;
+            color: #fff;
+            border-color: #ff4444;
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            border: 2px dashed #333;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        /* Modal de Configuración de Días */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-box {
+            background-color: #1a1a1a;
+            border: 1px solid var(--primary-color);
+            border-radius: 16px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .day-config-row {
+            background-color: #050505;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .day-config-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .day-config-header input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .form-control {
+            width: 100%;
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus { outline: none; border-color: var(--primary-color); }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-cancel, .btn-save {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .btn-cancel { background-color: #2a2a2a; color: #ccc; }
+        .btn-save { background-color: var(--primary-color); color: #050505; }
     </style>
 </head>
 <body>
-
     <div class="app-container">
-        
+        <!-- Cabecera dinámica -->
         <div class="header">
-            <div class="header-info">
-                <h2>Bienvenido</h2>
-                <h1 id="profileNameDisplay">Usuario</h1>
+            <div>
+                <p class="welcome-text">Entrenando hoy</p>
+                <h1 class="greeting" id="userName">Usuario</h1>
             </div>
-            <button class="btn-profile" onclick="window.location.href='index.html'" title="Cambiar Perfil">
-                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            </button>
+            <button class="logout-btn" onclick="logout()">Cambiar Perfil</button>
         </div>
 
-        <div class="days-filter-container">
-            <div class="days-filter-title">
-                Administrar Semana
-                <span style="font-size: 0.7rem; color: #888; font-weight: normal;">Marca para agregar</span>
-            </div>
-            <div class="days-grid-checkboxes" id="daysCheckboxesContainer">
-                <!-- Se generan desde JS -->
-            </div>
+        <!-- Botón para configurar los días que entrena -->
+        <div class="actions-top-grid">
+            <button class="action-top-btn" onclick="openConfigModal()">⚙️ Configurar Mis Días</button>
         </div>
 
-        <h3 class="section-title">Tus Rutinas</h3>
-        <div class="active-days-grid" id="activeDaysContainer">
-            <!-- Tarjetas de los días activos se generan aquí -->
+        <h2 class="section-title">Tu Semana de Entrenamiento</h2>
+        
+        <!-- Contenedor de los días activos -->
+        <div id="weekDaysList">
+            <!-- Se inyectan con JavaScript -->
         </div>
+        <div id="emptyState" class="empty-state" style="display:none;">
+            <p style="margin:0; font-size:0.9rem;">No tienes días de entrenamiento configurados.</p>
+            <p style="margin:5px 0 0 0; font-size:0.8rem; color:#888;">Toca "Configurar Mis Días" para armar tu rutina.</p>
+        </div>
+    </div>
 
+    <!-- MODAL CONFIGURACIÓN DE DÍAS -->
+    <div class="modal-overlay" id="configModal">
+        <div class="modal-box">
+            <h3 style="color:var(--primary-color); margin-top:0; text-transform:uppercase; font-size:1.1rem;">Personalizar Tus Días</h3>
+            <p style="font-size:0.75rem; color:#888; margin-bottom:15px;">Selecciona los días que entrenas y ponle un subtítulo a cada uno.</p>
+            
+            <div id="daysConfigContainer">
+                <!-- Se generan dinámicamente los 7 días de la semana -->
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeConfigModal()">Cancelar</button>
+                <button class="btn-save" onclick="saveUserSchedule()">Guardar Cambios</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Inicialización de datos del usuario
+        // 1. VALIDAR USUARIO ACTIVO Y APLICAR COLOR
         const activeProfileId = localStorage.getItem('active_profile_id');
-        if (!activeProfileId) { window.location.href = 'index.html'; }
+        if(!activeProfileId) {
+            window.location.href = 'index.html';
+        }
+
+        const profiles = JSON.parse(localStorage.getItem('app_profiles')) || [];
+        const activeProfile = profiles.find(p => p.id === activeProfileId);
         
-        let profiles = JSON.parse(localStorage.getItem('app_profiles')) || [];
-        let activeProfile = profiles.find(p => p.id === activeProfileId);
-        
-        if (activeProfile) {
-            document.getElementById('profileNameDisplay').innerText = activeProfile.name;
+        if(activeProfile) {
+            document.getElementById('userName').innerText = activeProfile.name;
             if (activeProfile.themeColor) {
                 document.documentElement.style.setProperty('--primary-color', activeProfile.themeColor);
             }
-            if (!activeProfile.activeDays) {
-                activeProfile.activeDays = [];
-            }
+        } else {
+            localStorage.removeItem('active_profile_id');
+            window.location.href = 'index.html';
         }
 
-        const allDays = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
-        const dayNames = { lunes: 'Lunes', martes: 'Martes', miercoles: 'Miércoles', jueves: 'Jueves', viernes: 'Viernes', sabado: 'Sábado', domingo: 'Domingo' };
+        function logout() {
+            localStorage.removeItem('active_profile_id');
+            window.location.href = 'index.html';
+        }
 
-        // Base de Datos para poder borrar los ejercicios al eliminar un día
+        // BASE DE DATOS (IndexedDB) para poder borrar los registros profundamente
         let db;
         const request = indexedDB.open("FitnessDB", 7);
         request.onupgradeneeded = function(e) {
@@ -115,78 +359,74 @@
             db = e.target.result; 
         };
 
-        // Renderizar checkboxes de la semana
-        function renderCheckboxes() {
-            const container = document.getElementById('daysCheckboxesContainer');
-            container.innerHTML = '';
-            
-            allDays.forEach(day => {
-                const label = document.createElement('label');
-                label.className = 'day-checkbox-label';
-                
-                const isChecked = activeProfile.activeDays.includes(day);
-                
-                label.innerHTML = `
-                    <input type="checkbox" value="${day}" ${isChecked ? 'checked' : ''} onchange="toggleDay(this)">
-                    ${dayNames[day]}
-                `;
-                container.appendChild(label);
-            });
-        }
+        // Lista completa de días disponibles
+        const allPossibleDays = [
+            { id: 'lunes', defaultName: 'Lunes' },
+            { id: 'martes', defaultName: 'Martes' },
+            { id: 'miercoles', defaultName: 'Miércoles' },
+            { id: 'jueves', defaultName: 'Jueves' },
+            { id: 'viernes', defaultName: 'Viernes' },
+            { id: 'sabado', defaultName: 'Sábado' },
+            { id: 'domingo', defaultName: 'Domingo' }
+        ];
 
-        // Renderizar las tarjetas de los días activos
-        function renderActiveDays() {
-            const container = document.getElementById('activeDaysContainer');
-            container.innerHTML = '';
-
-            // Ordenar los días activos basándonos en su orden natural en la semana
-            const sortedActiveDays = activeProfile.activeDays.sort((a, b) => allDays.indexOf(a) - allDays.indexOf(b));
-
-            if (sortedActiveDays.length === 0) {
-                container.innerHTML = `<div class="empty-state">No tienes días activos.<br><span style="font-size:0.75rem; font-weight:400; margin-top:5px; display:block;">Selecciona los días en el panel superior para comenzar.</span></div>`;
-                return;
-            }
-
-            sortedActiveDays.forEach(day => {
-                const card = document.createElement('div');
-                card.className = 'day-card';
-                // Al hacer clic en la tarjeta, vamos a la rutina
-                card.onclick = function() { window.location.href = `rutina.html?dia=${day}`; };
-                
-                card.innerHTML = `
-                    <div class="day-card-content">
-                        <h3>${dayNames[day]}</h3>
-                        <p>Toca para ver rutina</p>
-                    </div>
-                    <div class="day-card-arrow">→</div>
-                    <!-- Botón de eliminación profunda con la X -->
-                    <button class="delete-day-btn" title="Eliminar Día" onclick="deleteDayAndClearData(event, '${day}')">✕</button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // Función original para agregar o quitar el día desde el Checkbox
-        function toggleDay(checkboxElement) {
-            const day = checkboxElement.value;
-            if (checkboxElement.checked) {
-                if (!activeProfile.activeDays.includes(day)) {
-                    activeProfile.activeDays.push(day);
-                }
-                saveProfileData();
-                renderActiveDays();
+        // Obtener la configuración guardada de este usuario
+        function getUserSchedule() {
+            const savedSchedules = JSON.parse(localStorage.getItem('user_schedules')) || {};
+            if (savedSchedules[activeProfileId]) {
+                return savedSchedules[activeProfileId];
             } else {
-                // Si lo desmarca desde el checkbox, también lanzamos la limpieza profunda
-                checkboxElement.checked = true; // Lo revertimos momentáneamente para que la alerta controle la acción
-                deleteDayAndClearData(null, day, checkboxElement);
+                let defaultSched = {};
+                allPossibleDays.forEach(d => {
+                    defaultSched[d.id] = { active: false, subtitle: '' };
+                });
+                return defaultSched;
             }
         }
 
-        // FUNCIÓN PRINCIPAL: Elimina la tarjeta, desmarca el checkbox y BORRA la base de datos
-        function deleteDayAndClearData(event, dayToDelete, checkboxElementRef = null) {
-            if (event) event.stopPropagation(); // Evitar que el clic en la X abra `rutina.html`
+        // 2. RENDERIZAR LA SEMANA DEL USUARIO EN EL DASHBOARD
+        function renderUserDashboard() {
+            const schedule = getUserSchedule();
+            const weekDaysList = document.getElementById('weekDaysList');
+            const emptyState = document.getElementById('emptyState');
+            weekDaysList.innerHTML = '';
 
-            if (confirm(`¿Estás seguro de eliminar el ${dayNames[dayToDelete]}?\n\n⚠️ ESTO BORRARÁ TODOS LOS EJERCICIOS que hayas configurado en este día para dejarlos en blanco.`)) {
+            let activeCount = 0;
+
+            allPossibleDays.forEach(d => {
+                const dayConfig = schedule[d.id];
+                if (dayConfig && dayConfig.active) {
+                    activeCount++;
+                    const card = document.createElement('div');
+                    card.className = 'day-card';
+                    card.onclick = () => {
+                        window.location.href = `rutina.html?dia=${d.id}`;
+                    };
+                    
+                    card.innerHTML = `
+                        <button class="delete-day-btn" title="Eliminar Día" onclick="deleteDayAndClearData(event, '${d.id}', '${d.defaultName}')">✕</button>
+                        <div class="day-info">
+                            <h3>${d.defaultName}</h3>
+                            <p>${dayConfig.subtitle || 'TOCA PARA VER RUTINA'}</p>
+                        </div>
+                        <div class="day-action">→</div>
+                    `;
+                    weekDaysList.appendChild(card);
+                }
+            });
+
+            if (activeCount === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+            }
+        }
+
+        // FUNCION PRINCIPAL DE BORRADO DE BASE DE DATOS
+        function deleteDayAndClearData(event, dayId, dayName) {
+            if (event) event.stopPropagation(); // Evitar que el clic abra la rutina
+
+            if (confirm(`¿Estás seguro de eliminar el ${dayName}?\n\n⚠️ SE BORRARÁN TODOS LOS EJERCICIOS configurados en este día para dejarlo en blanco.`)) {
                 
                 // 1. Borrar datos físicos de IndexedDB
                 if (db) {
@@ -197,50 +437,111 @@
                     req.onsuccess = function() {
                         const allExercises = req.result;
                         allExercises.forEach(ex => {
-                            // Si el ejercicio le pertenece a este perfil y a este día, ¡Bórralo!
-                            if(ex.userId === activeProfileId && ex.day === dayToDelete) {
+                            if(ex.userId === activeProfileId && ex.day === dayId) {
                                 store.delete(ex.id);
                             }
                         });
                     };
 
                     tx.oncomplete = function() {
-                        // 2. Una vez borrados los datos, quitamos el día del perfil
-                        removeDayFromUI(dayToDelete);
+                        // 2. Desactivar el día en el LocalStorage
+                        removeDayFromUI(dayId);
                     };
                 } else {
-                    // Si por alguna razón la BD no cargó rápido, solo ocultamos la UI
-                    removeDayFromUI(dayToDelete);
-                }
-            } else {
-                // Si el usuario cancela y vino desde un checkbox, lo dejamos marcado
-                if (checkboxElementRef) {
-                    checkboxElementRef.checked = true;
+                    removeDayFromUI(dayId);
                 }
             }
         }
 
-        // Función de apoyo para actualizar la interfaz después de borrar
-        function removeDayFromUI(dayToDelete) {
-            activeProfile.activeDays = activeProfile.activeDays.filter(d => d !== dayToDelete);
-            saveProfileData();
-            renderCheckboxes(); // Actualiza visualmente el checkbox quitándole la paloma
-            renderActiveDays(); // Quita la tarjeta de la lista
+        function removeDayFromUI(dayId) {
+            const savedSchedules = JSON.parse(localStorage.getItem('user_schedules')) || {};
+            if (savedSchedules[activeProfileId] && savedSchedules[activeProfileId][dayId]) {
+                savedSchedules[activeProfileId][dayId].active = false; // Lo apaga
+                localStorage.setItem('user_schedules', JSON.stringify(savedSchedules));
+            }
+            renderUserDashboard();
         }
 
-        // Guarda en LocalStorage
-        function saveProfileData() {
-            const profileIndex = profiles.findIndex(p => p.id === activeProfileId);
-            if (profileIndex !== -1) {
-                profiles[profileIndex] = activeProfile;
-                localStorage.setItem('app_profiles', JSON.stringify(profiles));
+        // 3. FUNCIONES DEL MODAL DE CONFIGURACIÓN
+        function openConfigModal() {
+            const schedule = getUserSchedule();
+            const container = document.getElementById('daysConfigContainer');
+            container.innerHTML = '';
+
+            allPossibleDays.forEach(d => {
+                const dayConfig = schedule[d.id] || { active: false, subtitle: '' };
+                
+                const row = document.createElement('div');
+                row.className = 'day-config-row';
+                row.innerHTML = `
+                    <label class="day-config-header">
+                        <input type="checkbox" id="chk_${d.id}" ${dayConfig.active ? 'checked' : ''} onchange="toggleDayInput('${d.id}')">
+                        ${d.defaultName}
+                    </label>
+                    <input type="text" id="sub_${d.id}" class="form-control" placeholder="Ej. Upper Body, Natación..." value="${dayConfig.subtitle}" ${dayConfig.active ? '' : 'disabled'}>
+                `;
+                container.appendChild(row);
+            });
+
+            document.getElementById('configModal').style.display = 'flex';
+        }
+
+        function toggleDayInput(dayId) {
+            const isChecked = document.getElementById(`chk_${dayId}`).checked;
+            const inputSub = document.getElementById(`sub_${dayId}`);
+            inputSub.disabled = !isChecked;
+            if(isChecked && !inputSub.value) {
+                const dayObj = allPossibleDays.find(d => d.id === dayId);
+                inputSub.value = `TOCA PARA VER RUTINA`;
             }
         }
 
-        // Inicializar vistas
-        renderCheckboxes();
-        renderActiveDays();
+        function closeConfigModal() {
+            document.getElementById('configModal').style.display = 'none';
+        }
 
+        // GUARDAR CAMBIOS DEL MODAL Y LIMPIAR DB SI SE DESMARCÓ ALGUNO
+        function saveUserSchedule() {
+            const oldSchedule = getUserSchedule();
+            const schedule = {};
+            let requiresDBDelete = [];
+
+            allPossibleDays.forEach(d => {
+                const active = document.getElementById(`chk_${d.id}`).checked;
+                const subtitle = document.getElementById(`sub_${d.id}`).value.trim();
+                schedule[d.id] = { active, subtitle };
+
+                // Si antes estaba activo y ahora lo desmarcaron en el modal, se anota para borrar sus datos
+                if (oldSchedule[d.id] && oldSchedule[d.id].active && !active) {
+                    requiresDBDelete.push(d.id);
+                }
+            });
+
+            const savedSchedules = JSON.parse(localStorage.getItem('user_schedules')) || {};
+            savedSchedules[activeProfileId] = schedule;
+            localStorage.setItem('user_schedules', JSON.stringify(savedSchedules));
+
+            closeConfigModal();
+            renderUserDashboard();
+
+            // Borrar de la base de datos los días que se desmarcaron en el modal
+            if (requiresDBDelete.length > 0 && db) {
+                const tx = db.transaction("exercises", "readwrite");
+                const store = tx.objectStore("exercises");
+                const req = store.getAll();
+                req.onsuccess = function() {
+                    const allExercises = req.result;
+                    allExercises.forEach(ex => {
+                        if(ex.userId === activeProfileId && requiresDBDelete.includes(ex.day)) {
+                            store.delete(ex.id);
+                        }
+                    });
+                };
+            }
+        }
+
+        // Iniciar al cargar
+        renderUserDashboard();
     </script>
 </body>
 </html>
