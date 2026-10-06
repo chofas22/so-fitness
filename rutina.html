@@ -30,10 +30,11 @@
         .streak-info h4 { margin: 2px 0 0 0; font-size: 1rem; color: var(--primary-color); font-weight: 800; }
         .streak-badge { font-size: 1.5rem; }
 
-        .action-buttons-grid { display: flex; gap: 10px; margin-bottom: 25px; }
-        .action-btn { flex: 1; padding: 12px; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s; }
+        /* GRID CORREGIDO PARA EVITAR DESBORDAMIENTO EN MÓVILES */
+        .action-buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+        .action-btn { padding: 12px; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s; }
         .action-btn svg { width: 16px; height: 16px; fill: currentColor; }
-        .btn-trainer { background: var(--primary-gradient); color: #050505; }
+        .btn-trainer { background: var(--primary-gradient); color: #050505; grid-column: span 2; }
         .btn-add { background-color: var(--card-inner); color: #fff; border: 1px solid #444; }
         .btn-rm { background-color: #1a2a1a; color: #4CAF50; border: 1px solid #4CAF50; }
         .action-btn:hover { transform: scale(1.02); }
@@ -56,7 +57,6 @@
         .btn-small:hover { color: var(--primary-color); }
         .btn-delete:hover { color: #ff4444; }
 
-        /* Modal Generico Corregido para Móvil */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; box-sizing: border-box; }
         .modal-box { background-color: var(--card-bg); border: 1px solid var(--primary-color); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; max-height: 80dvh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 20px; }
         .form-group { margin-bottom: 15px; text-align: left; }
@@ -65,13 +65,11 @@
         .form-control:focus { outline: none; border-color: var(--primary-color); }
         select:invalid { color: #888; }
         
-        /* Skills / Etiquetas múltiples de músculos */
         .skills-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; background: #050505; border: 1px solid #444; padding: 8px; border-radius: 8px; min-height: 42px; align-items: center; }
         .skill-badge { background-color: var(--primary-color); color: #050505; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; text-transform: uppercase; }
         .skill-badge span { cursor: pointer; font-size: 0.85rem; font-weight: 900; }
         .skill-badge span:hover { color: #fff; }
 
-        /* Botón de Añadir con solo ícono vectorial + limpio */
         .btn-icon-add { background-color: var(--primary-color); color: #050505; border: none; border-radius: 8px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; flex-shrink: 0; }
         .btn-icon-add svg { width: 22px; height: 22px; fill: currentColor; }
         .btn-icon-add:active { transform: scale(0.95); }
@@ -179,7 +177,7 @@
                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Modo Entrenador
             </button>
             <button class="action-btn btn-rm" id="btnOpenRMModal">
-                🏋️‍♂️️ Calculadora RM
+                🏋️‍♂ Calculadora RM
             </button>
             <button class="action-btn btn-add" id="btnAddExercise">
                 + Ejercicio
@@ -195,6 +193,8 @@
             <h3 class="card-title" id="tTitle" style="font-size: 1.3rem;">TÍTULO</h3>
             <p class="card-subtitle" id="tSubtitle">SUBTÍTULO</p>
             <p class="card-details" id="tDetails">DETALLES</p>
+            <div id="tRMDisplay" style="color: #4CAF50; font-weight: 800; font-size: 0.9rem; margin-top: 8px;"></div>
+            
             <img id="tImg" class="exercise-img" src="" alt="Ejercicio" style="display:none; margin-top:10px;">
             <p class="card-instructions" id="tInstructions" style="background:#111; padding:12px; border-radius:8px; border:1px solid #333; margin-top:10px;"></p>
             <div id="tTips" class="card-tips" style="display:none;"></div>
@@ -222,7 +222,6 @@
         <div class="progress-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h3 style="margin: 0; font-size: 0.9rem; color: var(--primary-color); text-transform: uppercase;">📈 Rendimiento y Volumen</h3>
-                <button class="btn-small" id="btnOpenProgress" style="color: var(--primary-color); border: 1px solid #444; padding: 6px 10px; border-radius: 6px;">+ Nueva Serie</button>
             </div>
             
             <div id="volumeMetricsContainer" style="background: #111; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 15px; font-size: 0.8rem;">
@@ -308,7 +307,7 @@
         </div>
     </div>
 
-    <!-- MODAL AGREGAR EJERCICIO INTELIGENTE CON OPCIONES VACÍAS POR DEFECTO -->
+    <!-- MODAL AGREGAR EJERCICIO INTELIGENTE -->
     <div class="modal-overlay" id="exerciseModal">
         <div class="modal-box">
             <h3 style="color:var(--primary-color); margin-top:0;" id="modalFormTitle">Agregar Ejercicio</h3>
@@ -413,10 +412,10 @@
         </div>
     </div>
 
-    <!-- MODAL REGISTRAR PROGRESO -->
+    <!-- MODAL REGISTRAR PROGRESO (Oculto para edición manual desde historial si lo requieres) -->
     <div class="modal-overlay" id="progressModal">
         <div class="modal-box">
-            <h3 style="color:var(--primary-color); margin-top:0;" id="progModalTitle">Registrar Progreso</h3>
+            <h3 style="color:var(--primary-color); margin-top:0;" id="progModalTitle">Editar Progreso</h3>
             <input type="hidden" id="progIndexEdit" value="">
             <div class="form-group"><label>Ejercicio con Seguimiento</label><select id="progExerciseSelect" class="form-control"></select></div>
             <div class="form-group"><label>Fecha</label><input type="date" id="progDate" class="form-control"></div>
@@ -429,7 +428,7 @@
     <script>
         // INIT
         const urlParams = new URLSearchParams(window.location.search); const currentDay = urlParams.get('dia') || 'lunes';
-        const activeProfileId = localStorage.getItem('active_profile_id'); if (!activeProfileId) { window.location.href = 'index.html'; }
+        const activeProfileId = localStorage.getItem('active_profile_id') || 'testUser'; // Fallback temporal si no viene
         const profiles = JSON.parse(localStorage.getItem('app_profiles')) || []; const activeProfile = profiles.find(p => p.id === activeProfileId);
         let currentThemeColor = '#e87c3e';
         if (activeProfile) { document.getElementById('profileHeaderName').innerText = activeProfile.name; if (activeProfile.themeColor) { currentThemeColor = activeProfile.themeColor; document.documentElement.style.setProperty('--primary-color', currentThemeColor); } }
@@ -476,251 +475,67 @@
             calentamiento: {
                 gimnasio: [
                     { name: "Movilidad Articular de Hombros", muscles: ["Hombros"], inst: "Círculos amplios hacia adelante y atrás.", tips: "Mantén el abdomen contraído." },
-                    { name: "Sentadillas sin Peso (Air Squats)", muscles: ["Cuádriceps", "Glúteos"], inst: "Baja la cadera manteniendo talones pegados.", tips: "Lubrica rodillas y activa piernas." },
-                    { name: "Gato - Vaca (Movilidad de columna)", muscles: ["Abdomen"], inst: "En cuatro puntos, arquea la espalda arriba y abajo.", tips: "Libera tensión lumbar." },
-                    { name: "Rotaciones Torácicas en Cuadrupedia", muscles: ["Espalda"], inst: "Rota el tronco llevando un brazo hacia el cielo.", tips: "Sigue la mano con la mirada." },
-                    { name: "Círculos de Cadera", muscles: ["Glúteos"], inst: "Movimientos circulares amplios de pelvis de pie.", tips: "Prepara la cadera para sentadillas." },
-                    { name: "Activación de Manguito Rotador con Liga", muscles: ["Hombros"], inst: "Rotación externa con banda elástica pegada al codo.", tips: "Previene lesiones en press de banca." }
+                    { name: "Sentadillas sin Peso (Air Squats)", muscles: ["Cuádriceps", "Glúteos"], inst: "Baja la cadera manteniendo talones pegados.", tips: "Lubrica rodillas y activa piernas." }
                 ],
                 atletismo: [
-                    { name: "Trote Suave en Lugar", muscles: ["Cardio Global"], inst: "Eleva ligeramente las rodillas a ritmo aeróbico bajo.", tips: "Eleva la temperatura corporal progresivamente." },
-                    { name: "Desplantes Dinámicos", muscles: ["Cuádriceps", "Glúteos"], inst: "Paso al frente bajando cadera de forma alterna.", tips: "Torso recto y rodilla cerca del suelo." },
-                    { name: "Skipping Bajo", muscles: ["Cardio Global"], inst: "Elevación rápida de rodillas a baja altura en el lugar.", tips: "Apoyo sobre metatarsos." },
-                    { name: "Talones al Glúteo Dinámicos", muscles: ["Isquios"], inst: "Trote llevando los talones hacia atrás de forma ágil.", tips: "Activa la parte posterior del muslo." }
-                ],
-                natacion: [
-                    { name: "Círculos de Brazos en Seco", muscles: ["Hombros"], inst: "Simula brazadas de crol y espalda fuera del agua.", tips: "Activa hombros antes de entrar a la alberca." },
-                    { name: "Rotación de Tronco con Banda", muscles: ["Abdomen", "Espalda"], inst: "Simula el giro de crol con resistencia de polea o liga.", tips: "Mejora la hidrodinámica del nado." }
-                ],
-                funcional: [
-                    { name: "Plancha Abdominal de Activación", muscles: ["Abdomen"], inst: "Cuerpo en línea recta sobre antebrazos.", tips: "Aprieta glúteos y abdomen." },
-                    { name: "Puente de Glúteos sin Peso", muscles: ["Glúteos", "Isquios"], inst: "Elevación de cadera acostado en el mat.", tips: "Contrae los glúteos arriba por 2 segundos." }
-                ],
-                pilates: [
-                    { name: "Respiración Diafragmática e Inhalación Costal", muscles: ["Abdomen"], inst: "Inhalar expandiendo costillas y exhalar cerrando abdomen.", tips: "Conecta la mente con el centro." },
-                    { name: "Gato Estirado de Pilates", muscles: ["Abdomen", "Espalda"], inst: "Flexión y extensión suave de columna en decúbito prono.", tips: "Movimiento fluido coordinado con la respiración." }
-                ],
-                bicicleta: [
-                    { name: "Movilidad de Tobillos y Rodillas en Bici", muscles: ["Cuádriceps"], inst: "Giros de articulaciones previos a subir al sillín.", tips: "Evita rigidez articular inicial." }
+                    { name: "Trote Suave en Lugar", muscles: ["Cardio Global"], inst: "Eleva ligeramente las rodillas a ritmo aeróbico bajo.", tips: "Eleva la temperatura corporal progresivamente." }
                 ]
             },
             fuerza: {
                 gimnasio: [
                     { name: "Press de Banca Plano", muscles: ["Pecho", "Tríceps", "Hombros"], inst: "Baja la barra hacia el pecho medio y empuja arriba.", tips: "Retrae las escápulas y apoya los pies firmes." },
-                    { name: "Press Inclinado con Mancuernas", muscles: ["Pecho", "Hombros"], inst: "Acostado en banco inclinado, empuja las mancuernas arriba.", tips: "Controla el estiramiento abajo." },
-                    { name: "Press Declinado con Barra", muscles: ["Pecho", "Tríceps"], inst: "En banco declinado, baja la barra hacia el pecho bajo.", tips: "Asegura bien los pies en los rodillos." },
-                    { name: "Aperturas en Polea Baja", muscles: ["Pecho"], inst: "Cruza los cables frente al pecho con ligera flexión de codos.", tips: "Enfócate en la contracción al centro." },
-                    { name: "Aperturas con Mancuernas en Banco Plano", muscles: ["Pecho"], inst: "Abre los brazos en semicírculo con ligera flexión de codos.", tips: "No bajes los brazos más allá de la línea de los hombros." },
-                    { name: "Fondos en Paralelas (Chest Dips)", muscles: ["Pecho", "Tríceps"], inst: "Inclina el torso al frente al bajar en las paralelas.", tips: "Protege los hombros bajando controlado." },
-                    { name: "Pull-over con Mancuerna", muscles: ["Pecho", "Espalda"], inst: "Acostado transversal, lleva la mancuerna por detrás de la cabeza.", tips: "Mantén los brazos ligeramente flexionados." },
-                    { name: "Flexiones de Pecho con Lastre (Push-ups)", muscles: ["Pecho", "Tríceps", "Abdomen"], inst: "Lagartijas tradicionales con peso opcional en la espalda.", tips: "Cuerpo totalmente alineado." },
-                    { name: "Dominadas (Pull-ups)", muscles: ["Espalda", "Bíceps"], inst: "Colgado de la barra, eleva el pecho superando la barbilla.", tips: "Lleva los codos hacia abajo y atrás." },
-                    { name: "Jalón al Pecho (Lat Pulldown)", muscles: ["Espalda", "Bíceps"], inst: "Toma la barra abierta, jala hacia la parte alta del pecho.", tips: "Evita balancear el torso." },
-                    { name: "Remo con Barra", muscles: ["Espalda", "Bíceps", "Abdomen"], inst: "Inclinado al frente con espalda neutra, lleva la barra al abdomen.", tips: "Mantén la columna recta." },
-                    { name: "Remo en Polea Baja (Seated Cable Row)", muscles: ["Espalda", "Bíceps"], inst: "Sentado, jala el maneral hacia el abdomen contrayendo escápulas.", tips: "No encorves la espalda." },
-                    { name: "Remo con Mancuerna a una Mano", muscles: ["Espalda", "Bíceps"], inst: "Apoyado en banco, eleva la mancuerna rozando el costado.", tips: "Rotación mínima del tronco." },
-                    { name: "Pulldown con Brazos Extendidos", muscles: ["Espalda"], inst: "En polea alta con barra recta, baja extendido hacia los muslos.", tips: "Brazos rígidos sin doblar codos." },
-                    { name: "Remo en Barra T (T-Bar Row)", muscles: ["Espalda", "Bíceps"], inst: "Toma los manerales de la barra T y eleva hacia el pecho.", tips: "Pecho pegado al soporte si lo hay." },
-                    { name: "Jalón Agarre Neutro / Supino", muscles: ["Espalda", "Bíceps"], inst: "Jalón en polea alta con palmas hacia ti.", tips: "Mayor reclutamiento de bíceps y dorsal inferior." },
-                    { name: "Press Militar con Barra", muscles: ["Hombros", "Tríceps"], inst: "De pie, empuja la barra desde las clavículas sobre la cabeza.", tips: "Contrae glúteos y abdomen." },
-                    { name: "Press de Hombros con Mancuernas", muscles: ["Hombros", "Tríceps"], inst: "Sentado en banco con respaldo, presiona mancuernas arriba.", tips: "No arquees la espalda baja." },
-                    { name: "Elevaciones Laterales con Mancuernas", muscles: ["Hombros"], inst: "Eleva mancuernas a los lados hasta la altura de los hombros.", tips: "Ligera flexión en los codos." },
-                    { name: "Elevaciones Frontales con Disco", muscles: ["Hombros"], inst: "Sostén un disco y elévalo al frente hasta la altura de los ojos.", tips: "Movimiento controlado sin inercia." },
-                    { name: "Pájaros (Deltoides Posterior con Mancuernas)", muscles: ["Hombros", "Espalda"], inst: "Inclinado al frente, abre los brazos hacia los lados.", tips: "Imagina que juntas una nuez con tus escápulas." },
-                    { name: "Elevaciones Laterales en Polea Baja", muscles: ["Hombros"], inst: "Cruza el cable por detrás de las piernas y eleva lateralmente.", tips: "Tensión constante en todo el recorrido." },
-                    { name: "Encogimientos de Hombros (Trapecio)", muscles: ["Hombros"], inst: "Sostén pesadas mancuernas o barra y eleva los hombros hacia las orejas.", tips: "No hagas círculos con los hombros." },
-                    { name: "Curl con Barra Z", muscles: ["Bíceps"], inst: "Flexiona los codos elevando la barra z hacia los hombros.", tips: "Evita el impulso de la cadera." },
-                    { name: "Curl Martillo (Hammer Curl)", muscles: ["Bíceps"], inst: "Con agarre neutro, eleva las mancuernas de forma alterna.", tips: "Excelente para grosor del brazo." },
-                    { name: "Curl en Banco Scott (Predicador)", muscles: ["Bíceps"], inst: "Apoyado en banco predicador, realiza el curl con barra o mancuerna.", tips: "Aísla por completo el bíceps." },
-                    { name: "Curl Concentrado con Mancuerna", muscles: ["Bíceps"], inst: "Sentado con el codo apoyado en la cara interna del muslo.", tips: "Máxima contracción superior." },
-                    { name: "Curl en Polea Baja con Cuerda", muscles: ["Bíceps"], inst: "Curl con cuerda buscando separar las puntas arriba.", tips: "Mayor bombeo y tensión final." },
-                    { name: "Press Francés con Barra Z", muscles: ["Tríceps"], inst: "Acostado, baja la barra hacia la frente flexionando los codos.", tips: "Codos fijos apuntando al techo." },
-                    { name: "Extensiones de Tríceps en Polea", muscles: ["Tríceps"], inst: "Empuja el maneral hacia abajo extendiendo los codos.", tips: "Codos pegados a los costados." },
-                    { name: "Extensiones de Tríceps Overhead con Mancuerna", muscles: ["Tríceps"], inst: "Sostén una mancuerna tras la cabeza y elévala arriba.", tips: "Estiramiento completo de la cabeza larga." },
-                    { name: "Patada de Tríceps con Mancuerna", muscles: ["Tríceps"], inst: "Inclinado con apoyo, extiende el brazo hacia atrás de forma lineal.", tips: "Mantén el codo alto y fijo." },
-                    { name: "Press de Banca con Agarre Cerrado", muscles: ["Tríceps", "Pecho"], inst: "Press plano con las manos separadas al ancho de los hombros.", tips: "Enfoque directo en tríceps." },
                     { name: "Sentadilla con Barra (Back Squat)", muscles: ["Cuádriceps", "Glúteos", "Abdomen"], inst: "Barra en la parte alta de la espalda, baja la cadera.", tips: "Evita que las rodillas colapsen hacia adentro." },
-                    { name: "Sentadilla Frontal con Barra", muscles: ["Cuádriceps", "Abdomen"], inst: "Barra apoyada sobre los deltoides anteriores al frente.", tips: "Torso completamente vertical." },
-                    { name: "Prensa de Piernas 45°", muscles: ["Cuádriceps", "Glúteos"], inst: "Empuja la plataforma con los pies separados al ancho de hombros.", tips: "No bloquees las rodillas arriba." },
-                    { name: "Zancadas (Walking Lunges)", muscles: ["Cuádriceps", "Glúteos"], inst: "Da pasos largos al frente alternando piernas bajando la rodilla.", tips: "Mantén el torso erguido." },
-                    { name: "Sentadilla Búlgara", muscles: ["Cuádriceps", "Glúteos"], inst: "Con un pie apoyado en banco atrás, baja la cadera verticalmente.", tips: "Gran trabajo de estabilidad y fuerza unilateral." },
-                    { name: "Extensiones de Cuádriceps en Máquina", muscles: ["Cuádriceps"], inst: "Sentado, extiende las piernas hacia arriba controlando el peso.", tips: "Pausa de 1 segundo en máxima extensión." },
                     { name: "Peso Muerto Tradicional", muscles: ["Isquios", "Glúteos", "Espalda"], inst: "Toma la barra del suelo, extiende cadera y rodillas.", tips: "Espalda neutra." },
-                    { name: "Peso Muerto Rumano", muscles: ["Isquios", "Glúteos"], inst: "Desde arriba, flexiona la cadera llevando la barra rozando las piernas.", tips: "Enfoque total en estirar los isquiotibiales." },
-                    { name: "Curl de Isquiotibiales Acostado (Leg Curl)", muscles: ["Isquios"], inst: "Flexiona las piernas en máquina elevando el rodillo hacia los glúteos.", tips: "No levantes la cadera del banco." },
-                    { name: "Hip Thrust con Barra", muscles: ["Glúteos", "Isquios"], inst: "Apoyado en banco, eleva la cadera con la barra sobre la pelvis.", tips: "Contrae fuerte los glúteos arriba." },
-                    { name: "Patada de Glúteo en Polea Baja", muscles: ["Glúteos"], inst: "Con tobillera en polea, empuja la pierna hacia atrás de forma controlada.", tips: "No arquees la columna lumbar." },
-                    { name: "Elevación de Talones de Pie (Gemelos)", muscles: ["Pantorrillas"], inst: "Eleva los talones en un escalón con rango completo.", tips: "Baja el talón para estirar bien abajo." },
-                    { name: "Elevación de Talones Sentado (Soleo)", muscles: ["Pantorrillas"], inst: "Con máquina específica o barra en rodillas, eleva los talones.", tips: "Enfoque en la porción baja." }
-                ],
-                bicicleta: [
-                    { name: "Ciclismo Estacionario Base", muscles: ["Cuádriceps", "Cardio Global"], inst: "Cadencia constante con resistencia moderada.", tips: "Ajusta el asiento a la altura de la cadera." },
-                    { name: "HIIT en Bicicleta", muscles: ["Cardio Global", "Cuádriceps"], inst: "30s de sprint máximo con 60s de pedaleo suave.", tips: "Mantén la espalda firme y respiración rítmica." },
-                    { name: "Simulación de Montaña (Climbing)", muscles: ["Cuádriceps", "Glúteos"], inst: "Alta resistencia simulando pendiente con cadencia baja.", tips: "Controla la fuerza de empuje en cada pedalada." },
-                    { name: "Pedaleo a una Pierna (Técnica)", muscles: ["Cuádriceps"], inst: "Desengancha un pie y pedalea concentrado con el otro por intervalos.", tips: "Mejora la eficiencia circular." }
-                ],
-                natacion: [
-                    { name: "Crol / Estilo Libre", muscles: ["Espalda", "Hombros", "Abdomen"], inst: "Nado continuo alternando brazadas y respiración bilateral.", tips: "Gira el cuerpo completo en cada brazada." },
-                    { name: "Estilo Pecho / Braza", muscles: ["Pecho", "Espalda"], inst: "Brazos en semicírculo y patada de rana simultánea.", tips: "Coordina la respiración sacando el mentón." },
-                    { name: "Estilo Espalda Completo", muscles: ["Espalda", "Hombros"], inst: "Nado dorsal continuo con rotación de hombros y patada constante.", tips: "Mantén la barbilla ligeramente recogida." },
-                    { name: "Estilo Mariposa (Delfín)", muscles: ["Espalda", "Hombros", "Abdomen"], inst: "Ondulación de cadera y brazada simultánea fuera del agua.", tips: "Gran coordinación de core." },
-                    { name: "Patada con Tabla (Kick Set)", muscles: ["Cuádriceps", "Abdomen"], inst: "Desplazamiento usando solo patada con tabla al frente.", tips: "Patada desde la cadera." },
-                    { name: "Pull Buoy (Trabajo de Brazos)", muscles: ["Espalda", "Hombros"], inst: "Nado con corcho entre las piernas para aislar el tren superior.", tips: "Mantén la cadera alta en el agua." }
+                    { name: "Curl con Barra Z", muscles: ["Bíceps"], inst: "Flexiona los codos elevando la barra z hacia los hombros.", tips: "Evita el impulso de la cadera." }
                 ],
                 atletismo: [
                     { name: "Sprints de 100 Metros", muscles: ["Cardio Global", "Cuádriceps"], inst: "Máxima velocidad en línea recta.", tips: "Vista al frente y braceo enérgico." },
-                    { name: "Fartlek (Cambios de ritmo)", muscles: ["Cardio Global"], inst: "Alterna trote suave con carreras rápidas sin parar.", tips: "Regula tu intensidad según el esfuerzo." },
-                    { name: "Carrera Continua de Fondo", muscles: ["Cardio Global"], inst: "Ritmo aeróbico constante de larga duración.", tips: "Zancada fluida y pisada eficiente." },
-                    { name: "Carrera en Pendiente / Subidas (Hill Repeats)", muscles: ["Cuádriceps", "Cardio Global"], inst: "Sprints o trote fuerte en cuesta arriba.", tips: "Inclina ligeramente el torso al frente." },
-                    { name: "Técnica de Carrera: Skipping Alto", muscles: ["Cardio Global", "Abdomen"], inst: "Elevación alta de rodillas a ritmo dinámico.", tips: "Apoyo rápido de metatarso bajo la cadera." }
-                ],
-                funcional: [
-                    { name: "Burpees con Salto", muscles: ["Cardio Global", "Abdomen", "Pecho"], inst: "Baja a plancha, lagartija, recoge piernas y salta arriba.", tips: "Abdomen firme para proteger la lumbar." },
-                    { name: "Kettlebell Swing", muscles: ["Glúteos", "Isquios", "Abdomen"], inst: "Impulsa la pesa rusa desde la cadera usando potencia trasera.", tips: "El movimiento nace de la cadera, no de los brazos." },
-                    { name: "Flexiones Diamante (Diamond Push-ups)", muscles: ["Tríceps", "Pecho"], inst: "Lagartijas con las manos juntas formando un diamante.", tips: "Codos cerca de las costillas." },
-                    { name: "Battle Ropes", muscles: ["Hombros", "Abdomen", "Cardio Global"], inst: "Crea ondas continuas y alternas con las cuerdas pesadas.", tips: "Semiflexión en rodillas y core tenso." },
-                    { name: "Clean and Press con Kettlebell o Mancuerna", muscles: ["Hombros", "Cardio Global"], inst: "Levanta el peso del suelo al hombro con explosividad y presiona arriba.", tips: "Extensión potente de cadera." },
-                    { name: "Slam Balls (Lanzamiento de Balón Medicinal)", muscles: ["Abdomen", "Cardio Global"], inst: "Eleva el balón sobre la cabeza y lánzalo con fuerza contra el suelo.", tips: "Acompaña con todo el cuerpo." },
-                    { name: "Thrusters con Mancuernas", muscles: ["Cuádriceps", "Hombros", "Abdomen"], inst: "Sentadilla profunda seguida de un press militar explosivo al subir.", tips: "Transición fluida sin detenerse abajo." },
-                    { name: "Box Jumps (Saltos al Cajón)", muscles: ["Cuádriceps", "Glúteos"], inst: "Salta con ambos pies sobre una plataforma acolchada.", tips: "Aterriza con rodillas semiflexionadas." },
-                    { name: "Mountain Climbers Dinámicos", muscles: ["Abdomen", "Cardio Global"], inst: "En posición de plancha, lleva las rodillas al pecho alternando rápidamente.", tips: "Mantén la cadera estable." }
-                ],
-                pilates: [
-                    { name: "The Hundred", muscles: ["Abdomen"], inst: "Acostado boca arriba, eleva piernas y hombros bombeando brazos.", tips: "Zona lumbar pegada al mat." },
-                    { name: "Roll Up", muscles: ["Abdomen", "Espalda"], inst: "Desenrollamiento espinal fluido desde el suelo hasta tocar puntas.", tips: "Vértebra por vértebra sin tirones." },
-                    { name: "Single Leg Stretch", muscles: ["Abdomen"], inst: "Alterna abrazar una rodilla al pecho elevando el torso.", tips: "Ombligo hacia adentro." },
-                    { name: "Criss-Cross", muscles: ["Abdomen"], inst: "Rotación de tronco llevando el codo opuesto a la rodilla contraria.", tips: "Rotación desde las costillas." },
-                    { name: "Side Kick Series", muscles: ["Glúteos"], inst: "Patadas laterales controladas acostado de lado en el mat.", tips: "Cadera estable sin tambalearse." },
-                    { name: "Shoulder Bridge (Puente de Glúteos Clásico)", muscles: ["Glúteos", "Isquios", "Abdomen"], inst: "Elevación de cadera articulada vértebra por vértebra.", tips: "Pelvis neutra y contracción superior." },
-                    { name: "The Swimming (Nadador)", muscles: ["Espalda", "Glúteos"], inst: "Decúbito prono, eleva brazo y pierna contraria alternando el braceo.", tips: "Alarga el cuerpo desde la coronilla." },
-                    { name: "Open Leg Rocker", muscles: ["Abdomen"], inst: "Equilibrio sentado sosteniendo los tobillos con piernas en V y balanceo controlado.", tips: "Control abdominal absoluto." }
+                    { name: "Carrera Continua de Fondo", muscles: ["Cardio Global"], inst: "Ritmo aeróbico constante de larga duración.", tips: "Zancada fluida y pisada eficiente." }
                 ]
             },
             estiramiento: {
                 gimnasio: [
-                    { name: "Estiramiento de Pecho en Pared", muscles: ["Pecho", "Hombros"], inst: "Apoya el antebrazo en la pared y gira el torso suavemente.", tips: "Mantén el hombro abajo y relajado." },
-                    { name: "Estiramiento de Isquiotibiales Sentado", muscles: ["Isquios"], inst: "Sentado con pierna extendida, inclina el tronco al frente.", tips: "Pecho hacia el muslo sin forzar." }
-                ],
-                atletismo: [
-                    { name: "Estiramiento de Cuádriceps de Pie", muscles: ["Cuádriceps"], inst: "Toma el empeine por detrás llevando el talón al glúteo.", tips: "Mantén las rodillas juntas." },
-                    { name: "Estiramiento de Gemelos en Pared", muscles: ["Pantorrillas"], inst: "Apoya manos en pared, atrasa pierna estirada con talón en suelo.", tips: "Sin rebotes bruscos." }
-                ],
-                funcional: [
-                    { name: "Postura del Niño (Yoga Child's Pose)", muscles: ["Espalda", "Glúteos"], inst: "Lleva glúteos a los talones y estira los brazos al frente en el mat.", tips: "Respira profundo y relaja la columna." }
-                ],
-                pilates: [
-                    { name: "Spine Stretch Forward", muscles: ["Espalda", "Isquios"], inst: "Sentado con piernas abiertas, flexiona la columna al frente vértebra por vértebra.", tips: "Imagina pasar por encima de una esfera." }
-                ],
-                natacion: [
-                    { name: "Estiramiento de Dorsales y Tríceps", muscles: ["Espalda", "Tríceps"], inst: "Brazo arriba doblado tocando la espalda, empuja el codo con la otra mano.", tips: "Alivia la tensión de natación." }
-                ],
-                bicicleta: [
-                    { name: "Estiramiento de Flexores de Cadera", muscles: ["Cuádriceps", "Glúteos"], inst: "Zancada profunda apoyando la rodilla trasera en el suelo.", tips: "Abre la cadera tras el pedaleo." }
+                    { name: "Estiramiento de Pecho en Pared", muscles: ["Pecho", "Hombros"], inst: "Apoya el antebrazo en la pared y gira el torso suavemente.", tips: "Mantén el hombro abajo y relajado." }
                 ]
             }
         };
 
-        // GESTIÓN DE SKILLS DE MÚSCULOS (Añadir y Quitar)
         let selectedMuscleList = [];
         function addMuscleSkillTag() {
             const select = document.getElementById('muscleSelectDropdown');
             const val = select.value;
-            if(!val) return; // Si está en la opción por defecto, no hacer nada
+            if(!val) return; 
             if(!selectedMuscleList.includes(val)) {
-                selectedMuscleList.push(val);
-                renderMuscleTags();
-                filterCatalogByMusclesAndDiscipline();
+                selectedMuscleList.push(val); renderMuscleTags(); filterCatalogByMusclesAndDiscipline();
             }
-            select.value = ''; // Resetea el select
+            select.value = ''; 
         }
         function removeMuscleSkillTag(muscle) {
-            selectedMuscleList = selectedMuscleList.filter(m => m !== muscle);
-            renderMuscleTags();
-            filterCatalogByMusclesAndDiscipline();
+            selectedMuscleList = selectedMuscleList.filter(m => m !== muscle); renderMuscleTags(); filterCatalogByMusclesAndDiscipline();
         }
         function renderMuscleTags() {
-            const container = document.getElementById('muscleSkillsContainer');
-            container.innerHTML = '';
-            if(selectedMuscleList.length === 0) {
-                container.innerHTML = '<span style="color:#666; font-size:0.75rem;">Sin músculos seleccionados (Se muestran todos)</span>';
-                return;
-            }
-            selectedMuscleList.forEach(m => {
-                const badge = document.createElement('div');
-                badge.className = 'skill-badge';
-                badge.innerHTML = `${m} <span onclick="removeMuscleSkillTag('${m}')">×</span>`;
-                container.appendChild(badge);
-            });
+            const container = document.getElementById('muscleSkillsContainer'); container.innerHTML = '';
+            if(selectedMuscleList.length === 0) { container.innerHTML = '<span style="color:#666; font-size:0.75rem;">Sin músculos seleccionados (Se muestran todos)</span>'; return; }
+            selectedMuscleList.forEach(m => { const badge = document.createElement('div'); badge.className = 'skill-badge'; badge.innerHTML = `${m} <span onclick="removeMuscleSkillTag('${m}')">×</span>`; container.appendChild(badge); });
         }
 
-        // FILTRADO CRUZADO ESTRICTO Y DINÁMICO
         function filterCatalogByMusclesAndDiscipline() {
-            const section = document.getElementById('exSection').value;
-            const discipline = document.getElementById('exDiscipline').value;
-            const select = document.getElementById('exCatalogSelect');
-            
-            // Vaciar y mostrar por defecto
+            const section = document.getElementById('exSection').value; const discipline = document.getElementById('exDiscipline').value; const select = document.getElementById('exCatalogSelect');
             select.innerHTML = '<option value="" disabled selected>Selecciona tu ejercicio</option>';
-
-            // Si aún no han seleccionado sección o disciplina, detener aquí
             if(!section || !discipline) return;
-
-            if (discipline === 'otro') {
-                select.innerHTML = '<option value="otro">Otro (Escribir manual)</option>';
-                document.getElementById('manualTitleGroup').style.display = 'block';
-                document.getElementById('exInstructions').value = '';
-                document.getElementById('exTips').value = '';
-                return;
-            }
-
+            if (discipline === 'otro') { select.innerHTML = '<option value="otro">Otro (Escribir manual)</option>'; document.getElementById('manualTitleGroup').style.display = 'block'; document.getElementById('exInstructions').value = ''; document.getElementById('exTips').value = ''; return; }
             document.getElementById('manualTitleGroup').style.display = 'none';
-            const catBySection = massiveCatalog100[section] || {};
-            const disciplineList = catBySection[discipline] || [];
-
+            const catBySection = massiveCatalog100[section] || {}; const disciplineList = catBySection[discipline] || [];
             let filteredList = [];
-            if (selectedMuscleList.length === 0) {
-                // Si no hay músculos seleccionados, aparecen TODOS los de esa disciplina
-                filteredList = disciplineList;
-            } else {
-                // Filtrado estricto: el ejercicio debe contener al menos uno de los músculos seleccionados
-                filteredList = disciplineList.filter(item => {
-                    if (!item.muscles) return false;
-                    return item.muscles.some(m => selectedMuscleList.includes(m));
-                });
-            }
-
-            if (filteredList.length === 0) {
-                select.innerHTML = '<option value="no_encontrado" disabled>No se encuentran ejercicios</option><option value="otro">Otro (Personalizado)</option>';
-            } else {
-                filteredList.forEach(item => {
-                    const opt = new Option(item.name, item.name);
-                    opt.dataset.inst = item.inst;
-                    opt.dataset.tips = item.tips;
-                    select.add(opt);
-                });
-                select.add(new Option('Otro (Personalizado)', 'otro'));
-            }
+            if (selectedMuscleList.length === 0) { filteredList = disciplineList; } else { filteredList = disciplineList.filter(item => { if (!item.muscles) return false; return item.muscles.some(m => selectedMuscleList.includes(m)); }); }
+            if (filteredList.length === 0) { select.innerHTML = '<option value="no_encontrado" disabled>No se encuentran ejercicios</option><option value="otro">Otro (Personalizado)</option>'; } else { filteredList.forEach(item => { const opt = new Option(item.name, item.name); opt.dataset.inst = item.inst; opt.dataset.tips = item.tips; select.add(opt); }); select.add(new Option('Otro (Personalizado)', 'otro')); }
             onCatalogSelectChange();
         }
 
         function onCatalogSelectChange() {
-            const select = document.getElementById('exCatalogSelect');
-            const manualGroup = document.getElementById('manualTitleGroup');
-            
-            if(!select.value) return; // Si es la opción deshabilitada
-            
-            if (select.value === 'otro' || select.value === 'no_encontrado') {
-                if(select.value === 'otro') manualGroup.style.display = 'block';
-                document.getElementById('exInstructions').value = '';
-                document.getElementById('exTips').value = '';
-            } else {
-                manualGroup.style.display = 'none';
-                const selectedOpt = select.options[select.selectedIndex];
-                if(selectedOpt && selectedOpt.dataset.inst) {
-                    document.getElementById('exInstructions').value = selectedOpt.dataset.inst;
-                    document.getElementById('exTips').value = selectedOpt.dataset.tips || '';
-                }
-            }
+            const select = document.getElementById('exCatalogSelect'); const manualGroup = document.getElementById('manualTitleGroup');
+            if(!select.value) return; 
+            if (select.value === 'otro' || select.value === 'no_encontrado') { if(select.value === 'otro') manualGroup.style.display = 'block'; document.getElementById('exInstructions').value = ''; document.getElementById('exTips').value = ''; } else { manualGroup.style.display = 'none'; const selectedOpt = select.options[select.selectedIndex]; if(selectedOpt && selectedOpt.dataset.inst) { document.getElementById('exInstructions').value = selectedOpt.dataset.inst; document.getElementById('exTips').value = selectedOpt.dataset.tips || ''; } }
         }
 
         let currentImageBase64 = null;
@@ -734,52 +549,30 @@
         }
 
         function onModalUnitChange(inputId, selectEl) {
-            const input = document.getElementById(inputId);
-            let val = parseInt(input.value);
-            if(isNaN(val)) return;
-            if(selectEl.value === 'm') { input.value = Math.max(1, Math.round(val / 60)); } 
-            else { input.value = val * 60; }
+            const input = document.getElementById(inputId); let val = parseInt(input.value); if(isNaN(val)) return;
+            if(selectEl.value === 'm') { input.value = Math.max(1, Math.round(val / 60)); } else { input.value = val * 60; }
         }
-
         function onQuickRestUnitChange() {
-            const input = document.getElementById('quickRestTime');
-            const select = document.getElementById('quickRestUnit');
-            let val = parseInt(input.value);
-            if(isNaN(val)) return;
-            if(select.value === 'min') { input.value = Math.max(1, Math.round(val / 60)); } 
-            else { input.value = val * 60; }
+            const input = document.getElementById('quickRestTime'); const select = document.getElementById('quickRestUnit'); let val = parseInt(input.value); if(isNaN(val)) return;
+            if(select.value === 'min') { input.value = Math.max(1, Math.round(val / 60)); } else { input.value = val * 60; }
             updateRestDisplayInit();
         }
 
         function openExerciseModal() { 
-            // Reset general del formulario a vacío / valores por defecto
-            document.getElementById('exId').value = ''; 
-            document.getElementById('exSection').value = ''; 
-            document.getElementById('exDiscipline').value = ''; 
-            document.getElementById('muscleSelectDropdown').value = '';
-            document.getElementById('exCatalogSelect').innerHTML = '<option value="" disabled selected>Selecciona tu ejercicio</option>';
-            
-            selectedMuscleList = [];
-            renderMuscleTags();
-            
-            document.getElementById('exSubtitle').value = ''; 
-            document.getElementById('exInstructions').value = ''; 
-            document.getElementById('exTips').value = ''; 
-            document.getElementById('manualTitleGroup').style.display = 'none';
-
+            document.getElementById('exId').value = ''; document.getElementById('exSection').value = ''; document.getElementById('exDiscipline').value = ''; document.getElementById('muscleSelectDropdown').value = ''; document.getElementById('exCatalogSelect').innerHTML = '<option value="" disabled selected>Selecciona tu ejercicio</option>';
+            selectedMuscleList = []; renderMuscleTags();
+            document.getElementById('exSubtitle').value = ''; document.getElementById('exInstructions').value = ''; document.getElementById('exTips').value = ''; document.getElementById('manualTitleGroup').style.display = 'none';
             if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = ''; 
             document.getElementById('exSeries').value = '3'; document.getElementById('exReps').value = '10'; document.getElementById('exRepsRest').value = '60'; document.getElementById('exRepsRestUnit').value = 's';
             document.getElementById('exWorkTime').value = '45'; document.getElementById('exWorkUnit').value = 's'; document.getElementById('exRestTime').value = '15'; document.getElementById('exRestUnit').value = 's'; document.getElementById('exRounds').value = '3'; 
             document.getElementById('exDistance').value = ''; document.getElementById('exLaps').value = ''; document.getElementById('exDistRest').value = '30'; document.getElementById('exDistRestUnit').value = 's';
-            document.getElementById('exType').value = 'reps'; document.getElementById('exTrackProgress').checked = false; toggleTypeInputs(); currentImageBase64 = null; document.getElementById('modalFormTitle').innerText = "Agregar Ejercicio"; document.getElementById('exerciseModal').style.display = 'flex'; 
+            document.getElementById('exType').value = 'reps'; document.getElementById('exTrackProgress').checked = true; toggleTypeInputs(); currentImageBase64 = null; document.getElementById('modalFormTitle').innerText = "Agregar Ejercicio"; document.getElementById('exerciseModal').style.display = 'flex'; 
         }
         function closeExerciseModal() { document.getElementById('exerciseModal').style.display = 'none'; }
         
         function saveExercise() {
-            // Validar que se hayan seleccionado las opciones
             if(!document.getElementById('exSection').value) { alert("Por favor, selecciona una Sección de Entrenamiento."); return; }
             if(!document.getElementById('exDiscipline').value) { alert("Por favor, selecciona una Disciplina."); return; }
-            
             const catalogVal = document.getElementById('exCatalogSelect').value;
             if(!catalogVal) { alert("Por favor, selecciona un Ejercicio del catálogo."); return; }
 
@@ -810,25 +603,11 @@
         function editExercise(id) { 
             const ex = currentExercisesList.find(e => e.id === id); 
             if (ex) { 
-                document.getElementById('exId').value = ex.id; 
-                document.getElementById('exSection').value = ex.section;
-                document.getElementById('exDiscipline').value = 'gimnasio';
-                selectedMuscleList = ex.muscles || [];
-                renderMuscleTags();
-                filterCatalogByMusclesAndDiscipline();
-                document.getElementById('exCatalogSelect').value = ex.title;
-                if(document.getElementById('exCatalogSelect').value !== ex.title) {
-                    document.getElementById('exCatalogSelect').value = 'otro';
-                    document.getElementById('manualTitleGroup').style.display = 'block';
-                    document.getElementById('exTitle').value = ex.title;
-                }
-                document.getElementById('exSubtitle').value = ex.subtitle || ''; 
-                document.getElementById('exInstructions').value = ex.instructions || ''; 
-                document.getElementById('exTips').value = ex.tips || ''; 
-                document.getElementById('exType').value = ex.type || 'reps'; 
-                document.getElementById('exSeries').value = ex.series || ''; document.getElementById('exReps').value = ex.reps || ''; 
-                document.getElementById('exRounds').value = ex.rounds || ''; 
-                document.getElementById('exDistance').value = ex.distance || ''; document.getElementById('exLaps').value = ex.laps || ''; 
+                document.getElementById('exId').value = ex.id; document.getElementById('exSection').value = ex.section; document.getElementById('exDiscipline').value = 'gimnasio';
+                selectedMuscleList = ex.muscles || []; renderMuscleTags(); filterCatalogByMusclesAndDiscipline(); document.getElementById('exCatalogSelect').value = ex.title;
+                if(document.getElementById('exCatalogSelect').value !== ex.title) { document.getElementById('exCatalogSelect').value = 'otro'; document.getElementById('manualTitleGroup').style.display = 'block'; document.getElementById('exTitle').value = ex.title; }
+                document.getElementById('exSubtitle').value = ex.subtitle || ''; document.getElementById('exInstructions').value = ex.instructions || ''; document.getElementById('exTips').value = ex.tips || ''; document.getElementById('exType').value = ex.type || 'reps'; 
+                document.getElementById('exSeries').value = ex.series || ''; document.getElementById('exReps').value = ex.reps || ''; document.getElementById('exRounds').value = ex.rounds || ''; document.getElementById('exDistance').value = ex.distance || ''; document.getElementById('exLaps').value = ex.laps || ''; 
                 document.getElementById('exTrackProgress').checked = !!ex.trackProgress; toggleTypeInputs(); currentImageBase64 = ex.image || null; document.getElementById('modalFormTitle').innerText = "Editar Ejercicio"; document.getElementById('exerciseModal').style.display = 'flex'; 
             } 
         }
@@ -837,61 +616,54 @@
         // CALCULADORA DE RM
         document.getElementById('btnOpenRMModal').onclick = () => document.getElementById('rmModal').style.display = 'flex';
         document.getElementById('btnCloseRMModal').onclick = () => document.getElementById('rmModal').style.display = 'none';
-        document.getElementById('btnToggleRMHelp').onclick = () => {
-            const h = document.getElementById('rmHelpBox');
-            h.style.display = (h.style.display === 'none') ? 'block' : 'none';
-        };
+        document.getElementById('btnToggleRMHelp').onclick = () => { const h = document.getElementById('rmHelpBox'); h.style.display = (h.style.display === 'none') ? 'block' : 'none'; };
         document.getElementById('btnCalculateRM').onclick = () => {
-            const weight = parseFloat(document.getElementById('rmWeight').value);
-            const reps = parseInt(document.getElementById('rmReps').value);
-            const resEl = document.getElementById('rmResultDisplay');
-            if(isNaN(weight) || isNaN(reps) || weight <= 0 || reps <= 0) {
-                resEl.textContent = "Por favor ingresa valores válidos.";
-                return;
-            }
-            const rm = Math.round(weight * (1 + reps / 30));
-            resEl.textContent = `¡Tu RM estimado es de aprox. ${rm} KG!`;
+            const weight = parseFloat(document.getElementById('rmWeight').value); const reps = parseInt(document.getElementById('rmReps').value); const resEl = document.getElementById('rmResultDisplay');
+            if(isNaN(weight) || isNaN(reps) || weight <= 0 || reps <= 0) { resEl.textContent = "Por favor ingresa valores válidos."; return; }
+            const rm = Math.round(weight * (1 + reps / 30)); resEl.textContent = `¡Tu RM estimado es de aprox. ${rm} KG!`;
         };
 
         // CÁLCULO DE VOLUMEN SEMANAL
         function calculateWeeklyVolume() {
-            if (!db) return;
-            const tx = db.transaction("exercises", "readonly");
+            if (!db) return; const tx = db.transaction("exercises", "readonly");
             tx.objectStore("exercises").getAll().onsuccess = (e) => {
                 const all = (e.target.result || []).filter(ex => ex.userId === activeProfileId);
                 const counts = {};
-                all.forEach(ex => {
-                    const sCount = parseInt(ex.series) || (ex.type === 'reps' ? 3 : 1);
-                    if (ex.muscles && ex.muscles.length) {
-                        ex.muscles.forEach(m => { counts[m] = (counts[m] || 0) + sCount; });
-                    }
-                });
+                all.forEach(ex => { const sCount = parseInt(ex.series) || (ex.type === 'reps' ? 3 : 1); if (ex.muscles && ex.muscles.length) { ex.muscles.forEach(m => { counts[m] = (counts[m] || 0) + sCount; }); } });
                 const statsList = document.getElementById('volumeStatsList');
-                if (Object.keys(counts).length === 0) {
-                    statsList.innerHTML = "Sin datos de músculos registrados esta semana.";
-                    return;
-                }
+                if (Object.keys(counts).length === 0) { statsList.innerHTML = "Sin datos de músculos registrados esta semana."; return; }
                 let html = '<div style="display: flex; flex-direction: column; gap: 4px;">';
                 for (const [muscle, totalSeries] of Object.entries(counts)) {
-                    let levelColor = "#4CAF50"; 
-                    let levelText = "Óptimo (10-20s)";
-                    if (totalSeries < 10) { levelColor = "#FFC107"; levelText = "Bajo (<10s)"; }
-                    else if (totalSeries > 22) { levelColor = "#FF5722"; levelText = "Alto (>22s)"; }
+                    let levelColor = "#4CAF50"; let levelText = "Óptimo (10-20s)";
+                    if (totalSeries < 10) { levelColor = "#FFC107"; levelText = "Bajo (<10s)"; } else if (totalSeries > 22) { levelColor = "#FF5722"; levelText = "Alto (>22s)"; }
                     html += `<div style="display: flex; justify-content: space-between;"><span><b>${muscle}:</b> ${totalSeries} series</span><span style="color:${levelColor}; font-weight:700;">${levelText}</span></div>`;
                 }
-                html += '</div>';
-                statsList.innerHTML = html;
+                html += '</div>'; statsList.innerHTML = html;
+            };
+        }
+
+        // --- SISTEMA DE LOGGING EN LINEA (MODO ENTRENADOR) ---
+        function saveProgressInline(exerciseName, serieNum, weightVal, repsVal) {
+            const dateVal = new Date().toISOString().slice(0, 10);
+            const tx = db.transaction("progress", "readwrite");
+            const store = tx.objectStore("progress");
+            const recordId = activeProfileId + '_' + exerciseName;
+            const getReq = store.get(recordId);
+
+            getReq.onsuccess = function() {
+                let record = getReq.result || { id: recordId, userId: activeProfileId, exercise: exerciseName, history: [] };
+                const newEntry = { date: dateVal, serie: serieNum, weight: weightVal, reps: repsVal };
+                // Reemplazar si ya existe la serie en la misma fecha
+                const existingIdx = record.history.findIndex(h => h.date === dateVal && String(h.serie) === String(serieNum));
+                if (existingIdx !== -1) { record.history[existingIdx] = newEntry; } else { record.history.push(newEntry); }
+                record.history.sort((a, b) => new Date(a.date) - new Date(b.date));
+                store.put(record);
+                tx.oncomplete = function() { loadProgressRecords(); };
             };
         }
 
         // MODO ENTRENADOR
-        function parseTimeStringToSeconds(str) {
-            if (!str) return 0;
-            str = str.toLowerCase().trim();
-            let num = parseInt(str) || 0;
-            if (str.includes('m')) return num * 60;
-            return num;
-        }
+        function parseTimeStringToSeconds(str) { if (!str) return 0; str = str.toLowerCase().trim(); let num = parseInt(str) || 0; if (str.includes('m')) return num * 60; return num; }
         function formatSecondsToMS(totalSeconds) { const m = Math.floor(totalSeconds / 60); const s = totalSeconds % 60; return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`; }
         function formatMSMToStopwatch(ms) { const date = new Date(ms); const m = String(date.getUTCMinutes()).padStart(2, '0'); const s = String(date.getUTCSeconds()).padStart(2, '0'); const msStr = String(Math.floor(date.getUTCMilliseconds() / 10)).padStart(2, '0'); return `${m}:${s}.${msStr}`; }
         
@@ -900,15 +672,28 @@
         function playBeepShort() { playTone(600, 0.15); } function playBeepHigh() { playTone(880, 0.25); } function playDoubleBeep() { playTone(880, 0.15); setTimeout(() => playTone(1200, 0.25), 180); }
 
         let trainerIndex = 0; let inlineTimerInterval = null; let inlineStopwatchInterval = null;
-        function startTrainerMode() { if (currentExercisesList.length === 0) { alert("Primero debes agregar al menos un ejercicio."); return; } trainerIndex = 0; document.getElementById('mainContentContainer').style.display = 'none'; document.querySelector('.action-buttons-grid').style.display = 'none'; document.getElementById('trainer-mode-container').style.display = 'block'; renderTrainerStep(); }
-        function exitTrainerMode() { clearInlineTimers(); document.getElementById('trainer-mode-container').style.display = 'none'; document.getElementById('mainContentContainer').style.display = 'block'; document.querySelector('.action-buttons-grid').style.display = 'flex'; }
+        let currentTrainerSeries = 1; let currentTrainerLap = 1;
+
+        function startTrainerMode() { if (currentExercisesList.length === 0) { alert("Primero debes agregar al menos un ejercicio."); return; } trainerIndex = 0; currentTrainerSeries = 1; currentTrainerLap = 1; document.getElementById('mainContentContainer').style.display = 'none'; document.querySelector('.action-buttons-grid').style.display = 'none'; document.getElementById('trainer-mode-container').style.display = 'block'; renderTrainerStep(); }
+        function exitTrainerMode() { clearInlineTimers(); document.getElementById('trainer-mode-container').style.display = 'none'; document.getElementById('mainContentContainer').style.display = 'block'; document.querySelector('.action-buttons-grid').style.display = 'grid'; }
         function clearInlineTimers() { if(inlineTimerInterval) clearInterval(inlineTimerInterval); if(inlineStopwatchInterval) clearInterval(inlineStopwatchInterval); }
 
         function renderTrainerStep() { 
             clearInlineTimers(); const ex = currentExercisesList[trainerIndex]; document.getElementById('trainerCounter').innerText = `Ejercicio ${trainerIndex + 1} de ${currentExercisesList.length}`; document.getElementById('tTitle').innerText = ex.title; document.getElementById('tSubtitle').innerText = ex.subtitle || ''; document.getElementById('tDetails').innerText = ex.details || ''; document.getElementById('tInstructions').innerText = ex.instructions || 'Sin instrucciones adicionales.'; 
-            const tipsEl = document.getElementById('tTips');
-            if(ex.tips) { tipsEl.innerHTML = `💡 <b>Tips:</b> ${ex.tips}`; tipsEl.style.display = 'block'; } else { tipsEl.style.display = 'none'; }
+            
+            // BUSCAR RM HISTÓRICO Y MOSTRARLO
+            const rmEl = document.getElementById('tRMDisplay'); rmEl.innerHTML = '';
+            const exProgress = globalProgressRecords.find(r => r.exercise === ex.title);
+            if (exProgress && exProgress.history && exProgress.history.length > 0) {
+                let maxRM = 0;
+                exProgress.history.forEach(h => {
+                    let w = parseFloat(h.weight) || 0; let r = parseInt(h.reps) || 0;
+                    if (w > 0 && r > 0) { let rm = Math.round(w * (1 + r / 30)); if (rm > maxRM) maxRM = rm; }
+                });
+                if (maxRM > 0) { rmEl.innerHTML = `🏆 Tu RM Histórico: ${maxRM} KG`; }
+            }
 
+            const tipsEl = document.getElementById('tTips'); if(ex.tips) { tipsEl.innerHTML = `💡 <b>Tips:</b> ${ex.tips}`; tipsEl.style.display = 'block'; } else { tipsEl.style.display = 'none'; }
             const imgEl = document.getElementById('tImg'); if (ex.image) { imgEl.src = ex.image; imgEl.style.display = 'block'; } else { imgEl.style.display = 'none'; } 
             const timerArea = document.getElementById('trainerTimerArea'); timerArea.innerHTML = '';
 
@@ -918,32 +703,66 @@
 
             if (ex.type === 'reps') {
                 const restSecs = parseTimeStringToSeconds(ex.repsRest) || 60;
-                timerArea.innerHTML = `<div class="inline-timer-status" id="inlineStatus">Termina tu serie y toma un respiro</div><div class="inline-timer-display" id="inlineClock">${formatSecondsToMS(restSecs)}</div><div class="inline-btn-group"><button class="inline-btn inline-btn-main" id="btnInlineAction">${playSvg} Iniciar Descanso</button></div>`;
+                const totalSeries = parseInt(ex.series) || 1;
+
+                timerArea.innerHTML = `
+                    <div class="inline-timer-status" id="inlineStatus" style="margin-bottom:10px;">SERIE ${currentTrainerSeries} DE ${totalSeries}</div>
+                    <div id="repsFormArea">
+                        <div style="display:flex; gap:10px; margin-bottom:15px; justify-content:center;">
+                            <div style="text-align:left; width:90px;">
+                                <label style="font-size:0.7rem; color:var(--primary-color); font-weight:700; text-transform:uppercase;">Peso (KG)</label>
+                                <input type="number" id="inlineWeight" class="form-control" placeholder="Ej. 60" style="text-align:center; padding:10px; font-size:1rem; font-weight:700;">
+                            </div>
+                            <div style="text-align:left; width:90px;">
+                                <label style="font-size:0.7rem; color:var(--primary-color); font-weight:700; text-transform:uppercase;">Reps</label>
+                                <input type="number" id="inlineReps" class="form-control" style="text-align:center; padding:10px; font-size:1rem; font-weight:700;" value="${ex.reps || ''}">
+                            </div>
+                        </div>
+                        <button class="inline-btn inline-btn-log" id="btnLogAndRest" style="width:100%; margin-bottom:15px; padding:12px;">💾 Guardar Serie y Descansar</button>
+                    </div>
+                    <div class="inline-timer-display" id="inlineClock" style="display:none; font-size:3rem;">${formatSecondsToMS(restSecs)}</div>
+                    <div class="inline-btn-group" id="restBtnGroup" style="display:none;">
+                        <button class="inline-btn inline-btn-sec" id="btnSkipRest" style="width:100%;">Omitir Descanso ⏭</button>
+                    </div>
+                `;
+
                 let isResting = false; let targetTimestamp = 0;
-                document.getElementById('btnInlineAction').onclick = function() {
-                    if(!isResting) { 
-                        isResting = true; playBeepHigh(); 
-                        targetTimestamp = Date.now() + (restSecs * 1000);
-                        this.innerHTML = `${pauseSvg} Omitir Descanso`; this.className = "inline-btn inline-btn-sec"; document.getElementById('inlineStatus').innerText = "RECUPERACIÓN"; 
-                        inlineTimerInterval = setInterval(() => { 
-                            const remainingMs = targetTimestamp - Date.now();
-                            const timeLeft = Math.max(0, Math.ceil(remainingMs / 1000));
-                            document.getElementById('inlineClock').innerText = formatSecondsToMS(timeLeft); 
-                            if(timeLeft <= 3 && timeLeft > 0) playBeepShort(); 
-                            if(timeLeft <= 0) { 
-                                clearInterval(inlineTimerInterval); playDoubleBeep(); 
-                                isResting = false; document.getElementById('inlineClock').innerText = formatSecondsToMS(restSecs); 
-                                document.getElementById('inlineStatus').innerText = "¡LISTO PARA OTRA SERIE!"; 
-                                this.innerHTML = `${playSvg} Iniciar Descanso`; this.className = "inline-btn inline-btn-main"; 
-                            } 
-                        }, 200); 
-                    } else { 
-                        clearInterval(inlineTimerInterval); isResting = false; 
-                        document.getElementById('inlineClock').innerText = formatSecondsToMS(restSecs); 
-                        document.getElementById('inlineStatus').innerText = "Descanso Omitido"; 
-                        this.innerHTML = `${playSvg} Iniciar Descanso`; this.className = "inline-btn inline-btn-main"; 
-                    }
+
+                document.getElementById('btnLogAndRest').onclick = function() {
+                    const w = document.getElementById('inlineWeight').value;
+                    const r = document.getElementById('inlineReps').value;
+                    if (!w) { alert("Ingresa el peso levantado para guardar tu progreso."); return; }
+
+                    saveProgressInline(ex.title, currentTrainerSeries, w, r);
+
+                    document.getElementById('repsFormArea').style.display = 'none';
+                    document.getElementById('inlineClock').style.display = 'block';
+                    document.getElementById('restBtnGroup').style.display = 'flex';
+                    document.getElementById('inlineStatus').innerText = "RECUPERACIÓN";
+
+                    isResting = true; playBeepHigh();
+                    targetTimestamp = Date.now() + (restSecs * 1000);
+
+                    inlineTimerInterval = setInterval(() => {
+                        const remainingMs = targetTimestamp - Date.now();
+                        const timeLeft = Math.max(0, Math.ceil(remainingMs / 1000));
+                        document.getElementById('inlineClock').innerText = formatSecondsToMS(timeLeft);
+                        if(timeLeft <= 3 && timeLeft > 0) playBeepShort();
+                        if(timeLeft <= 0) finishRest();
+                    }, 200);
                 };
+
+                document.getElementById('btnSkipRest').onclick = function() { if(isResting) finishRest(); };
+
+                function finishRest() {
+                    clearInterval(inlineTimerInterval); isResting = false; playDoubleBeep();
+                    currentTrainerSeries++;
+                    if (currentTrainerSeries > totalSeries) {
+                        timerArea.innerHTML = `<div class="inline-timer-status" style="color:#4CAF50; font-size:1.2rem; margin-top:20px;">¡EJERCICIO COMPLETADO! 🎉</div>`;
+                    } else {
+                        renderTrainerStep(); // Vuelve a re-renderizar para la siguiente serie limpia
+                    }
+                }
             } 
             else if (ex.type === 'time') {
                 const workSecs = parseTimeStringToSeconds(ex.workTime) || 45; const restSecs = parseTimeStringToSeconds(ex.restTime) || 15; const totalRounds = parseInt(ex.rounds) || 3;
@@ -951,22 +770,15 @@
                 let isRunning = false; let phase = 'prep'; let targetTimestamp = 0; let currentRnd = 1;
 
                 function updateTimeUI(timeLeft) { 
-                    document.getElementById('inlineClock').innerText = formatSecondsToMS(timeLeft); 
-                    document.getElementById('inlineSub').innerText = `Ronda ${currentRnd} de ${totalRounds}`; 
-                    const st = document.getElementById('inlineStatus'); 
-                    if(phase === 'prep') { st.innerText = "⏳ PREPARACIÓN"; st.style.color = "#888"; } 
-                    else if(phase === 'work') { st.innerText = "🔥 ¡A TRABAJAR!"; st.style.color = "var(--primary-color)"; } 
-                    else if(phase === 'rest') { st.innerText = "💧 DESCANSO"; st.style.color = "#00bcd4"; } 
-                    else if(phase === 'done') { st.innerText = "🎉 ¡COMPLETADO!"; st.style.color = "#4CAF50"; } 
+                    document.getElementById('inlineClock').innerText = formatSecondsToMS(timeLeft); document.getElementById('inlineSub').innerText = `Ronda ${currentRnd} de ${totalRounds}`; const st = document.getElementById('inlineStatus'); 
+                    if(phase === 'prep') { st.innerText = "⏳ PREPARACIÓN"; st.style.color = "#888"; } else if(phase === 'work') { st.innerText = "🔥 ¡A TRABAJAR!"; st.style.color = "var(--primary-color)"; } else if(phase === 'rest') { st.innerText = "💧 DESCANSO"; st.style.color = "#00bcd4"; } else if(phase === 'done') { st.innerText = "🎉 ¡COMPLETADO!"; st.style.color = "#4CAF50"; } 
                 }
 
                 document.getElementById('btnInlineAction').onclick = function() { 
                     if(!isRunning) { 
-                        isRunning = true; this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); 
-                        if(!targetTimestamp) { phase = 'prep'; targetTimestamp = Date.now() + (5 * 1000); }
+                        isRunning = true; this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); if(!targetTimestamp) { phase = 'prep'; targetTimestamp = Date.now() + (5 * 1000); }
                         inlineTimerInterval = setInterval(() => { 
-                            const remainingMs = targetTimestamp - Date.now();
-                            const timeLeft = Math.max(0, Math.ceil(remainingMs / 1000));
+                            const remainingMs = targetTimestamp - Date.now(); const timeLeft = Math.max(0, Math.ceil(remainingMs / 1000));
                             if(timeLeft <= 3 && timeLeft > 0) playBeepShort(); 
                             if(timeLeft <= 0) { 
                                 if(phase === 'prep') { phase = 'work'; targetTimestamp = Date.now() + (workSecs * 1000); playDoubleBeep(); } 
@@ -985,15 +797,31 @@
             }
             else if (ex.type === 'distance') {
                 const restSecs = parseTimeStringToSeconds(ex.distRest) || 30;
-                timerArea.innerHTML = `<div class="inline-timer-status" id="inlineStatus">CRONÓMETRO DE RECORRIDO</div><div class="inline-timer-display" id="inlineClock" style="font-family: monospace;">00:00.00</div><div class="inline-btn-group" style="margin-bottom: 10px;"><button class="inline-btn inline-btn-main" id="btnInlineAction">${playSvg} Iniciar</button><button class="inline-btn inline-btn-sec" id="btnInlineReset">${resetSvg}</button></div><div class="inline-btn-group" style="border-top: 1px solid #333; padding-top:15px; flex-wrap: wrap;"><button class="inline-btn inline-btn-log" id="btnLogLap">+ Registrar Tiempo</button><button class="inline-btn inline-btn-sec" id="btnStartRest" style="flex:2;">Tomar Descanso (${restSecs}s)</button></div>`;
+                const totalLaps = parseInt(ex.laps) || 1;
+                timerArea.innerHTML = `<div class="inline-timer-status" id="inlineStatus">VUELTA ${currentTrainerLap} DE ${totalLaps}</div><div class="inline-timer-display" id="inlineClock" style="font-family: monospace;">00:00.00</div><div class="inline-btn-group" style="margin-bottom: 10px;"><button class="inline-btn inline-btn-main" id="btnInlineAction">${playSvg} Iniciar</button><button class="inline-btn inline-btn-sec" id="btnInlineReset">${resetSvg}</button></div><div class="inline-btn-group" style="border-top: 1px solid #333; padding-top:15px; flex-wrap: wrap;"><button class="inline-btn inline-btn-log" id="btnLogLap">+ Guardar Vuelta ${currentTrainerLap}</button><button class="inline-btn inline-btn-sec" id="btnStartRest" style="flex:2;">Tomar Descanso (${restSecs}s)</button></div>`;
                 let startTime = 0; let accumulatedTime = 0; let isRunning = false;
                 function updateStopwatchUI() { document.getElementById('inlineClock').innerText = formatMSMToStopwatch(accumulatedTime); }
                 document.getElementById('btnInlineAction').onclick = function() { 
                     if(!isRunning) { isRunning = true; startTime = Date.now() - accumulatedTime; this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); document.getElementById('inlineStatus').innerText = "EN MOVIMIENTO..."; inlineStopwatchInterval = setInterval(() => { accumulatedTime = Date.now() - startTime; updateStopwatchUI(); }, 50); } 
                     else { isRunning = false; clearInterval(inlineStopwatchInterval); this.innerHTML = `${playSvg} Reanudar`; document.getElementById('inlineStatus').innerText = "PAUSADO"; } 
                 };
-                document.getElementById('btnInlineReset').onclick = function() { isRunning = false; clearInterval(inlineStopwatchInterval); accumulatedTime = 0; updateStopwatchUI(); document.getElementById('btnInlineAction').innerHTML = `${playSvg} Iniciar`; document.getElementById('inlineStatus').innerText = "CRONÓMETRO DE RECORRIDO"; };
-                document.getElementById('btnLogLap').onclick = function() { let currentDisplay = document.getElementById('inlineClock').innerText; openProgressModal(null, null, ex.title, currentDisplay); };
+                document.getElementById('btnInlineReset').onclick = function() { isRunning = false; clearInterval(inlineStopwatchInterval); accumulatedTime = 0; updateStopwatchUI(); document.getElementById('btnInlineAction').innerHTML = `${playSvg} Iniciar`; document.getElementById('inlineStatus').innerText = `VUELTA ${currentTrainerLap} DE ${totalLaps}`; };
+                
+                document.getElementById('btnLogLap').onclick = function() { 
+                    let currentDisplay = document.getElementById('inlineClock').innerText; 
+                    saveProgressInline(ex.title, currentTrainerLap, currentDisplay, "Vuelta " + currentTrainerLap); 
+                    
+                    currentTrainerLap++;
+                    if (currentTrainerLap > totalLaps) {
+                        document.getElementById('inlineStatus').innerText = "¡RECORRIDO COMPLETADO! 🎉";
+                        document.getElementById('inlineStatus').style.color = "#4CAF50";
+                        this.style.display = 'none';
+                    } else {
+                        document.getElementById('inlineStatus').innerText = `VUELTA ${currentTrainerLap} DE ${totalLaps}`;
+                        this.innerText = `+ Guardar Vuelta ${currentTrainerLap}`;
+                    }
+                };
+
                 let restRunning = false; let restInterval = null;
                 document.getElementById('btnStartRest').onclick = function() { 
                     if(isRunning) document.getElementById('btnInlineAction').click(); 
@@ -1003,26 +831,12 @@
             }
         }
 
-        function nextTrainerStep() { if (trainerIndex < currentExercisesList.length - 1) { trainerIndex++; renderTrainerStep(); } else { alert("¡Felicidades! Has completado el entrenamiento."); exitTrainerMode(); } }
-        function prevTrainerStep() { if (trainerIndex > 0) { trainerIndex--; renderTrainerStep(); } }
+        function nextTrainerStep() { if (trainerIndex < currentExercisesList.length - 1) { trainerIndex++; currentTrainerSeries = 1; currentTrainerLap = 1; renderTrainerStep(); } else { alert("¡Felicidades! Has completado el entrenamiento."); exitTrainerMode(); } }
+        function prevTrainerStep() { if (trainerIndex > 0) { trainerIndex--; currentTrainerSeries = 1; currentTrainerLap = 1; renderTrainerStep(); } }
 
         // PROGRESO Y GRÁFICAS
         let globalProgressRecords = []; let currentChartExercise = '';
-        function openProgressModal(editIndex = null, existingData = null, defaultExercise = null, defaultVal = '') {
-            const select = document.getElementById('progExerciseSelect'); select.innerHTML = ''; const trackableExercises = allUserExercises.filter(e => e.trackProgress);
-            if (trackableExercises.length === 0) { select.appendChild(new Option('No hay ejercicios marcados', '')); } else { [...new Set(trackableExercises.map(e => e.title))].forEach(name => select.appendChild(new Option(name, name))); }
-            if(defaultExercise) { select.value = defaultExercise; }
-            if (editIndex !== null && existingData) { document.getElementById('progModalTitle').textContent = "Editar Registro"; select.value = existingData.exercise; document.getElementById('progDate').value = existingData.date; document.getElementById('progSerieNum').value = existingData.serie; document.getElementById('progWeight').value = existingData.weight; document.getElementById('progReps').value = existingData.reps; document.getElementById('progIndexEdit').value = editIndex; } 
-            else { document.getElementById('progModalTitle').textContent = "Registrar Progreso"; document.getElementById('progDate').value = new Date().toISOString().slice(0, 10); document.getElementById('progSerieNum').value = '1'; document.getElementById('progWeight').value = defaultVal; document.getElementById('progReps').value = ''; document.getElementById('progIndexEdit').value = ''; }
-            document.getElementById('progressModal').style.display = 'flex';
-        }
         function closeProgressModal() { document.getElementById('progressModal').style.display = 'none'; }
-        function saveProgressRecord() {
-            const exerciseName = document.getElementById('progExerciseSelect').value; const dateVal = document.getElementById('progDate').value; const serieVal = parseInt(document.getElementById('progSerieNum').value) || 1; const weightVal = document.getElementById('progWeight').value; const repsVal = document.getElementById('progReps').value; const editIdx = document.getElementById('progIndexEdit').value;
-            if (!exerciseName) { alert("Selecciona un ejercicio válido."); return; } if (!dateVal) { alert("Ingresa la fecha."); return; } if (!weightVal) { alert("Ingresa el dato (Peso, Tiempo, etc)."); return; }
-            const tx = db.transaction("progress", "readwrite"); const store = tx.objectStore("progress"); const recordId = activeProfileId + '_' + exerciseName; const getReq = store.get(recordId);
-            getReq.onsuccess = function() { let record = getReq.result || { id: recordId, userId: activeProfileId, exercise: exerciseName, history: [] }; const newEntry = { date: dateVal, serie: serieVal, weight: weightVal, reps: repsVal }; if (editIdx !== "") { record.history[parseInt(editIdx)] = newEntry; } else { record.history.push(newEntry); } record.history.sort((a, b) => new Date(a.date) - new Date(b.date)); store.put(record); tx.oncomplete = function() { closeProgressModal(); loadProgressRecords(); }; };
-        }
         function loadProgressRecords() {
             if (!db) return; const tx = db.transaction("progress", "readonly"); const store = tx.objectStore("progress"); const req = store.getAll();
             req.onsuccess = function() {
@@ -1031,7 +845,7 @@
                 let allHistoryEntries = []; globalProgressRecords.forEach((r) => { r.history.forEach((h, idx) => allHistoryEntries.push({ exercise: r.exercise, index: idx, ...h })); }); allHistoryEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
                 const groupedByDate = {}; allHistoryEntries.forEach(entry => { if (!groupedByDate[entry.date]) groupedByDate[entry.date] = []; groupedByDate[entry.date].push(entry); });
                 const monthNamesFull = {'01':'Enero', '02':'Febrero', '03':'Marzo', '04':'Abril', '05':'Mayo', '06':'Junio', '07':'Julio', '08':'Agosto', '09':'Septiembre', '10':'Octubre', '11':'Noviembre', '12':'Diciembre'};
-                Object.keys(groupedByDate).sort((a,b) => new Date(b) - new Date(a)).forEach(dateStr => { const groupDiv = document.createElement('div'); const header = document.createElement('div'); header.className = 'history-date-header'; const [y, m, d] = dateStr.split('-'); header.innerText = `${d} de ${monthNamesFull[m]} ${y}`; groupDiv.appendChild(header); groupedByDate[dateStr].forEach(item => { const card = document.createElement('div'); card.className = 'history-record-card'; card.innerHTML = `<div class="history-record-info"><div class="history-record-ex">${item.exercise}</div><div class="history-record-details">${item.weight} <span>(Reps/Info: ${item.reps || '-'})</span> — <span>Serie ${item.serie}</span></div></div><div><button class="btn-small" onclick="editProgressRecord('${item.exercise}', ${item.index})">✏️</button><button class="btn-small btn-delete" onclick="deleteProgressRecord('${item.exercise}', ${item.index})">🗑</button></div>`; groupDiv.appendChild(card); }); historyContainer.appendChild(groupDiv); });
+                Object.keys(groupedByDate).sort((a,b) => new Date(b) - new Date(a)).forEach(dateStr => { const groupDiv = document.createElement('div'); const header = document.createElement('div'); header.className = 'history-date-header'; const [y, m, d] = dateStr.split('-'); header.innerText = `${d} de ${monthNamesFull[m]} ${y}`; groupDiv.appendChild(header); groupedByDate[dateStr].forEach(item => { const card = document.createElement('div'); card.className = 'history-record-card'; card.innerHTML = `<div class="history-record-info"><div class="history-record-ex">${item.exercise}</div><div class="history-record-details">${item.weight} <span>(Reps/Info: ${item.reps || '-'})</span> — <span>Serie/Vta ${item.serie}</span></div></div><div><button class="btn-small btn-delete" onclick="deleteProgressRecord('${item.exercise}', ${item.index})">🗑</button></div>`; groupDiv.appendChild(card); }); historyContainer.appendChild(groupDiv); });
                 updateChartSelectors();
             };
         }
@@ -1040,7 +854,6 @@
         function onTimeViewChange() { updateTimeContextSelectors(); drawChart(); }
         function onChartFilterChange() { drawChart(); }
         function updateTimeContextSelectors() { const timeView = document.getElementById('chartTimeView').value; const selectCtx = document.getElementById('chartTimeContext'); selectCtx.innerHTML = ''; const record = globalProgressRecords.find(r => r.exercise === currentChartExercise); if (!record || !record.history.length) { selectCtx.innerHTML = '<option value="">Sin datos</option>'; return; } const uniqueVals = new Set(); record.history.forEach(h => { if (timeView === 'ano') uniqueVals.add(h.date.substring(0, 4)); else if (timeView === 'mes') uniqueVals.add(h.date.substring(0, 7)); else if (timeView === 'dia') uniqueVals.add(h.date); }); const sortedVals = Array.from(uniqueVals).sort((a,b) => b.localeCompare(a)); const monthNamesFull = {'01':'Enero', '02':'Febrero', '03':'Marzo', '04':'Abril', '05':'Mayo', '06':'Junio', '07':'Julio', '08':'Agosto', '09':'Septiembre', '10':'Octubre', '11':'Noviembre', '12':'Diciembre'}; sortedVals.forEach(val => { const opt = document.createElement('option'); opt.value = val; if (timeView === 'ano') { opt.textContent = val; } else if (timeView === 'mes') { const [y, m] = val.split('-'); opt.textContent = `${monthNamesFull[m]} ${y}`; } else { opt.textContent = val; } selectCtx.appendChild(opt); }); }
-        function editProgressRecord(exerciseName, index) { const record = globalProgressRecords.find(r => r.exercise === exerciseName); if (record && record.history[index]) { openProgressModal(index, { exercise: exerciseName, ...record.history[index] }); } }
         function deleteProgressRecord(exerciseName, index) { if (confirm("¿Deseas eliminar este registro de serie?")) { const tx = db.transaction("progress", "readwrite"); const store = tx.objectStore("progress"); const recordId = activeProfileId + '_' + exerciseName; const getReq = store.get(recordId); getReq.onsuccess = function() { let record = getReq.result; if (record && record.history) { record.history.splice(index, 1); store.put(record); tx.oncomplete = function() { loadProgressRecords(); }; } }; } }
         function clearCanvas() { const canvas = document.getElementById('progressCanvas'); const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
         let chartRenderedPoints = [];
@@ -1066,7 +879,7 @@
             const canvas = document.getElementById('progressCanvas'); const tooltip = document.getElementById('chartTooltip');
             canvas.addEventListener('mousemove', (e) => { const rect = canvas.getBoundingClientRect(); const mouseX = e.clientX - rect.left; const mouseY = e.clientY - rect.top; let hoveredPoint = null; for (let pt of chartRenderedPoints) { const dx = mouseX - pt.x; const dy = mouseY - pt.y; if (Math.sqrt(dx * dx + dy * dy) < 14) { hoveredPoint = pt; break; } } if (hoveredPoint) { tooltip.style.display = 'block'; tooltip.style.left = hoveredPoint.x + 'px'; tooltip.style.top = hoveredPoint.y + 'px'; tooltip.innerHTML = `<strong>${hoveredPoint.tooltipTitle}</strong><br>${hoveredPoint.weight} (${hoveredPoint.reps || '-'})`; } else { tooltip.style.display = 'none'; } });
             canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
-            document.getElementById('btnStartTrainer').addEventListener('click', startTrainerMode); document.getElementById('btnAddExercise').addEventListener('click', openExerciseModal); document.getElementById('btnExitTrainer').addEventListener('click', exitTrainerMode); document.getElementById('btnPrevTrainer').addEventListener('click', prevTrainerStep); document.getElementById('btnNextTrainer').addEventListener('click', nextTrainerStep); document.getElementById('btnOpenProgress').addEventListener('click', () => openProgressModal()); document.getElementById('btnCloseProgressModal').addEventListener('click', closeProgressModal); document.getElementById('btnSaveProgress').addEventListener('click', saveProgressRecord); document.getElementById('timer-bubble').addEventListener('click', toggleTimerModal); document.getElementById('btnCloseTimer').addEventListener('click', toggleTimerModal); document.getElementById('tabHiitBtn').addEventListener('click', () => switchTimerTab('hiit')); document.getElementById('tabRestBtn').addEventListener('click', () => switchTimerTab('rest')); document.getElementById('mainActionBtn').addEventListener('click', startPauseTimer); document.getElementById('btnResetTimer').addEventListener('click', resetTimer); document.getElementById('exType').addEventListener('change', toggleTypeInputs); document.getElementById('btnCloseExerciseModal').addEventListener('click', closeExerciseModal); document.getElementById('btnSaveExercise').addEventListener('click', saveExercise);
+            document.getElementById('btnStartTrainer').addEventListener('click', startTrainerMode); document.getElementById('btnAddExercise').addEventListener('click', openExerciseModal); document.getElementById('btnExitTrainer').addEventListener('click', exitTrainerMode); document.getElementById('btnPrevTrainer').addEventListener('click', prevTrainerStep); document.getElementById('btnNextTrainer').addEventListener('click', nextTrainerStep); document.getElementById('timer-bubble').addEventListener('click', toggleTimerModal); document.getElementById('btnCloseTimer').addEventListener('click', toggleTimerModal); document.getElementById('tabHiitBtn').addEventListener('click', () => switchTimerTab('hiit')); document.getElementById('tabRestBtn').addEventListener('click', () => switchTimerTab('rest')); document.getElementById('mainActionBtn').addEventListener('click', startPauseTimer); document.getElementById('btnResetTimer').addEventListener('click', resetTimer); document.getElementById('exType').addEventListener('change', toggleTypeInputs); document.getElementById('btnCloseExerciseModal').addEventListener('click', closeExerciseModal); document.getElementById('btnSaveExercise').addEventListener('click', saveExercise);
         });
 
         // TEMPORIZADOR GLOBAL FLOTANTE CON TIMESTAMP ABSOLUTO
