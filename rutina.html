@@ -412,7 +412,7 @@
         </div>
     </div>
 
-    <!-- MODAL REGISTRAR PROGRESO (Oculto para edición manual desde historial si lo requieres) -->
+    <!-- MODAL REGISTRAR PROGRESO (Historial) -->
     <div class="modal-overlay" id="progressModal">
         <div class="modal-box">
             <h3 style="color:var(--primary-color); margin-top:0;" id="progModalTitle">Editar Progreso</h3>
@@ -428,7 +428,7 @@
     <script>
         // INIT
         const urlParams = new URLSearchParams(window.location.search); const currentDay = urlParams.get('dia') || 'lunes';
-        const activeProfileId = localStorage.getItem('active_profile_id') || 'testUser'; // Fallback temporal si no viene
+        const activeProfileId = localStorage.getItem('active_profile_id') || 'testUser';
         const profiles = JSON.parse(localStorage.getItem('app_profiles')) || []; const activeProfile = profiles.find(p => p.id === activeProfileId);
         let currentThemeColor = '#e87c3e';
         if (activeProfile) { document.getElementById('profileHeaderName').innerText = activeProfile.name; if (activeProfile.themeColor) { currentThemeColor = activeProfile.themeColor; document.documentElement.style.setProperty('--primary-color', currentThemeColor); } }
@@ -653,7 +653,6 @@
             getReq.onsuccess = function() {
                 let record = getReq.result || { id: recordId, userId: activeProfileId, exercise: exerciseName, history: [] };
                 const newEntry = { date: dateVal, serie: serieNum, weight: weightVal, reps: repsVal };
-                // Reemplazar si ya existe la serie en la misma fecha
                 const existingIdx = record.history.findIndex(h => h.date === dateVal && String(h.serie) === String(serieNum));
                 if (existingIdx !== -1) { record.history[existingIdx] = newEntry; } else { record.history.push(newEntry); }
                 record.history.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -681,16 +680,17 @@
         function renderTrainerStep() { 
             clearInlineTimers(); const ex = currentExercisesList[trainerIndex]; document.getElementById('trainerCounter').innerText = `Ejercicio ${trainerIndex + 1} de ${currentExercisesList.length}`; document.getElementById('tTitle').innerText = ex.title; document.getElementById('tSubtitle').innerText = ex.subtitle || ''; document.getElementById('tDetails').innerText = ex.details || ''; document.getElementById('tInstructions').innerText = ex.instructions || 'Sin instrucciones adicionales.'; 
             
-            // BUSCAR RM HISTÓRICO Y MOSTRARLO
             const rmEl = document.getElementById('tRMDisplay'); rmEl.innerHTML = '';
-            const exProgress = globalProgressRecords.find(r => r.exercise === ex.title);
-            if (exProgress && exProgress.history && exProgress.history.length > 0) {
-                let maxRM = 0;
-                exProgress.history.forEach(h => {
-                    let w = parseFloat(h.weight) || 0; let r = parseInt(h.reps) || 0;
-                    if (w > 0 && r > 0) { let rm = Math.round(w * (1 + r / 30)); if (rm > maxRM) maxRM = rm; }
-                });
-                if (maxRM > 0) { rmEl.innerHTML = `🏆 Tu RM Histórico: ${maxRM} KG`; }
+            if (ex.trackProgress) {
+                const exProgress = globalProgressRecords.find(r => r.exercise === ex.title);
+                if (exProgress && exProgress.history && exProgress.history.length > 0) {
+                    let maxRM = 0;
+                    exProgress.history.forEach(h => {
+                        let w = parseFloat(h.weight) || 0; let r = parseInt(h.reps) || 0;
+                        if (w > 0 && r > 0) { let rm = Math.round(w * (1 + r / 30)); if (rm > maxRM) maxRM = rm; }
+                    });
+                    if (maxRM > 0) { rmEl.innerHTML = `🏆 Tu RM Histórico: ${maxRM} KG`; }
+                }
             }
 
             const tipsEl = document.getElementById('tTips'); if(ex.tips) { tipsEl.innerHTML = `💡 <b>Tips:</b> ${ex.tips}`; tipsEl.style.display = 'block'; } else { tipsEl.style.display = 'none'; }
@@ -701,6 +701,55 @@
             const pauseSvg = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
             const resetSvg = '<svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>';
 
+            // VALIDAR SI TIENE ACTIVADO EL REGISTRO DE PROGRESO
+            if (!ex.trackProgress) {
+                // MODO SOLO VISUALIZACIÓN / TEMPORIZADOR SIMPLE SIN LOGS
+                if (ex.type === 'reps') {
+                    const restSecs = parseTimeStringToSeconds(ex.repsRest) || 60;
+                    timerArea.innerHTML = `<div class="inline-timer-status">Descanso libre (Sin registro)</div><div class="inline-timer-display" id="inlineClock">${formatSecondsToMS(restSecs)}</div><div class="inline-btn-group"><button class="inline-btn inline-btn-main" id="btnInlineAction">${playSvg} Iniciar Descanso</button></div>`;
+                    let isResting = false; let targetTimestamp = 0;
+                    document.getElementById('btnInlineAction').onclick = function() {
+                        if(!isResting) {
+                            isResting = true; playBeepHigh(); targetTimestamp = Date.now() + (restSecs * 1000);
+                            this.innerHTML = `${pauseSvg} Omitir`; this.className = "inline-btn inline-btn-sec";
+                            inlineTimerInterval = setInterval(() => {
+                                const timeLeft = Math.max(0, Math.ceil((targetTimestamp - Date.now()) / 1000));
+                                document.getElementById('inlineClock').innerText = formatSecondsToMS(timeLeft);
+                                if(timeLeft <= 0) { clearInterval(inlineTimerInterval); playDoubleBeep(); isResting = false; document.getElementById('inlineClock').innerText = formatSecondsToMS(restSecs); this.innerHTML = `${playSvg} Iniciar Descanso`; this.className = "inline-btn inline-btn-main"; }
+                            }, 200);
+                        } else { clearInterval(inlineTimerInterval); isResting = false; document.getElementById('inlineClock').innerText = formatSecondsToMS(restSecs); this.innerHTML = `${playSvg} Iniciar Descanso`; this.className = "inline-btn inline-btn-main"; }
+                    };
+                } else if (ex.type === 'time') {
+                    const workSecs = parseTimeStringToSeconds(ex.workTime) || 45; const restSecs = parseTimeStringToSeconds(ex.restTime) || 15; const totalRounds = parseInt(ex.rounds) || 3;
+                    timerArea.innerHTML = `<div class="inline-timer-status" id="inlineStatus">CIRCUITO LIBRE</div><div class="inline-timer-display" id="inlineClock">${formatSecondsToMS(workSecs)}</div><div class="inline-timer-sub" id="inlineSub">Ronda 1 de ${totalRounds}</div><div class="inline-btn-group"><button class="inline-btn inline-btn-main" id="btnInlineAction">${playSvg} Empezar</button></div>`;
+                    let isRunning = false; let phase = 'work'; let targetTimestamp = 0; let currentRnd = 1;
+                    document.getElementById('btnInlineAction').onclick = function() {
+                        if(!isRunning) {
+                            isRunning = true; this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); targetTimestamp = Date.now() + (workSecs * 1000);
+                            inlineTimerInterval = setInterval(() => {
+                                const timeLeft = Math.max(0, Math.ceil((targetTimestamp - Date.now()) / 1000));
+                                document.getElementById('inlineClock').innerText = formatSecondsToMS(timeLeft);
+                                if(timeLeft <= 0) {
+                                    if(currentRnd < totalRounds) { currentRnd++; targetTimestamp = Date.now() + (workSecs * 1000); playDoubleBeep(); }
+                                    else { clearInterval(inlineTimerInterval); isRunning = false; playDoubleBeep(); document.getElementById('inlineStatus').innerText = "¡COMPLETADO!"; }
+                                }
+                            }, 200);
+                        } else { isRunning = false; this.innerHTML = `${playSvg} Reanudar`; clearInterval(inlineTimerInterval); }
+                    };
+                } else {
+                    // Distancia / Tiempo libre sin registro
+                    timerArea.innerHTML = `<div class="inline-timer-status">CRONÓMETRO LIBRE</div><div class="inline-timer-display" id="inlineClock" style="font-family: monospace;">00:00.00</div><div class="inline-btn-group"><button class="inline-btn inline-btn-main" id="btnInlineAction">${playSvg} Iniciar</button><button class="inline-btn inline-btn-sec" id="btnInlineReset">${resetSvg}</button></div>`;
+                    let startTime = 0; let accumulatedTime = 0; let isRunning = false;
+                    document.getElementById('btnInlineAction').onclick = function() {
+                        if(!isRunning) { isRunning = true; startTime = Date.now() - accumulatedTime; this.innerHTML = `${pauseSvg} Pausar`; playBeepHigh(); inlineStopwatchInterval = setInterval(() => { accumulatedTime = Date.now() - startTime; document.getElementById('inlineClock').innerText = formatMSMToStopwatch(accumulatedTime); }, 50); }
+                        else { isRunning = false; clearInterval(inlineStopwatchInterval); this.innerHTML = `${playSvg} Reanudar`; }
+                    };
+                    document.getElementById('btnInlineReset').onclick = function() { isRunning = false; clearInterval(inlineStopwatchInterval); accumulatedTime = 0; document.getElementById('inlineClock').innerText = "00:00.00"; document.getElementById('btnInlineAction').innerHTML = `${playSvg} Iniciar`; };
+                }
+                return;
+            }
+
+            // MODO CON REGISTRO DE PROGRESO ACTIVADO
             if (ex.type === 'reps') {
                 const restSecs = parseTimeStringToSeconds(ex.repsRest) || 60;
                 const totalSeries = parseInt(ex.series) || 1;
@@ -760,7 +809,7 @@
                     if (currentTrainerSeries > totalSeries) {
                         timerArea.innerHTML = `<div class="inline-timer-status" style="color:#4CAF50; font-size:1.2rem; margin-top:20px;">¡EJERCICIO COMPLETADO! 🎉</div>`;
                     } else {
-                        renderTrainerStep(); // Vuelve a re-renderizar para la siguiente serie limpia
+                        renderTrainerStep();
                     }
                 }
             } 
