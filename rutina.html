@@ -70,6 +70,11 @@
         .skill-badge span { cursor: pointer; font-size: 0.85rem; font-weight: 900; }
         .skill-badge span:hover { color: #fff; }
 
+        /* Botón de Añadir con solo ícono vectorial + limpio */
+        .btn-icon-add { background-color: var(--primary-color); color: #050505; border: none; border-radius: 8px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; flex-shrink: 0; }
+        .btn-icon-add svg { width: 22px; height: 22px; fill: currentColor; }
+        .btn-icon-add:active { transform: scale(0.95); }
+
         .checkbox-group { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.85rem; color: #fff; font-weight: 600; margin-top: 10px; }
         .checkbox-group input { width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; }
         .input-group-flex { display: flex; gap: 10px; }
@@ -302,17 +307,17 @@
         </div>
     </div>
 
-    <!-- MODAL AGREGAR EJERCICIO INTELIGENTE CON CATÁLOGO MASIVO E INSTRUCCIONES -->
+    <!-- MODAL AGREGAR EJERCICIO INTELIGENTE CON FILTRADO CRUZADO ESTRICTO Y 100 EJERCICIOS -->
     <div class="modal-overlay" id="exerciseModal">
         <div class="modal-box">
             <h3 style="color:var(--primary-color); margin-top:0;" id="modalFormTitle">Agregar Ejercicio</h3>
             <input type="hidden" id="exId">
             
-            <div class="form-group"><label>1. Sección de Entrenamiento</label><select id="exSection" class="form-control" onchange="updateExerciseCatalog()"><option value="calentamiento">Calentamiento</option><option value="fuerza" selected>Bloque Principal / Fuerza</option><option value="estiramiento">Estiramiento / Calm</option></select></div>
+            <div class="form-group"><label>1. Sección de Entrenamiento</label><select id="exSection" class="form-control" onchange="filterCatalogByMusclesAndDiscipline()"><option value="calentamiento">Calentamiento</option><option value="fuerza" selected>Bloque Principal / Fuerza</option><option value="estiramiento">Estiramiento / Calm</option></select></div>
             
-            <!-- Selector de Músculos tipo Curriculum (Skills) -->
+            <!-- Selector de Músculos tipo Curriculum con botón de solo vector + -->
             <div class="form-group">
-                <label>2. Grupos Musculares (Agregar)</label>
+                <label>2. Grupos Musculares (Filtrado Cruzado)</label>
                 <div class="input-group-flex">
                     <select id="muscleSelectDropdown" class="form-control">
                         <option value="Pecho">Pecho</option>
@@ -327,12 +332,12 @@
                         <option value="Cardio Global">Cardio Global</option>
                         <option value="Otro">Otro</option>
                     </select>
-                    <button type="button" class="btn-save" style="width: 100px; padding: 0;" onclick="addMuscleSkillTag()">+ Añadir</button>
+                    <button type="button" class="btn-icon-add" onclick="addMuscleSkillTag()" title="Añadir Músculo"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></button>
                 </div>
                 <div class="skills-container" id="muscleSkillsContainer" style="margin-top: 8px;"></div>
             </div>
 
-            <div class="form-group"><label>3. Disciplina / Actividad</label><select id="exDiscipline" class="form-control" onchange="updateExerciseCatalog()"><option value="gimnasio" selected>Gimnasio</option><option value="bicicleta">Bicicleta</option><option value="natacion">Natación</option><option value="atletismo">Atletismo / Correr</option><option value="funcional">Funcional</option><option value="pilates">Pilates</option><option value="otro">Otro</option></select></div>
+            <div class="form-group"><label>3. Disciplina / Actividad</label><select id="exDiscipline" class="form-control" onchange="filterCatalogByMusclesAndDiscipline()"><option value="gimnasio" selected>Gimnasio</option><option value="bicicleta">Bicicleta</option><option value="natacion">Natación</option><option value="atletismo">Atletismo / Correr</option><option value="funcional">Funcional</option><option value="pilates">Pilates</option><option value="otro">Otro</option></select></div>
 
             <div class="form-group"><label>4. Catálogo de Ejercicios</label><select id="exCatalogSelect" class="form-control" onchange="onCatalogSelectChange()"></select></div>
 
@@ -412,7 +417,7 @@
         } updateStreak();
 
         // DB
-        let db; const request = indexedDB.open("FitnessDB", 6);
+        let db; const request = indexedDB.open("FitnessDB", 7);
         request.onupgradeneeded = function(e) { db = e.target.result; if (!db.objectStoreNames.contains("exercises")) db.createObjectStore("exercises", { keyPath: "id" }); if (!db.objectStoreNames.contains("progress")) db.createObjectStore("progress", { keyPath: "id" }); };
         request.onsuccess = function(e) { db = e.target.result; loadExercises(); loadProgressRecords(); };
 
@@ -440,64 +445,151 @@
             });
         }
 
-        // CATÁLOGO MASIVO INTELIGENTE CON INSTRUCCIONES Y TIPS AUTOMÁTICOS
-        const massiveCatalog = {
+        // SUPERCATÁLOGO DE 100 EJERCICIOS MASIVOS CON FILTRADO CRUZADO
+        const massiveCatalog100 = {
             calentamiento: {
                 gimnasio: [
-                    { name: "Movilidad Articular de Hombros", inst: "Realiza círculos amplios con los brazos hacia adelante y hacia atrás de forma controlada.", tips: "Mantén el abdomen contraído y no apresures el movimiento." },
-                    { name: "Sentadillas sin Peso (Air Squats)", inst: "Baja la cadera manteniendo los talones pegados al suelo y el pecho erguido.", tips: "Ideal para lubricar rodillas y activar cuádriceps y glúteos." },
-                    { name: "Gato - Vaca (Movilidad de columna)", inst: "En posición de cuatro puntos, arquea la espalda hacia arriba (gato) y luego hacia abajo (vaca).", tips: "Excelente para liberar tensión en la espalda baja antes de entrenar." }
+                    { name: "Movilidad Articular de Hombros", muscles: ["Hombros"], inst: "Círculos amplios hacia adelante y atrás.", tips: "Mantén el abdomen contraído." },
+                    { name: "Sentadillas sin Peso (Air Squats)", muscles: ["Cuádriceps", "Glúteos"], inst: "Baja la cadera manteniendo talones pegados.", tips: "Lubrica rodillas y activa piernas." },
+                    { name: "Gato - Vaca (Movilidad de columna)", muscles: ["Abdomen"], inst: "En cuatro puntos, arquea la espalda arriba y abajo.", tips: "Libera tensión lumbar." },
+                    { name: "Rotaciones Torácicas en Cuadrupedia", muscles: ["Espalda"], inst: "Rota el tronco llevando un brazo hacia el cielo.", tips: "Sigue la mano con la mirada." },
+                    { name: "Círculos de Cadera", muscles: ["Glúteos"], inst: "Movimientos circulares amplios de pelvis de pie.", tips: "Prepara la cadera para sentadillas." },
+                    { name: "Activación de Manguito Rotador con Liga", muscles: ["Hombros"], inst: "Rotación externa con banda elástica pegada al codo.", tips: "Previene lesiones en press de banca." }
                 ],
                 atletismo: [
-                    { name: "Trote Suave en Lugar", inst: "Eleva ligeramente las rodillas manteniendo un ritmo aeróbico bajo.", tips: "Sirve para elevar la temperatura corporal progresivamente." },
-                    { name: "Desplantes Dinámicos", inst: "Da un paso al frente bajando la cadera de forma alterna.", tips: "Mantén el torso recto y la rodilla trasera cerca del suelo sin golpear." }
+                    { name: "Trote Suave en Lugar", muscles: ["Cardio Global"], inst: "Eleva ligeramente las rodillas a ritmo aeróbico bajo.", tips: "Eleva la temperatura corporal progresivamente." },
+                    { name: "Desplantes Dinámicos", muscles: ["Cuádriceps", "Glúteos"], inst: "Paso al frente bajando cadera de forma alterna.", tips: "Torso recto y rodilla cerca del suelo." },
+                    { name: "Skipping Bajo", muscles: ["Cardio Global"], inst: "Elevación rápida de rodillas a baja altura en el lugar.", tips: "Apoyo sobre metatarsos." },
+                    { name: "Talones al Glúteo Dinámicos", muscles: ["Isquios"], inst: "Trote llevando los talones hacia atrás de forma ágil.", tips: "Activa la parte posterior del muslo." }
                 ],
                 natacion: [
-                    { name: "Círculos de Brazos en Seco", inst: "Simula brazadas de crol y espalda de pie fuera del agua.", tips: "Activa los manguitos rotadores y previene lesiones de hombro." }
+                    { name: "Círculos de Brazos en Seco", muscles: ["Hombros"], inst: "Simula brazadas de crol y espalda fuera del agua.", tips: "Activa hombros antes de entrar a la alberca." },
+                    { name: "Rotación de Tronco con Banda", muscles: ["Abdomen", "Espalda"], inst: "Simula el giro de crol con resistencia de polea o liga.", tips: "Mejora la hidrodinámica del nado." }
                 ],
                 funcional: [
-                    { name: "Plancha Abdominal de Activación", inst: "Mantén el cuerpo en línea recta apoyado sobre antebrazos y puntas de pies.", tips: "Aprieta glúteos y abdomen para proteger la zona lumbar." }
+                    { name: "Plancha Abdominal de Activación", muscles: ["Abdomen"], inst: "Cuerpo en línea recta sobre antebrazos.", tips: "Aprieta glúteos y abdomen." },
+                    { name: "Puente de Glúteos sin Peso", muscles: ["Glúteos", "Isquios"], inst: "Elevación de cadera acostado en el mat.", tips: "Contrae los glúteos arriba por 2 segundos." }
+                ],
+                pilates: [
+                    { name: "Respiración Diafragmática e Inhalación Costal", muscles: ["Abdomen"], inst: "Inhalar expandiendo costillas y exhalar cerrando abdomen.", tips: "Conecta la mente con el centro." },
+                    { name: "Gato Estirado de Pilates", muscles: ["Abdomen", "Espalda"], inst: "Flexión y extensión suave de columna en decúbito prono.", tips: "Movimiento fluido coordinado con la respiración." }
+                ],
+                bicicleta: [
+                    { name: "Movilidad de Tobillos y Rodillas en Bici", muscles: ["Cuádriceps"], inst: "Giros de articulaciones previos a subir al sillín.", tips: "Evita rigidez articular inicial." }
                 ]
             },
             fuerza: {
                 gimnasio: [
-                    { name: "Press de Banca", inst: "Acostado en banco plano, baja la barra de forma controlada hacia el pecho medio y empuja hacia arriba.", tips: "Retrae las escápulas y apoya firmemente los pies en el suelo." },
-                    { name: "Sentadilla con Barra", inst: "Coloca la barra sobre la parte alta de la espalda, baja la cadera flexionando rodillas y cadera.", tips: "Evita que las rodillas colapsen hacia adentro al subir." },
-                    { name: "Peso Muerto", inst: "Toma la barra del suelo con agarre firme, extiende cadera y rodillas hasta quedar completamente erguido.", tips: "Mantén la espalda completamente neutra en todo momento." },
-                    { name: "Dominadas", inst: "Colgado de la barra, eleva el pecho hasta que tu barbilla supere la altura de las manos.", tips: "Inicia el movimiento llevando los codos hacia abajo y atrás." },
-                    { name: "Curl de Bíceps con Mancuernas", inst: "De pie, flexiona los codos elevando las mancuernas hacia los hombros sin balancear el cuerpo.", tips: "Controla la fase de bajada (excéntrica) de forma lenta." }
+                    { name: "Press de Banca Plano", muscles: ["Pecho", "Tríceps", "Hombros"], inst: "Baja la barra hacia el pecho medio y empuja arriba.", tips: "Retrae las escápulas y apoya los pies firmes." },
+                    { name: "Press Inclinado con Mancuernas", muscles: ["Pecho", "Hombros"], inst: "Acostado en banco inclinado, empuja las mancuernas arriba.", tips: "Controla el estiramiento abajo." },
+                    { name: "Press Declinado con Barra", muscles: ["Pecho", "Tríceps"], inst: "En banco declinado, baja la barra hacia el pecho bajo.", tips: "Asegura bien los pies en los rodillos." },
+                    { name: "Aperturas en Polea Baja", muscles: ["Pecho"], inst: "Cruza los cables frente al pecho con ligera flexión de codos.", tips: "Enfócate en la contracción al centro." },
+                    { name: "Aperturas con Mancuernas en Banco Plano", muscles: ["Pecho"], inst: "Abre los brazos en semicírculo con ligera flexión de codos.", tips: "No bajes los brazos más allá de la línea de los hombros." },
+                    { name: "Fondos en Paralelas (Chest Dips)", muscles: ["Pecho", "Tríceps"], inst: "Inclina el torso al frente al bajar en las paralelas.", tips: "Protege los hombros bajando controlado." },
+                    { name: "Pull-over con Mancuerna", muscles: ["Pecho", "Espalda"], inst: "Acostado transversal, lleva la mancuerna por detrás de la cabeza.", tips: "Mantén los brazos ligeramente flexionados." },
+                    { name: "Flexiones de Pecho con Lastre (Push-ups)", muscles: ["Pecho", "Tríceps", "Abdomen"], inst: "Lagartijas tradicionales con peso opcional en la espalda.", tips: "Cuerpo totalmente alineado." },
+                    { name: "Dominadas (Pull-ups)", muscles: ["Espalda", "Bíceps"], inst: "Colgado de la barra, eleva el pecho superando la barbilla.", tips: "Lleva los codos hacia abajo y atrás." },
+                    { name: "Jalón al Pecho (Lat Pulldown)", muscles: ["Espalda", "Bíceps"], inst: "Toma la barra abierta, jala hacia la parte alta del pecho.", tips: "Evita balancear el torso." },
+                    { name: "Remo con Barra", muscles: ["Espalda", "Bíceps", "Abdomen"], inst: "Inclinado al frente con espalda neutra, lleva la barra al abdomen.", tips: "Mantén la columna recta." },
+                    { name: "Remo en Polea Baja (Seated Cable Row)", muscles: ["Espalda", "Bíceps"], inst: "Sentado, jala el maneral hacia el abdomen contrayendo escápulas.", tips: "No encorves la espalda." },
+                    { name: "Remo con Mancuerna a una Mano", muscles: ["Espalda", "Bíceps"], inst: "Apoyado en banco, eleva la mancuerna rozando el costado.", tips: "Rotación mínima del tronco." },
+                    { name: "Pulldown con Brazos Extendidos", muscles: ["Espalda"], inst: "En polea alta con barra recta, baja extendido hacia los muslos.", tips: "Brazos rígidos sin doblar codos." },
+                    { name: "Remo en Barra T (T-Bar Row)", muscles: ["Espalda", "Bíceps"], inst: "Toma los manerales de la barra T y eleva hacia el pecho.", tips: "Pecho pegado al soporte si lo hay." },
+                    { name: "Jalón Agarre Neutro / Supino", muscles: ["Espalda", "Bíceps"], inst: "Jalón en polea alta con palmas hacia ti.", tips: "Mayor reclutamiento de bíceps y dorsal inferior." },
+                    { name: "Press Militar con Barra", muscles: ["Hombros", "Tríceps"], inst: "De pie, empuja la barra desde las clavículas sobre la cabeza.", tips: "Contrae glúteos y abdomen." },
+                    { name: "Press de Hombros con Mancuernas", muscles: ["Hombros", "Tríceps"], inst: "Sentado en banco con respaldo, presiona mancuernas arriba.", tips: "No arquees la espalda baja." },
+                    { name: "Elevaciones Laterales con Mancuernas", muscles: ["Hombros"], inst: "Eleva mancuernas a los lados hasta la altura de los hombros.", tips: "Ligera flexión en los codos." },
+                    { name: "Elevaciones Frontales con Disco", muscles: ["Hombros"], inst: "Sostén un disco y elévalo al frente hasta la altura de los ojos.", tips: "Movimiento controlado sin inercia." },
+                    { name: "Pájaros (Deltoides Posterior con Mancuernas)", muscles: ["Hombros", "Espalda"], inst: "Inclinado al frente, abre los brazos hacia los lados.", tips: "Imagina que juntas una nuez con tus escápulas." },
+                    { name: "Elevaciones Laterales en Polea Baja", muscles: ["Hombros"], inst: "Cruza el cable por detrás de las piernas y eleva lateralmente.", tips: "Tensión constante en todo el recorrido." },
+                    { name: "Encogimientos de Hombros (Trapecio)", muscles: ["Hombros"], inst: "Sostén pesadas mancuernas o barra y eleva los hombros hacia las orejas.", tips: "No hagas círculos con los hombros." },
+                    { name: "Curl con Barra Z", muscles: ["Bíceps"], inst: "Flexiona los codos elevando la barra z hacia los hombros.", tips: "Evita el impulso de la cadera." },
+                    { name: "Curl Martillo (Hammer Curl)", muscles: ["Bíceps"], inst: "Con agarre neutro, eleva las mancuernas de forma alterna.", tips: "Excelente para grosor del brazo." },
+                    { name: "Curl en Banco Scott (Predicador)", muscles: ["Bíceps"], inst: "Apoyado en banco predicador, realiza el curl con barra o mancuerna.", tips: "Aísla por completo el bíceps." },
+                    { name: "Curl Concentrado con Mancuerna", muscles: ["Bíceps"], inst: "Sentado con el codo apoyado en la cara interna del muslo.", tips: "Máxima contracción superior." },
+                    { name: "Curl en Polea Baja con Cuerda", muscles: ["Bíceps"], inst: "Curl con cuerda buscando separar las puntas arriba.", tips: "Mayor bombeo y tensión final." },
+                    { name: "Press Francés con Barra Z", muscles: ["Tríceps"], inst: "Acostado, baja la barra hacia la frente flexionando los codos.", tips: "Codos fijos apuntando al techo." },
+                    { name: "Extensiones de Tríceps en Polea", muscles: ["Tríceps"], inst: "Empuja el maneral hacia abajo extendiendo los codos.", tips: "Codos pegados a los costados." },
+                    { name: "Extensiones de Tríceps Overhead con Mancuerna", muscles: ["Tríceps"], inst: "Sostén una mancuerna tras la cabeza y elévala arriba.", tips: "Estiramiento completo de la cabeza larga." },
+                    { name: "Patada de Tríceps con Mancuerna", muscles: ["Tríceps"], inst: "Inclinado con apoyo, extiende el brazo hacia atrás de forma lineal.", tips: "Mantén el codo alto y fijo." },
+                    { name: "Press de Banca con Agarre Cerrado", muscles: ["Tríceps", "Pecho"], inst: "Press plano con las manos separadas al ancho de los hombros.", tips: "Enfoque directo en tríceps." },
+                    { name: "Sentadilla con Barra (Back Squat)", muscles: ["Cuádriceps", "Glúteos", "Abdomen"], inst: "Barra en la parte alta de la espalda, baja la cadera.", tips: "Evita que las rodillas colapsen hacia adentro." },
+                    { name: "Sentadilla Frontal con Barra", muscles: ["Cuádriceps", "Abdomen"], inst: "Barra apoyada sobre los deltoides anteriores al frente.", tips: "Torso completamente vertical." },
+                    { name: "Prensa de Piernas 45°", muscles: ["Cuádriceps", "Glúteos"], inst: "Empuja la plataforma con los pies separados al ancho de hombros.", tips: "No bloquees las rodillas arriba." },
+                    { name: "Zancadas (Walking Lunges)", muscles: ["Cuádriceps", "Glúteos"], inst: "Da pasos largos al frente alternando piernas bajando la rodilla.", tips: "Mantén el torso erguido." },
+                    { name: "Sentadilla Búlgara", muscles: ["Cuádriceps", "Glúteos"], inst: "Con un pie apoyado en banco atrás, baja la cadera verticalmente.", tips: "Gran trabajo de estabilidad y fuerza unilateral." },
+                    { name: "Extensiones de Cuádriceps en Máquina", muscles: ["Cuádriceps"], inst: "Sentado, extiende las piernas hacia arriba controlando el peso.", tips: "Pausa de 1 segundo en máxima extensión." },
+                    { name: "Peso Muerto Tradicional", muscles: ["Isquios", "Glúteos", "Espalda"], inst: "Toma la barra del suelo, extiende cadera y rodillas.", tips: "Espalda neutra." },
+                    { name: "Peso Muerto Rumano", muscles: ["Isquios", "Glúteos"], inst: "Desde arriba, flexiona la cadera llevando la barra rozando las piernas.", tips: "Enfoque total en estirar los isquiotibiales." },
+                    { name: "Curl de Isquiotibiales Acostado (Leg Curl)", muscles: ["Isquios"], inst: "Flexiona las piernas en máquina elevando el rodillo hacia los glúteos.", tips: "No levantes la cadera del banco." },
+                    { name: "Hip Thrust con Barra", muscles: ["Glúteos", "Isquios"], inst: "Apoyado en banco, eleva la cadera con la barra sobre la pelvis.", tips: "Contrae fuerte los glúteos arriba." },
+                    { name: "Patada de Glúteo en Polea Baja", muscles: ["Glúteos"], inst: "Con tobillera en polea, empuja la pierna hacia atrás de forma controlada.", tips: "No arquees la columna lumbar." },
+                    { name: "Elevación de Talones de Pie (Gemelos)", muscles: ["Pantorrillas"], inst: "Eleva los talones en un escalón con rango completo.", tips: "Baja el talón para estirar bien abajo." },
+                    { name: "Elevación de Talones Sentado (Soleo)", muscles: ["Pantorrillas"], inst: "Con máquina específica o barra en rodillas, eleva los talones.", tips: "Enfoque en la porción baja." }
                 ],
                 bicicleta: [
-                    { name: "Ciclismo Estacionario Base", inst: "Mantén una cadencia constante de pedaleo con resistencia moderada.", tips: "Ajusta el asiento a la altura de tu cadera para proteger tus rodillas." },
-                    { name: "HIIT en Bicicleta", inst: "Alterna 30 segundos de sprint máximo con 60 segundos de pedaleo suave.", tips: "Mantén la espalda firme y respira de forma rítmica." }
+                    { name: "Ciclismo Estacionario Base", muscles: ["Cuádriceps", "Cardio Global"], inst: "Cadencia constante con resistencia moderada.", tips: "Ajusta el asiento a la altura de la cadera." },
+                    { name: "HIIT en Bicicleta", muscles: ["Cardio Global", "Cuádriceps"], inst: "30s de sprint máximo con 60s de pedaleo suave.", tips: "Mantén la espalda firme y respiración rítmica." },
+                    { name: "Simulación de Montaña (Climbing)", muscles: ["Cuádriceps", "Glúteos"], inst: "Alta resistencia simulando pendiente con cadencia baja.", tips: "Controla la fuerza de empuje en cada pedalada." },
+                    { name: "Pedaleo a una Pierna (Técnica)", muscles: ["Cuádriceps"], inst: "Desengancha un pie y pedalea concentrado con el otro por intervalos.", tips: "Mejora la eficiencia circular." }
                 ],
                 natacion: [
-                    { name: "Crol / Estilo Libre", inst: "Nado continuo alternando brazadas con respiración bilateral y patada constante.", tips: "Gira el cuerpo completo en cada brazada, no solo el cuello." },
-                    { name: "Estilo Pecho / Braza", inst: "Movimiento simultáneo de brazos en semicírculo y patada de rana.", tips: "Coordina la respiración sacando el mentón al frente justo al presionar." }
+                    { name: "Crol / Estilo Libre", muscles: ["Espalda", "Hombros", "Abdomen"], inst: "Nado continuo alternando brazadas y respiración bilateral.", tips: "Gira el cuerpo completo en cada brazada." },
+                    { name: "Estilo Pecho / Braza", muscles: ["Pecho", "Espalda"], inst: "Brazos en semicírculo y patada de rana simultánea.", tips: "Coordina la respiración sacando el mentón." },
+                    { name: "Estilo Espalda Completo", muscles: ["Espalda", "Hombros"], inst: "Nado dorsal continuo con rotación de hombros y patada constante.", tips: "Mantén la barbilla ligeramente recogida." },
+                    { name: "Estilo Mariposa (Delfín)", muscles: ["Espalda", "Hombros", "Abdomen"], inst: "Ondulación de cadera y brazada simultánea fuera del agua.", tips: "Gran coordinación de core." },
+                    { name: "Patada con Tabla (Kick Set)", muscles: ["Cuádriceps", "Abdomen"], inst: "Desplazamiento usando solo patada con tabla al frente.", tips: "Patada desde la cadera." },
+                    { name: "Pull Buoy (Trabajo de Brazos)", muscles: ["Espalda", "Hombros"], inst: "Nado con corcho entre las piernas para aislar el tren superior.", tips: "Mantén la cadera alta en el agua." }
                 ],
                 atletismo: [
-                    { name: "Sprints de 100 Metros", inst: "Corre a máxima velocidad explosiva en línea recta.", tips: "Mantén la vista al frente y braceo enérgico." },
-                    { name: "Fartlek (Cambios de ritmo)", inst: "Alterna tramos de trote suave con carreras rápidas sin detenerte.", tips: "Escucha a tu cuerpo para regular la intensidad." }
+                    { name: "Sprints de 100 Metros", muscles: ["Cardio Global", "Cuádriceps"], inst: "Máxima velocidad en línea recta.", tips: "Vista al frente y braceo enérgico." },
+                    { name: "Fartlek (Cambios de ritmo)", muscles: ["Cardio Global"], inst: "Alterna trote suave con carreras rápidas sin parar.", tips: "Regula tu intensidad según el esfuerzo." },
+                    { name: "Carrera Continua de Fondo", muscles: ["Cardio Global"], inst: "Ritmo aeróbico constante de larga duración.", tips: "Zancada fluida y pisada eficiente." },
+                    { name: "Carrera en Pendiente / Subidas (Hill Repeats)", muscles: ["Cuádriceps", "Cardio Global"], inst: "Sprints o trote fuerte en cuesta arriba.", tips: "Inclina ligeramente el torso al frente." },
+                    { name: "Técnica de Carrera: Skipping Alto", muscles: ["Cardio Global", "Abdomen"], inst: "Elevación alta de rodillas a ritmo dinámico.", tips: "Apoyo rápido de metatarso bajo la cadera." }
                 ],
                 funcional: [
-                    { name: "Burpees", inst: "Desde de pie, baja a plancha, haz una lagartija, recoge las piernas y salta con aplauso arriba.", tips: "Mantén el abdomen firme para evitar arquear la espalda al bajar." },
-                    { name: "Kettlebell Swing", inst: "Impulsa la pesa rusa desde la cadera usando la potencia de glúteos e isquios.", tips: "El movimiento nace de la cadera, no de los brazos." }
+                    { name: "Burpees con Salto", muscles: ["Cardio Global", "Abdomen", "Pecho"], inst: "Baja a plancha, lagartija, recoge piernas y salta arriba.", tips: "Abdomen firme para proteger la lumbar." },
+                    { name: "Kettlebell Swing", muscles: ["Glúteos", "Isquios", "Abdomen"], inst: "Impulsa la pesa rusa desde la cadera usando potencia trasera.", tips: "El movimiento nace de la cadera, no de los brazos." },
+                    { name: "Flexiones Diamante (Diamond Push-ups)", muscles: ["Tríceps", "Pecho"], inst: "Lagartijas con las manos juntas formando un diamante.", tips: "Codos cerca de las costillas." },
+                    { name: "Battle Ropes", muscles: ["Hombros", "Abdomen", "Cardio Global"], inst: "Crea ondas continuas y alternas con las cuerdas pesadas.", tips: "Semiflexión en rodillas y core tenso." },
+                    { name: "Clean and Press con Kettlebell o Mancuerna", muscles: ["Hombros", "Cardio Global"], inst: "Levanta el peso del suelo al hombro con explosividad y presiona arriba.", tips: "Extensión potente de cadera." },
+                    { name: "Slam Balls (Lanzamiento de Balón Medicinal)", muscles: ["Abdomen", "Cardio Global"], inst: "Eleva el balón sobre la cabeza y lánzalo con fuerza contra el suelo.", tips: "Acompaña con todo el cuerpo." },
+                    { name: "Thrusters con Mancuernas", muscles: ["Cuádriceps", "Hombros", "Abdomen"], inst: "Sentadilla profunda seguida de un press militar explosivo al subir.", tips: "Transición fluida sin detenerse abajo." },
+                    { name: "Box Jumps (Saltos al Cajón)", muscles: ["Cuádriceps", "Glúteos"], inst: "Salta con ambos pies sobre una plataforma acolchada.", tips: "Aterriza con rodillas semiflexionadas." },
+                    { name: "Mountain Climbers Dinámicos", muscles: ["Abdomen", "Cardio Global"], inst: "En posición de plancha, lleva las rodillas al pecho alternando rápidamente.", tips: "Mantén la cadera estable." }
                 ],
                 pilates: [
-                    { name: "The Hundred", inst: "Acostado boca arriba, eleva piernas y hombros bombeando los brazos firmemente.", tips: "Mantén la zona lumbar completamente pegada al mat." }
+                    { name: "The Hundred", muscles: ["Abdomen"], inst: "Acostado boca arriba, eleva piernas y hombros bombeando brazos.", tips: "Zona lumbar pegada al mat." },
+                    { name: "Roll Up", muscles: ["Abdomen", "Espalda"], inst: "Desenrollamiento espinal fluido desde el suelo hasta tocar puntas.", tips: "Vértebra por vértebra sin tirones." },
+                    { name: "Single Leg Stretch", muscles: ["Abdomen"], inst: "Alterna abrazar una rodilla al pecho elevando el torso.", tips: "Ombligo hacia adentro." },
+                    { name: "Criss-Cross", muscles: ["Abdomen"], inst: "Rotación de tronco llevando el codo opuesto a la rodilla contraria.", tips: "Rotación desde las costillas." },
+                    { name: "Side Kick Series", muscles: ["Glúteos"], inst: "Patadas laterales controladas acostado de lado en el mat.", tips: "Cadera estable sin tambalearse." },
+                    { name: "Shoulder Bridge (Puente de Glúteos Clásico)", muscles: ["Glúteos", "Isquios", "Abdomen"], inst: "Elevación de cadera articulada vértebra por vértebra.", tips: "Pelvis neutra y contracción superior." },
+                    { name: "The Swimming (Nadador)", muscles: ["Espalda", "Glúteos"], inst: "Decúbito prono, eleva brazo y pierna contraria alternando el braceo.", tips: "Alarga el cuerpo desde la coronilla." },
+                    { name: "Open Leg Rocker", muscles: ["Abdomen"], inst: "Equilibrio sentado sosteniendo los tobillos con piernas en V y balanceo controlado.", tips: "Control abdominal absoluto." }
                 ]
             },
             estiramiento: {
                 gimnasio: [
-                    { name: "Estiramiento de Pecho en Pared", inst: "Apoya el antebrazo en una pared y gira el torso suavemente hacia el lado contrario.", tips: "Mantén el hombro abajo y relajado." },
-                    { name: "Estiramiento de Isquiotibiales", inst: "Sentado en el suelo con una pierna extendida, inclina el tronco al frente desde la cadera.", tips: "No forces la espalda; busca llevar el pecho hacia el muslo." }
+                    { name: "Estiramiento de Pecho en Pared", muscles: ["Pecho", "Hombros"], inst: "Apoya el antebrazo en la pared y gira el torso suavemente.", tips: "Mantén el hombro abajo y relajado." },
+                    { name: "Estiramiento de Isquiotibiales Sentado", muscles: ["Isquios"], inst: "Sentado con pierna extendida, inclina el tronco al frente.", tips: "Pecho hacia el muslo sin forzar." }
                 ],
                 atletismo: [
-                    { name: "Estiramiento de Cuádriceps de Pie", inst: "Toma tu empeine por detrás llevando el talón hacia el glúteo.", tips: "Mantén las rodillas juntas y contrae el abdomen para no arquear la espalda." },
-                    { name: "Estiramiento de Gemelos", inst: "Apoya las manos en una pared, atrasa una pierna estirada con el talón apoyado en el suelo.", tips: "Siente el alivio en la pantorrilla sin hacer rebotes bruscos." }
+                    { name: "Estiramiento de Cuádriceps de Pie", muscles: ["Cuádriceps"], inst: "Toma el empeine por detrás llevando el talón al glúteo.", tips: "Mantén las rodillas juntas." },
+                    { name: "Estiramiento de Gemelos en Pared", muscles: ["Pantorrillas"], inst: "Apoya manos en pared, atrasa pierna estirada con talón en suelo.", tips: "Sin rebotes bruscos." }
                 ],
                 funcional: [
-                    { name: "Postura del Niño (Yoga)", inst: "Arrodillado, lleva los glúteos hacia los talones y estira los brazos al frente sobre el suelo.", tips: "Respira profundo y relaja toda la columna vertebral." }
+                    { name: "Postura del Niño (Yoga Child's Pose)", muscles: ["Espalda", "Glúteos"], inst: "Lleva glúteos a los talones y estira los brazos al frente en el mat.", tips: "Respira profundo y relaja la columna." }
+                ],
+                pilates: [
+                    { name: "Spine Stretch Forward", muscles: ["Espalda", "Isquios"], inst: "Sentado con piernas abiertas, flexiona la columna al frente vértebra por vértebra.", tips: "Imagina pasar por encima de una esfera." }
+                ],
+                natacion: [
+                    { name: "Estiramiento de Dorsales y Tríceps", muscles: ["Espalda", "Tríceps"], inst: "Brazo arriba doblado tocando la espalda, empuja el codo con la otra mano.", tips: "Alivia la tensión de natación." }
+                ],
+                bicicleta: [
+                    { name: "Estiramiento de Flexores de Cadera", muscles: ["Cuádriceps", "Glúteos"], inst: "Zancada profunda apoyando la rodilla trasera en el suelo.", tips: "Abre la cadera tras el pedaleo." }
                 ]
             }
         };
@@ -510,17 +602,19 @@
             if(!selectedMuscleList.includes(val)) {
                 selectedMuscleList.push(val);
                 renderMuscleTags();
+                filterCatalogByMusclesAndDiscipline();
             }
         }
         function removeMuscleSkillTag(muscle) {
             selectedMuscleList = selectedMuscleList.filter(m => m !== muscle);
             renderMuscleTags();
+            filterCatalogByMusclesAndDiscipline();
         }
         function renderMuscleTags() {
             const container = document.getElementById('muscleSkillsContainer');
             container.innerHTML = '';
             if(selectedMuscleList.length === 0) {
-                container.innerHTML = '<span style="color:#666; font-size:0.75rem;">Sin músculos seleccionados</span>';
+                container.innerHTML = '<span style="color:#666; font-size:0.75rem;">Sin músculos seleccionados (Se muestran todos)</span>';
                 return;
             }
             selectedMuscleList.forEach(m => {
@@ -531,12 +625,13 @@
             });
         }
 
-        function updateExerciseCatalog() {
+        // FILTRADO CRUZADO ESTRICTO Y DINÁMICO
+        function filterCatalogByMusclesAndDiscipline() {
             const section = document.getElementById('exSection').value;
             const discipline = document.getElementById('exDiscipline').value;
             const select = document.getElementById('exCatalogSelect');
             select.innerHTML = '';
-            
+
             if (discipline === 'otro') {
                 select.innerHTML = '<option value="otro">Otro (Escribir manual)</option>';
                 document.getElementById('manualTitleGroup').style.display = 'block';
@@ -546,24 +641,40 @@
             }
 
             document.getElementById('manualTitleGroup').style.display = 'none';
-            const catBySection = massiveCatalog[section] || {};
-            const list = catBySection[discipline] || [{ name: "Ejercicio General", inst: "Ejecuta con buena técnica.", tips: "Mantén control." }];
-            
-            list.forEach(item => {
-                const opt = new Option(item.name, item.name);
-                opt.dataset.inst = item.inst;
-                opt.dataset.tips = item.tips;
-                select.add(opt);
-            });
-            select.add(new Option('Otro (Personalizado)', 'otro'));
+            const catBySection = massiveCatalog100[section] || {};
+            const disciplineList = catBySection[discipline] || [];
+
+            let filteredList = [];
+            if (selectedMuscleList.length === 0) {
+                // Si no hay músculos seleccionados, aparecen TODOS los de esa disciplina
+                filteredList = disciplineList;
+            } else {
+                // Filtrado estricto: el ejercicio debe contener al menos uno de los músculos seleccionados
+                filteredList = disciplineList.filter(item => {
+                    if (!item.muscles) return false;
+                    return item.muscles.some(m => selectedMuscleList.includes(m));
+                });
+            }
+
+            if (filteredList.length === 0) {
+                select.innerHTML = '<option value="no_encontrado" disabled>No se encuentran ejercicios</option><option value="otro">Otro (Personalizado)</option>';
+            } else {
+                filteredList.forEach(item => {
+                    const opt = new Option(item.name, item.name);
+                    opt.dataset.inst = item.inst;
+                    opt.dataset.tips = item.tips;
+                    select.add(opt);
+                });
+                select.add(new Option('Otro (Personalizado)', 'otro'));
+            }
             onCatalogSelectChange();
         }
 
         function onCatalogSelectChange() {
             const select = document.getElementById('exCatalogSelect');
             const manualGroup = document.getElementById('manualTitleGroup');
-            if (select.value === 'otro') {
-                manualGroup.style.display = 'block';
+            if (select.value === 'otro' || select.value === 'no_encontrado') {
+                if(select.value === 'otro') manualGroup.style.display = 'block';
                 document.getElementById('exInstructions').value = '';
                 document.getElementById('exTips').value = '';
             } else {
@@ -608,9 +719,9 @@
             document.getElementById('exId').value = ''; 
             document.getElementById('exSection').value = 'fuerza';
             document.getElementById('exDiscipline').value = 'gimnasio';
-            selectedMuscleList = ["Pecho"];
+            selectedMuscleList = [];
             renderMuscleTags();
-            updateExerciseCatalog();
+            filterCatalogByMusclesAndDiscipline();
             document.getElementById('exSubtitle').value = ''; 
             if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = ''; 
             document.getElementById('exSeries').value = '3'; document.getElementById('exReps').value = '10'; document.getElementById('exRepsRest').value = '60'; document.getElementById('exRepsRestUnit').value = 's';
@@ -623,7 +734,7 @@
         function saveExercise() {
             const catalogVal = document.getElementById('exCatalogSelect').value;
             const manualTitle = document.getElementById('exTitle').value.trim();
-            const title = (catalogVal === 'otro') ? manualTitle : catalogVal;
+            const title = (catalogVal === 'otro' || catalogVal === 'no_encontrado') ? manualTitle : catalogVal;
             if (!title) { alert("Ingresa un nombre para el ejercicio"); return; }
 
             const exId = document.getElementById('exId').value || 'ex_' + Date.now(); const existing = currentExercisesList.find(e => e.id === exId); const imageToSave = currentImageBase64 || (existing ? existing.image : null); const type = document.getElementById('exType').value; const trackProgress = document.getElementById('exTrackProgress').checked;
@@ -652,15 +763,15 @@
                 document.getElementById('exId').value = ex.id; 
                 document.getElementById('exSection').value = ex.section;
                 document.getElementById('exDiscipline').value = 'gimnasio';
-                updateExerciseCatalog();
+                selectedMuscleList = ex.muscles || [];
+                renderMuscleTags();
+                filterCatalogByMusclesAndDiscipline();
                 document.getElementById('exCatalogSelect').value = ex.title;
                 if(document.getElementById('exCatalogSelect').value !== ex.title) {
                     document.getElementById('exCatalogSelect').value = 'otro';
                     document.getElementById('manualTitleGroup').style.display = 'block';
                     document.getElementById('exTitle').value = ex.title;
                 }
-                selectedMuscleList = ex.muscles || [];
-                renderMuscleTags();
                 document.getElementById('exSubtitle').value = ex.subtitle || ''; 
                 document.getElementById('exInstructions').value = ex.instructions || ''; 
                 document.getElementById('exTips').value = ex.tips || ''; 
