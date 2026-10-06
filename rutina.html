@@ -40,9 +40,7 @@
             text-transform: uppercase;
         }
 
-        .back-btn:hover {
-            text-decoration: underline;
-        }
+        .back-btn:hover { text-decoration: underline; }
 
         .header {
             text-align: center;
@@ -81,460 +79,130 @@
             box-shadow: 0 4px 12px rgba(232, 124, 62, 0.15);
         }
 
-        .streak-info span {
-            font-size: 0.7rem;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: block;
-        }
+        .streak-info span { font-size: 0.7rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; display: block; }
+        .streak-info h4 { margin: 2px 0 0 0; font-size: 1rem; color: var(--primary-color); font-weight: 800; }
+        .streak-badge { font-size: 1.5rem; }
 
-        .streak-info h4 {
-            margin: 2px 0 0 0;
-            font-size: 1rem;
-            color: var(--primary-color);
-            font-weight: 800;
-        }
-
-        .streak-badge {
-            font-size: 1.5rem;
-        }
-
-        .action-buttons-grid {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
+        .action-buttons-grid { display: flex; gap: 10px; margin-bottom: 25px; }
         .action-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 12px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            flex: 1; padding: 12px; border-radius: 12px; font-family: 'Montserrat', sans-serif;
+            font-weight: 800; font-size: 0.8rem; text-transform: uppercase; cursor: pointer;
+            border: none; display: flex; align-items: center; justify-content: center; gap: 8px;
             transition: transform 0.2s;
         }
-
-        .action-btn svg {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
-        }
-
-        .btn-trainer {
-            background: var(--primary-gradient);
-            color: #050505;
-        }
-
-        .btn-add {
-            background-color: var(--card-inner);
-            color: #fff;
-            border: 1px solid #444;
-        }
-
-        .action-btn:hover {
-            transform: scale(1.02);
-        }
+        .action-btn svg { width: 16px; height: 16px; fill: currentColor; }
+        .btn-trainer { background: var(--primary-gradient); color: #050505; }
+        .btn-add { background-color: var(--card-inner); color: #fff; border: 1px solid #444; }
+        .action-btn:hover { transform: scale(1.02); }
 
         .section-title {
-            color: #ffffff;
-            font-size: 1rem;
-            font-weight: 700;
-            margin: 25px 0 15px 0;
-            border-left: 4px solid var(--primary-color);
-            padding-left: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: #ffffff; font-size: 1rem; font-weight: 700; margin: 25px 0 15px 0;
+            border-left: 4px solid var(--primary-color); padding-left: 10px; text-transform: uppercase; letter-spacing: 0.5px;
         }
 
-        /* ESTILOS DE LA TARJETA TIPO ACORDEÓN */
+        /* TARJETAS EJERCICIO */
         .exercise-card {
-            background-color: var(--card-inner);
-            border: 1px solid #444;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            position: relative;
-            cursor: pointer;
-            transition: border-color 0.2s;
+            background-color: var(--card-inner); border: 1px solid #444; border-radius: 12px;
+            padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); position: relative;
+            cursor: pointer; transition: border-color 0.2s;
         }
-
-        .exercise-card:hover {
-            border-color: var(--primary-color);
-        }
-
-        .card-title {
-            color: var(--primary-color);
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin: 0 0 4px 0;
-            text-transform: uppercase;
-        }
-
-        .card-subtitle {
-            font-size: 0.82rem;
-            color: #d1d1d1;
-            margin: 0 0 6px 0;
-        }
-
-        .card-details {
-            font-size: 0.75rem;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .card-hidden-content {
-            display: none;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #383838;
-        }
-
-        .exercise-card.active .card-hidden-content {
-            display: block;
-        }
-
-        .exercise-img {
-            width: 100%;
-            max-height: 220px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            background-color: #111;
-            border: 1px solid #444;
-        }
-
-        .card-instructions {
-            font-size: 0.82rem;
-            color: #ccc;
-            line-height: 1.4;
-            margin: 0;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px;
-            border-top: 1px solid #383838;
-            padding-top: 12px;
-        }
-
-        .btn-small {
-            background: none;
-            border: none;
-            color: #888;
-            font-size: 0.75rem;
-            font-weight: 800;
-            cursor: pointer;
-            text-transform: uppercase;
-            padding: 0;
-            letter-spacing: 0.5px;
-        }
-
+        .exercise-card:hover { border-color: var(--primary-color); }
+        .card-title { color: var(--primary-color); font-size: 1.05rem; font-weight: 700; margin: 0 0 4px 0; text-transform: uppercase; }
+        .card-subtitle { font-size: 0.82rem; color: #d1d1d1; margin: 0 0 6px 0; }
+        .card-details { font-size: 0.75rem; color: var(--primary-color); text-transform: uppercase; font-weight: 700; margin: 0; }
+        .card-hidden-content { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #383838; }
+        .exercise-card.active .card-hidden-content { display: block; }
+        .exercise-img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background-color: #111; border: 1px solid #444; }
+        .card-instructions { font-size: 0.82rem; color: #ccc; line-height: 1.4; margin: 0; }
+        
+        .card-actions { display: flex; gap: 12px; margin-top: 15px; border-top: 1px solid #383838; padding-top: 12px; }
+        .btn-small { background: none; border: none; color: #888; font-size: 0.75rem; font-weight: 800; cursor: pointer; text-transform: uppercase; padding: 0; letter-spacing: 0.5px; }
         .btn-small:hover { color: var(--primary-color); }
         .btn-delete:hover { color: #ff4444; }
 
-        /* Modal Formulario */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .modal-box {
-            background-color: var(--card-bg);
-            border: 1px solid var(--primary-color);
-            border-radius: 16px;
-            padding: 20px;
-            width: 100%;
-            max-width: 400px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--primary-color);
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .form-control {
-            width: 100%;
-            background-color: #050505;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            box-sizing: border-box;
-        }
-
+        /* Modal Generico */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; box-sizing: border-box; }
+        .modal-box { background-color: var(--card-bg); border: 1px solid var(--primary-color); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 0.75rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+        .form-control { width: 100%; background-color: #050505; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; box-sizing: border-box; }
         .form-control:focus { outline: none; border-color: var(--primary-color); }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            color: #fff;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-        .checkbox-group input {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary-color);
-            cursor: pointer;
-        }
-
-        .input-group-flex {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .btn-cancel, .btn-save {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            border: none;
-            font-family: 'Montserrat', sans-serif;
-            text-transform: uppercase;
-        }
-
+        .checkbox-group { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.85rem; color: #fff; font-weight: 600; margin-top: 10px; }
+        .checkbox-group input { width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer; }
+        .input-group-flex { display: flex; gap: 10px; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-cancel, .btn-save { flex: 1; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; font-family: 'Montserrat', sans-serif; text-transform: uppercase; }
         .btn-cancel { background-color: var(--card-inner); color: #ccc; }
         .btn-save { background-color: var(--primary-color); color: #050505; }
 
-        /* Estilos Modo Entrenador */
-        #trainer-mode-container {
-            display: none;
-            background-color: var(--card-bg);
-            border: 1px solid var(--primary-color);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            margin-bottom: 25px;
-        }
+        /* MODO ENTRENADOR */
+        #trainer-mode-container { display: none; background-color: var(--card-bg); border: 1px solid var(--primary-color); border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); margin-bottom: 25px; }
+        .trainer-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .trainer-counter { font-size: 0.8rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; }
+        .exit-trainer-btn { background: none; border: none; color: #aaa; font-size: 0.85rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+        .trainer-nav-buttons { display: flex; gap: 10px; margin-top: 15px; }
+        .nav-step-btn { flex: 1; background-color: var(--card-inner); color: #fff; border: 1px solid #444; padding: 12px; border-radius: 8px; font-weight: 700; text-transform: uppercase; cursor: pointer; font-family: 'Montserrat', sans-serif; }
+        .nav-step-btn.primary { background-color: var(--primary-color); color: #050505; border-color: var(--primary-color); }
+        .empty-state { text-align: center; padding: 40px 20px; color: #666; border: 2px dashed #333; border-radius: 12px; margin-top: 20px; }
 
-        .trainer-top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
-        }
-
-        .trainer-counter {
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .exit-trainer-btn {
-            background: none;
-            border: none;
-            color: #aaa;
-            font-size: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .trainer-nav-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .nav-step-btn {
-            flex: 1;
-            background-color: var(--card-inner);
-            color: #fff;
-            border: 1px solid #444;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .nav-step-btn.primary {
-            background-color: var(--primary-color);
-            color: #050505;
-            border-color: var(--primary-color);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #666;
-            border: 2px dashed #333;
-            border-radius: 12px;
-            margin-top: 20px;
-        }
-
-        /* --- TEMPORIZADOR FLOTANTE --- */
-        #timer-bubble {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: var(--primary-color);
-            color: #050505;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(232, 124, 62, 0.4);
-            cursor: pointer;
-            z-index: 9999;
-            transition: transform 0.2s ease;
-        }
+        /* TEMPORIZADOR FLOTANTE */
+        #timer-bubble { position: fixed; bottom: 25px; right: 25px; background-color: var(--primary-color); color: #050505; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(232, 124, 62, 0.4); cursor: pointer; z-index: 9999; transition: transform 0.2s ease; }
         #timer-bubble:hover { transform: scale(1.08); }
         #timer-bubble svg { width: 26px; height: 26px; fill: #050505; }
-
-        #timer-modal {
-            position: fixed;
-            bottom: 95px;
-            right: 20px;
-            max-width: 360px;
-            width: calc(100% - 40px);
-            background-color: var(--card-bg);
-            border: 1px solid var(--primary-color);
-            border-radius: 16px;
-            padding: 18px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-            z-index: 10000;
-            display: none;
-            color: #fff;
-            box-sizing: border-box;
-        }
-
-        .timer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 8px;
-        }
+        #timer-modal { position: fixed; bottom: 95px; right: 20px; max-width: 360px; width: calc(100% - 40px); background-color: var(--card-bg); border: 1px solid var(--primary-color); border-radius: 16px; padding: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.9); z-index: 10000; display: none; color: #fff; box-sizing: border-box; }
+        .timer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
         .timer-header h3 { margin: 0; font-size: 0.95rem; color: var(--primary-color); text-transform: uppercase; }
         .close-timer { background: none; border: none; color: #aaa; font-size: 1.2rem; cursor: pointer; padding: 0; width: auto; }
         .close-timer:hover { color: #fff; }
-
-        .timer-tabs {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 12px;
-            background-color: #111;
-            padding: 4px;
-            border-radius: 8px;
-        }
-        .timer-tab {
-            flex: 1; background: none; border: none; color: #888; padding: 8px;
-            font-size: 0.75rem; font-weight: 700; text-transform: uppercase; cursor: pointer;
-            border-radius: 6px; font-family: 'Montserrat', sans-serif; transition: all 0.2s;
-        }
+        .timer-tabs { display: flex; gap: 5px; margin-bottom: 12px; background-color: #111; padding: 4px; border-radius: 8px; }
+        .timer-tab { flex: 1; background: none; border: none; color: #888; padding: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; cursor: pointer; border-radius: 6px; font-family: 'Montserrat', sans-serif; transition: all 0.2s; }
         .timer-tab.active { background-color: var(--primary-color); color: #050505; }
-
         .timer-inputs-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-        .timer-row {
-            display: flex; justify-content: space-between; align-items: center;
-            background-color: #111; padding: 8px 12px; border-radius: 8px; border: 1px solid #333;
-        }
+        .timer-row { display: flex; justify-content: space-between; align-items: center; background-color: #111; padding: 8px 12px; border-radius: 8px; border: 1px solid #333; }
         .timer-row label { font-size: 0.75rem; color: #ccc; text-transform: uppercase; font-weight: 700; }
         .timer-input-wrapper { display: flex; align-items: center; gap: 6px; }
-        .timer-row input, .timer-row select {
-            background-color: #1a1a1a; border: 1px solid #444; border-radius: 6px; color: #fff; font-family: 'Montserrat', sans-serif;
-        }
+        .timer-row input, .timer-row select { background-color: #1a1a1a; border: 1px solid #444; border-radius: 6px; color: #fff; font-family: 'Montserrat', sans-serif; }
         .timer-row input { width: 55px; padding: 6px; text-align: center; font-size: 0.9rem; }
         .timer-row select { padding: 6px; font-size: 0.8rem; cursor: pointer; }
-
-        .timer-display {
-            text-align: center; background-color: #111; border: 2px solid #333; border-radius: 12px; padding: 12px; margin-bottom: 12px;
-        }
+        .timer-display { text-align: center; background-color: #111; border: 2px solid #333; border-radius: 12px; padding: 12px; margin-bottom: 12px; }
         .timer-status { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--primary-color); margin-bottom: 4px; font-weight: 700; }
         .timer-clock { font-size: 2.2rem; font-weight: 800; color: #ffffff; margin: 0; }
         .timer-rounds-info { font-size: 0.75rem; color: #888; margin-top: 4px; text-transform: uppercase; }
-
         .timer-actions { display: flex; gap: 8px; }
-        .timer-btn {
-            padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center;
-        }
+        .timer-btn { padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; }
         .timer-btn svg { width: 20px; height: 20px; fill: currentColor; }
         .btn-main { background-color: var(--primary-color); color: #050505; flex: 1; }
         .btn-reset-icon { background-color: var(--card-inner); border: 1px solid #444; color: #fff; width: 48px; flex-shrink: 0; border-radius: 8px; }
 
         /* TABLA Y GRÁFICA DE PROGRESO */
-        .progress-section {
-            background-color: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 25px;
-        }
+        .progress-section { background-color: var(--card-bg); border: 1px solid #333; border-radius: 12px; padding: 15px; margin-top: 25px; }
         .progress-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; margin-bottom: 15px; }
         .progress-table th { color: var(--primary-color); border-bottom: 1px solid #444; padding-bottom: 8px; font-size: 0.68rem; text-transform: uppercase; }
         .progress-table td { padding: 8px 0; border-bottom: 1px solid #222; color: #ccc; }
         .progress-table tr:hover td { background-color: rgba(232, 124, 62, 0.05); }
 
-        .chart-container {
-            background-color: #111;
-            border: 1px solid #333;
+        .chart-container { background-color: #111; border: 1px solid #333; border-radius: 8px; padding: 12px; text-align: center; position: relative; }
+        .chart-title { font-size: 0.75rem; color: var(--primary-color); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+        canvas { width: 100% !important; height: 140px !important; cursor: crosshair; }
+        
+        /* TOOLTIP PARA LA GRÁFICA */
+        #chartTooltip {
+            position: absolute;
+            background-color: var(--card-inner);
+            color: #fff;
+            padding: 8px 12px;
+            border: 1px solid var(--primary-color);
             border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-        }
-        .chart-title {
             font-size: 0.75rem;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 10px;
+            pointer-events: none;
+            display: none;
+            z-index: 100;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            transform: translate(-50%, -100%);
+            margin-top: -10px; /* Para que quede justo arriba del punto */
         }
-        canvas {
-            width: 100% !important;
-            height: 140px !important;
-        }
+        #chartTooltip strong { color: var(--primary-color); font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -618,7 +286,7 @@
                 </tbody>
             </table>
 
-            <!-- GRÁFICA DE EVOLUCIÓN CON LÍNEA CONTINUA Y FILTROS -->
+            <!-- GRÁFICA DE EVOLUCIÓN -->
             <div class="chart-container">
                 <div style="display: flex; gap: 8px; margin-bottom: 10px;">
                     <select id="chartExerciseSelect" class="form-control" style="font-size: 0.75rem; padding: 6px;" onchange="onChartFilterChange()"></select>
@@ -632,7 +300,12 @@
                     </select>
                 </div>
                 <div class="chart-title" id="chartTitle">Selecciona un ejercicio y serie</div>
-                <canvas id="progressCanvas"></canvas>
+                
+                <!-- Contenedor Relativo para que el Tooltip flote encima -->
+                <div style="position: relative;">
+                    <canvas id="progressCanvas"></canvas>
+                    <div id="chartTooltip"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -705,6 +378,7 @@
         </div>
 
         <div class="timer-actions">
+            <!-- El icono cambia dinámicamente entre Play y Pause -->
             <button class="timer-btn btn-main" id="mainActionBtn"><svg id="mainBtnIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
             <button class="timer-btn btn-reset-icon" id="btnResetTimer"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
         </div>
@@ -1125,6 +799,7 @@
                     record.history.push(newEntry);
                 }
 
+                // Asegurar que el historial en la base de datos quede ordenado por fecha
                 record.history.sort((a, b) => new Date(a.date) - new Date(b.date));
 
                 store.put(record);
@@ -1169,7 +844,7 @@
                             <td><strong>${h.weight} KG</strong> x ${h.reps} reps</td>
                             <td>
                                 <button class="btn-small" onclick="editProgressRecord('${r.exercise}', ${idx})">✏️</button>
-                                <button class="btn-small btn-delete" onclick="deleteProgressRecord('${r.exercise}', ${idx})">🗑️</button>
+                                <button class="btn-small btn-delete" onclick="deleteProgressRecord('${r.exercise}', ${idx})">🗑️️</button>
                             </td>
                         `;
                         tbody.appendChild(tr);
@@ -1256,12 +931,15 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
+        let chartRenderedPoints = []; // Para detectar el hover
+
         function drawChart(exerciseName, serieFilter = 'all') {
             currentChartExercise = exerciseName;
             const record = globalProgressRecords.find(r => r.exercise === exerciseName);
             const titleEl = document.getElementById('chartTitle');
             const canvas = document.getElementById('progressCanvas');
             const ctx = canvas.getContext('2d');
+            chartRenderedPoints = []; 
 
             canvas.width = canvas.parentElement.clientWidth - 24;
             canvas.height = 140;
@@ -1276,6 +954,9 @@
             if (serieFilter !== 'all') {
                 history = history.filter(h => String(h.serie) === String(serieFilter));
             }
+
+            // ASEGURAR ORDEN CRONOLÓGICO PARA LA GRÁFICA
+            history.sort((a, b) => new Date(a.date) - new Date(b.date));
 
             let serieLabelText = serieFilter === 'all' ? 'Todas las series' : `Serie ${serieFilter}`;
             titleEl.textContent = `${exerciseName} — ${serieLabelText}`;
@@ -1305,7 +986,7 @@
 
             const stepX = history.length > 1 ? chartW / (history.length - 1) : chartW;
 
-            // Línea continua conectando los puntos con el color personalizado
+            // Línea continua
             ctx.strokeStyle = currentThemeColor;
             ctx.lineWidth = 3;
             ctx.beginPath();
@@ -1313,33 +994,62 @@
             history.forEach((h, i) => {
                 const x = padding + (i * stepX);
                 const y = canvas.height - padding - ((h.weight - minW) / (maxW - minW || 1)) * chartH;
-
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
+                
+                // Guardar coordenadas para el Tooltip
+                chartRenderedPoints.push({ x, y, date: h.date, weight: h.weight, reps: h.reps });
             });
             ctx.stroke();
 
-            // Puntos y etiquetas
-            history.forEach((h, i) => {
-                const x = padding + (i * stepX);
-                const y = canvas.height - padding - ((h.weight - minW) / (maxW - minW || 1)) * chartH;
-
+            // Dibujar los puntos sobre la línea
+            chartRenderedPoints.forEach(pt => {
                 ctx.fillStyle = currentThemeColor;
                 ctx.beginPath();
-                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2);
                 ctx.fill();
 
                 ctx.fillStyle = '#ffffff';
                 ctx.beginPath();
-                ctx.arc(x, y, 2, 0, Math.PI * 2);
+                ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
                 ctx.fill();
-
-                ctx.fillStyle = '#fff';
-                ctx.font = '9px Montserrat';
-                ctx.textAlign = 'center';
-                ctx.fillText(`${h.weight}kg (${h.reps}r)`, x, y - 10);
             });
         }
+
+        // TOOLTIP INTERACTIVO PARA LA GRÁFICA
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('progressCanvas');
+            const tooltip = document.getElementById('chartTooltip');
+
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                let hoveredPoint = null;
+                for (let pt of chartRenderedPoints) {
+                    const dx = mouseX - pt.x;
+                    const dy = mouseY - pt.y;
+                    if (Math.sqrt(dx * dx + dy * dy) < 12) { // Rango de detección del cursor
+                        hoveredPoint = pt;
+                        break;
+                    }
+                }
+
+                if (hoveredPoint) {
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = hoveredPoint.x + 'px';
+                    tooltip.style.top = hoveredPoint.y + 'px';
+                    tooltip.innerHTML = `<strong>${hoveredPoint.date}</strong><br>${hoveredPoint.weight} KG x ${hoveredPoint.reps} reps`;
+                } else {
+                    tooltip.style.display = 'none';
+                }
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                tooltip.style.display = 'none';
+            });
+        });
 
         // MODO ENTRENADOR
         let trainerIndex = 0;
@@ -1396,6 +1106,17 @@
         let timerInterval = null, isRunning = false, isPaused = false;
         let currentPhase = 'prep', timeLeft = 10, currentRound = 1, maxRounds = 3, workDuration = 45, restDuration = 15, restTimeLeft = 60;
 
+        function updateTimerButtonIcon() {
+            const iconEl = document.getElementById('mainBtnIcon');
+            if (isRunning && !isPaused) {
+                // Icono de Pausa
+                iconEl.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+            } else {
+                // Icono de Play
+                iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>';
+            }
+        }
+
         function toggleTimerModal() {
             const modal = document.getElementById('timer-modal');
             modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
@@ -1403,7 +1124,7 @@
         }
 
         function switchTimerTab(mode) {
-            if(isRunning || isPaused) { clearInterval(timerInterval); isRunning = false; isPaused = false; }
+            if(isRunning || isPaused) { clearInterval(timerInterval); isRunning = false; isPaused = false; updateTimerButtonIcon(); }
             currentTimerMode = mode;
             document.getElementById('hiitSection').style.display = (mode === 'hiit') ? 'block' : 'none';
             document.getElementById('restSection').style.display = (mode === 'rest') ? 'block' : 'none';
@@ -1445,11 +1166,13 @@
                     isRunning = true; isPaused = false; playBeepHigh();
                 } else { isPaused = !isPaused; }
 
+                updateTimerButtonIcon();
+
                 if(timerInterval) clearInterval(timerInterval);
                 timerInterval = setInterval(() => {
                     if (isRunning && !isPaused) {
                         if (restTimeLeft > 0) { restTimeLeft--; if (restTimeLeft <= 3) playBeepShort(); updateDisplay(); }
-                        else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('quickStatusText').textContent = "¡Tiempo terminado! 🎉"; }
+                        else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('quickStatusText').textContent = "¡Tiempo terminado! 🎉"; updateTimerButtonIcon(); }
                     }
                 }, 1000);
                 return;
@@ -1463,7 +1186,9 @@
                 isRunning = true; isPaused = false; playBeepHigh();
             } else { isPaused = !isPaused; }
 
+            updateTimerButtonIcon();
             updateDisplay();
+
             if(timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 if (isRunning && !isPaused) {
@@ -1482,11 +1207,12 @@
 
         function nextRoundProgression() {
             if (currentRound < maxRounds) { currentRound++; currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); }
-            else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('timerStatusText').textContent = "¡Completado! 🎉"; }
+            else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('timerStatusText').textContent = "¡Completado! 🎉"; updateTimerButtonIcon(); }
         }
 
         function resetTimer() {
             clearInterval(timerInterval); isRunning = false; isPaused = false;
+            updateTimerButtonIcon();
             if(currentTimerMode === 'rest') { updateRestDisplayInit(); return; }
             timeLeft = 10; currentPhase = 'prep'; currentRound = 1;
             document.getElementById('timerStatusText').textContent = "Listo para empezar";
