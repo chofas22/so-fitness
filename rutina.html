@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rutina - Fitness App</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300&display=swap');
 
         :root {
             --primary-color: #e87c3e; /* Se actualiza dinámicamente según el perfil */
@@ -104,7 +104,6 @@
         .trainer-nav-buttons { display: flex; gap: 10px; margin-top: 15px; }
         .nav-step-btn { flex: 1; background-color: var(--card-inner); color: #fff; border: 1px solid #444; padding: 12px; border-radius: 8px; font-weight: 700; text-transform: uppercase; cursor: pointer; font-family: 'Montserrat', sans-serif; }
         .nav-step-btn.primary { background-color: var(--primary-color); color: #050505; border-color: var(--primary-color); }
-        .empty-state { text-align: center; padding: 40px 20px; color: #666; border: 2px dashed #333; border-radius: 12px; margin-top: 20px; }
 
         /* TEMPORIZADOR FLOTANTE */
         #timer-bubble { position: fixed; bottom: 25px; right: 25px; background-color: var(--primary-color); color: #050505; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(232, 124, 62, 0.4); cursor: pointer; z-index: 9999; transition: transform 0.2s ease; }
@@ -135,21 +134,15 @@
         .btn-main { background-color: var(--primary-color); color: #050505; flex: 1; }
         .btn-reset-icon { background-color: var(--card-inner); border: 1px solid #444; color: #fff; width: 48px; flex-shrink: 0; border-radius: 8px; }
 
-        /* TABLA Y GRÁFICA DE PROGRESO */
+        /* SECCIÓN PROGRESO (Gráfica arriba, historial abajo) */
         .progress-section { background-color: var(--card-bg); border: 1px solid #333; border-radius: 12px; padding: 15px; margin-top: 25px; }
-        .progress-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; margin-bottom: 15px; }
-        .progress-table th { color: var(--primary-color); border-bottom: 1px solid #444; padding-bottom: 8px; font-size: 0.68rem; text-transform: uppercase; }
-        .progress-table td { padding: 8px 0; border-bottom: 1px solid #222; color: #ccc; }
-        .progress-table tr:hover td { background-color: rgba(232, 124, 62, 0.05); }
-
-        .chart-container { background-color: #111; border: 1px solid #333; border-radius: 8px; padding: 12px; text-align: center; position: relative; }
+        
+        /* GRÁFICA */
+        .chart-container { background-color: #111; border: 1px solid #333; border-radius: 8px; padding: 12px; text-align: center; position: relative; margin-bottom: 15px; }
         .chart-filters-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
         .chart-filters-grid > select { flex: 1; min-width: 120px; font-size: 0.75rem; padding: 6px; }
-        
         .chart-title { font-size: 0.75rem; color: var(--primary-color); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
         canvas { width: 100% !important; height: 140px !important; cursor: crosshair; }
-        
-        /* TOOLTIP PARA LA GRÁFICA */
         #chartTooltip {
             position: absolute; background-color: var(--card-inner); color: #fff;
             padding: 8px 12px; border: 1px solid var(--primary-color); border-radius: 8px;
@@ -158,6 +151,42 @@
             transform: translate(-50%, -100%); margin-top: -24px;
         }
         #chartTooltip strong { color: var(--primary-color); font-size: 0.8rem; }
+
+        /* HISTORIAL DESPLEGABLE (Tarjetas por fecha) */
+        .history-toggle-btn {
+            width: 100%; background-color: var(--card-inner); border: 1px solid #444;
+            color: #fff; padding: 12px; border-radius: 8px; font-family: 'Montserrat', sans-serif;
+            font-weight: 700; font-size: 0.8rem; text-transform: uppercase; cursor: pointer;
+            transition: all 0.2s; margin-top: 5px;
+        }
+        .history-toggle-btn:hover { border-color: var(--primary-color); }
+        
+        .history-date-header {
+            font-family: 'Montserrat', sans-serif;
+            font-style: italic; /* Tipografía ligera y cursiva */
+            font-weight: 300;
+            font-size: 0.9rem;
+            color: #aaa;
+            margin: 20px 0 10px 0;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 5px;
+            text-align: left;
+        }
+        .history-record-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-inner);
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .history-record-info { display: flex; flex-direction: column; gap: 4px; }
+        .history-record-ex { color: var(--primary-color); font-weight: 800; font-size: 0.85rem; text-transform: uppercase; }
+        .history-record-details { color: #fff; font-size: 0.8rem; font-weight: 600; }
+        .history-record-details span { color: #888; font-weight: 400; font-size: 0.75rem; }
     </style>
 </head>
 <body>
@@ -217,26 +246,12 @@
 
         <!-- SECCIÓN PROGRESO Y GRÁFICAS -->
         <div class="progress-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h3 style="margin: 0; font-size: 0.9rem; color: var(--primary-color); text-transform: uppercase;">📈 Historial y Series</h3>
-                <button class="btn-small" id="btnOpenProgress" style="color: var(--primary-color);">+ Registrar Serie</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; font-size: 0.9rem; color: var(--primary-color); text-transform: uppercase;">📈 Rendimiento</h3>
+                <button class="btn-small" id="btnOpenProgress" style="color: var(--primary-color); border: 1px solid #444; padding: 6px 10px; border-radius: 6px;">+ Nueva Serie</button>
             </div>
             
-            <table class="progress-table">
-                <thead>
-                    <tr>
-                        <th>Fecha / Ejercicio</th>
-                        <th>Serie</th>
-                        <th>Peso / Reps</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="progressTableBody">
-                    <tr><td colspan="4" style="text-align: center; color: #666; font-size: 0.8rem;">Sin registros aún.</td></tr>
-                </tbody>
-            </table>
-
-            <!-- GRÁFICA DE EVOLUCIÓN AVANZADA -->
+            <!-- GRÁFICA DE EVOLUCIÓN AVANZADA (Arriba) -->
             <div class="chart-container">
                 <div class="chart-filters-grid">
                     <select id="chartExerciseSelect" class="form-control" onchange="onExerciseChange()"></select>
@@ -266,6 +281,13 @@
                     <div id="chartTooltip"></div>
                 </div>
             </div>
+
+            <!-- HISTORIAL DESPLEGABLE (Abajo) -->
+            <button class="history-toggle-btn" id="btnToggleHistory">Ver Historial de Registros ▼</button>
+            <div id="historyContentContainer" style="display: none;">
+                <!-- Aquí se inyectan las tarjetas separadas por día -->
+            </div>
+
         </div>
     </div>
 
@@ -274,39 +296,22 @@
         <svg viewBox="0 0 24 24"><path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
     </div>
 
+    <!-- MODALES OMITIDOS EN HTML PERO FUNCIONALES (Mismos de la versión anterior) -->
+    <!-- Se mantienen exactamente iguales los modales del timer, agregar ejercicio y registrar serie -->
     <div id="timer-modal">
         <div class="timer-header">
             <h3 id="timerModalTitle">Temporizador HIIT</h3>
             <button class="close-timer" id="btnCloseTimer">✕</button>
         </div>
-
         <div class="timer-tabs">
             <button class="timer-tab active" id="tabHiitBtn">HIIT / Circuito</button>
             <button class="timer-tab" id="tabRestBtn">Descanso Rápido</button>
         </div>
-
         <div id="hiitSection">
             <div class="timer-inputs-grid" id="timerConfigSection">
-                <div class="timer-row">
-                    <label>Trabajo</label>
-                    <div class="timer-input-wrapper">
-                        <input type="number" id="workTime" value="45" min="1">
-                        <select id="workUnit"><option value="sec" selected>seg</option><option value="min">min</option></select>
-                    </div>
-                </div>
-                <div class="timer-row">
-                    <label>Descanso</label>
-                    <div class="timer-input-wrapper">
-                        <input type="number" id="restTime" value="15" min="0">
-                        <select id="restUnit"><option value="sec" selected>seg</option><option value="min">min</option></select>
-                    </div>
-                </div>
-                <div class="timer-row">
-                    <label>Rondas</label>
-                    <div class="timer-input-wrapper">
-                        <input type="number" id="totalRounds" value="3" min="1" style="width: 85px;">
-                    </div>
-                </div>
+                <div class="timer-row"><label>Trabajo</label><div class="timer-input-wrapper"><input type="number" id="workTime" value="45" min="1"><select id="workUnit"><option value="sec" selected>seg</option><option value="min">min</option></select></div></div>
+                <div class="timer-row"><label>Descanso</label><div class="timer-input-wrapper"><input type="number" id="restTime" value="15" min="0"><select id="restUnit"><option value="sec" selected>seg</option><option value="min">min</option></select></div></div>
+                <div class="timer-row"><label>Rondas</label><div class="timer-input-wrapper"><input type="number" id="totalRounds" value="3" min="1" style="width: 85px;"></div></div>
             </div>
             <div class="timer-display">
                 <div class="timer-status" id="timerStatusText">Listo para empezar</div>
@@ -314,16 +319,9 @@
                 <div class="timer-rounds-info" id="timerRoundsDisplay">Ronda 1 de 3</div>
             </div>
         </div>
-
         <div id="restSection" style="display: none;">
             <div class="timer-inputs-grid">
-                <div class="timer-row">
-                    <label>Tiempo de Descanso</label>
-                    <div class="timer-input-wrapper">
-                        <input type="number" id="quickRestTime" value="60" min="1">
-                        <select id="quickRestUnit"><option value="sec" selected>seg</option><option value="min">min</option></select>
-                    </div>
-                </div>
+                <div class="timer-row"><label>Tiempo de Descanso</label><div class="timer-input-wrapper"><input type="number" id="quickRestTime" value="60" min="1"><select id="quickRestUnit"><option value="sec" selected>seg</option><option value="min">min</option></select></div></div>
             </div>
             <div class="timer-display">
                 <div class="timer-status" id="quickStatusText">Descanso entre series</div>
@@ -331,7 +329,6 @@
                 <div class="timer-rounds-info" id="quickSubText">Listo para iniciar</div>
             </div>
         </div>
-
         <div class="timer-actions">
             <button class="timer-btn btn-main" id="mainActionBtn"><svg id="mainBtnIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
             <button class="timer-btn btn-reset-icon" id="btnResetTimer"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
@@ -343,62 +340,16 @@
         <div class="modal-box">
             <h3 style="color:var(--primary-color); margin-top:0;" id="modalFormTitle">Agregar Ejercicio</h3>
             <input type="hidden" id="exId">
-            <div class="form-group">
-                <label>Sección</label>
-                <select id="exSection" class="form-control">
-                    <option value="calentamiento">1. Calentamiento</option>
-                    <option value="fuerza" selected>2. Fuerza / Bloque Principal</option>
-                    <option value="estiramiento">3. Estiramiento / Calm</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Nombre del Ejercicio</label>
-                <input type="text" id="exTitle" class="form-control" placeholder="Ej. Sentadillas Goblet">
-            </div>
-            <div class="form-group">
-                <label>Subtítulo / Músculo</label>
-                <input type="text" id="exSubtitle" class="form-control" placeholder="Ej. Cuádriceps y Glúteos">
-            </div>
-            <div class="form-group">
-                <label>Tipo de Ejercicio</label>
-                <select id="exType" class="form-control">
-                    <option value="reps">Series y Repeticiones</option>
-                    <option value="time">Por Tiempo / Intervalos</option>
-                </select>
-            </div>
-            <div class="form-group" id="repsInputs">
-                <label>Configuración de Series</label>
-                <div class="input-group-flex">
-                    <input type="number" id="exSeries" class="form-control" placeholder="Series (Ej. 3)">
-                    <input type="number" id="exReps" class="form-control" placeholder="Reps (Ej. 12)">
-                </div>
-            </div>
-            <div class="form-group" id="timeInputs" style="display: none;">
-                <label>Configuración de Intervalos</label>
-                <div class="input-group-flex" style="margin-bottom: 8px;">
-                    <input type="text" id="exWorkTime" class="form-control" placeholder="Trabajo (Ej. 45s)">
-                    <input type="text" id="exRestTime" class="form-control" placeholder="Descanso (Ej. 15s)">
-                </div>
-                <input type="text" id="exRounds" class="form-control" placeholder="Rondas (Ej. 3 Rondas)">
-            </div>
-            <div class="form-group">
-                <label>Instrucciones</label>
-                <textarea id="exInstructions" class="form-control" rows="3" placeholder="Descripción técnica..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>Foto (Opcional)</label>
-                <input type="file" id="exImageInput" class="form-control" accept="image/*">
-            </div>
-            <div class="form-group">
-                <label class="checkbox-group">
-                    <input type="checkbox" id="exTrackProgress">
-                    📈 Registrar progreso de peso (KG) para este ejercicio
-                </label>
-            </div>
-            <div class="modal-buttons">
-                <button class="btn-cancel" id="btnCloseExerciseModal">Cancelar</button>
-                <button class="btn-save" id="btnSaveExercise">Guardar</button>
-            </div>
+            <div class="form-group"><label>Sección</label><select id="exSection" class="form-control"><option value="calentamiento">1. Calentamiento</option><option value="fuerza" selected>2. Fuerza / Bloque Principal</option><option value="estiramiento">3. Estiramiento / Calm</option></select></div>
+            <div class="form-group"><label>Nombre del Ejercicio</label><input type="text" id="exTitle" class="form-control" placeholder="Ej. Sentadillas Goblet"></div>
+            <div class="form-group"><label>Subtítulo / Músculo</label><input type="text" id="exSubtitle" class="form-control" placeholder="Ej. Cuádriceps y Glúteos"></div>
+            <div class="form-group"><label>Tipo de Ejercicio</label><select id="exType" class="form-control"><option value="reps">Series y Repeticiones</option><option value="time">Por Tiempo / Intervalos</option></select></div>
+            <div class="form-group" id="repsInputs"><label>Configuración de Series</label><div class="input-group-flex"><input type="number" id="exSeries" class="form-control" placeholder="Series (Ej. 3)"><input type="number" id="exReps" class="form-control" placeholder="Reps (Ej. 12)"></div></div>
+            <div class="form-group" id="timeInputs" style="display: none;"><label>Configuración de Intervalos</label><div class="input-group-flex" style="margin-bottom: 8px;"><input type="text" id="exWorkTime" class="form-control" placeholder="Trabajo (Ej. 45s)"><input type="text" id="exRestTime" class="form-control" placeholder="Descanso (Ej. 15s)"></div><input type="text" id="exRounds" class="form-control" placeholder="Rondas (Ej. 3 Rondas)"></div>
+            <div class="form-group"><label>Instrucciones</label><textarea id="exInstructions" class="form-control" rows="3" placeholder="Descripción técnica..."></textarea></div>
+            <div class="form-group"><label>Foto (Opcional)</label><input type="file" id="exImageInput" class="form-control" accept="image/*"></div>
+            <div class="form-group"><label class="checkbox-group"><input type="checkbox" id="exTrackProgress">📈 Registrar progreso de peso (KG) para este ejercicio</label></div>
+            <div class="modal-buttons"><button class="btn-cancel" id="btnCloseExerciseModal">Cancelar</button><button class="btn-save" id="btnSaveExercise">Guardar</button></div>
         </div>
     </div>
 
@@ -407,54 +358,27 @@
         <div class="modal-box">
             <h3 style="color:var(--primary-color); margin-top:0;" id="progModalTitle">Registrar Serie de Carga</h3>
             <input type="hidden" id="progIndexEdit" value="">
-            <div class="form-group">
-                <label>Ejercicio con Seguimiento</label>
-                <select id="progExerciseSelect" class="form-control"></select>
-            </div>
-            <div class="form-group">
-                <label>Fecha</label>
-                <input type="date" id="progDate" class="form-control">
-            </div>
-            <div class="form-group">
-                <label>Número de Serie</label>
-                <input type="number" id="progSerieNum" class="form-control" value="1" min="1">
-            </div>
-            <div class="form-group">
-                <div class="input-group-flex">
-                    <div>
-                        <label>Peso (KG)</label>
-                        <input type="number" id="progWeight" class="form-control" placeholder="Ej. 80" step="0.5">
-                    </div>
-                    <div>
-                        <label>Repeticiones</label>
-                        <input type="number" id="progReps" class="form-control" placeholder="Ej. 10" min="1">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="btn-cancel" id="btnCloseProgressModal">Cancelar</button>
-                <button class="btn-save" id="btnSaveProgress">Guardar Serie</button>
-            </div>
+            <div class="form-group"><label>Ejercicio con Seguimiento</label><select id="progExerciseSelect" class="form-control"></select></div>
+            <div class="form-group"><label>Fecha</label><input type="date" id="progDate" class="form-control"></div>
+            <div class="form-group"><label>Número de Serie</label><input type="number" id="progSerieNum" class="form-control" value="1" min="1"></div>
+            <div class="form-group"><div class="input-group-flex"><div><label>Peso (KG)</label><input type="number" id="progWeight" class="form-control" placeholder="Ej. 80" step="0.5"></div><div><label>Repeticiones</label><input type="number" id="progReps" class="form-control" placeholder="Ej. 10" min="1"></div></div></div>
+            <div class="modal-buttons"><button class="btn-cancel" id="btnCloseProgressModal">Cancelar</button><button class="btn-save" id="btnSaveProgress">Guardar Serie</button></div>
         </div>
     </div>
 
     <script>
+        // Lógica de perfil inicial
         const urlParams = new URLSearchParams(window.location.search);
         const currentDay = urlParams.get('dia') || 'lunes';
         const activeProfileId = localStorage.getItem('active_profile_id');
-
         if (!activeProfileId) { window.location.href = 'index.html'; }
 
         const profiles = JSON.parse(localStorage.getItem('app_profiles')) || [];
         const activeProfile = profiles.find(p => p.id === activeProfileId);
-        
         let currentThemeColor = '#e87c3e';
         if (activeProfile) {
             document.getElementById('profileHeaderName').innerText = activeProfile.name;
-            if (activeProfile.themeColor) {
-                currentThemeColor = activeProfile.themeColor;
-                document.documentElement.style.setProperty('--primary-color', currentThemeColor);
-            }
+            if (activeProfile.themeColor) { currentThemeColor = activeProfile.themeColor; document.documentElement.style.setProperty('--primary-color', currentThemeColor); }
         }
         document.getElementById('dayHeaderTitle').innerText = currentDay.toUpperCase();
 
@@ -463,42 +387,27 @@
             const userStreak = streakData[activeProfileId] || { count: 0, lastDate: '' };
             const todayStr = new Date().toISOString().slice(0, 10);
             const yesterdayStr = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-
             if (userStreak.lastDate === todayStr) {}
             else if (userStreak.lastDate === yesterdayStr) { userStreak.count += 1; userStreak.lastDate = todayStr; }
             else if (!userStreak.lastDate) { userStreak.count = 1; userStreak.lastDate = todayStr; }
             else { userStreak.count = 1; userStreak.lastDate = todayStr; }
-
-            streakData[activeProfileId] = userStreak;
-            localStorage.setItem('user_streaks', JSON.stringify(streakData));
+            streakData[activeProfileId] = userStreak; localStorage.setItem('user_streaks', JSON.stringify(streakData));
             document.getElementById('streakText').innerText = `¡${userStreak.count} ${userStreak.count === 1 ? 'día seguido' : 'días seguidos'}!`;
         }
         updateStreak();
 
+        // Base de datos
         let db;
         const request = indexedDB.open("FitnessDB", 6);
-
-        request.onupgradeneeded = function(e) {
-            db = e.target.result;
-            if (!db.objectStoreNames.contains("exercises")) db.createObjectStore("exercises", { keyPath: "id" });
-            if (!db.objectStoreNames.contains("progress")) db.createObjectStore("progress", { keyPath: "id" });
-        };
-
-        request.onsuccess = function(e) {
-            db = e.target.result;
-            loadExercises();
-            loadProgressRecords();
-        };
+        request.onupgradeneeded = function(e) { db = e.target.result; if (!db.objectStoreNames.contains("exercises")) db.createObjectStore("exercises", { keyPath: "id" }); if (!db.objectStoreNames.contains("progress")) db.createObjectStore("progress", { keyPath: "id" }); };
+        request.onsuccess = function(e) { db = e.target.result; loadExercises(); loadProgressRecords(); };
 
         let currentExercisesList = [];
         let allUserExercises = [];
 
         function loadExercises() {
             if (!db) return;
-            const tx = db.transaction("exercises", "readonly");
-            const store = tx.objectStore("exercises");
-            const req = store.getAll();
-
+            const tx = db.transaction("exercises", "readonly"); const store = tx.objectStore("exercises"); const req = store.getAll();
             req.onsuccess = function() {
                 const allExercises = req.result || [];
                 allUserExercises = allExercises.filter(ex => ex.userId === activeProfileId);
@@ -508,165 +417,71 @@
         }
 
         function renderExercises() {
-            const calList = document.getElementById('calentamientoList');
-            const fueList = document.getElementById('fuerzaList');
-            const estList = document.getElementById('estiramientoList');
-            const emptyState = document.getElementById('emptyState');
-
+            const calList = document.getElementById('calentamientoList'); const fueList = document.getElementById('fuerzaList'); const estList = document.getElementById('estiramientoList'); const emptyState = document.getElementById('emptyState');
             if (!calList || !fueList || !estList || !emptyState) return;
             calList.innerHTML = ''; fueList.innerHTML = ''; estList.innerHTML = '';
-
-            if (currentExercisesList.length === 0) {
-                emptyState.style.display = 'block';
-                return;
-            } else {
-                emptyState.style.display = 'none';
-            }
-
+            if (currentExercisesList.length === 0) { emptyState.style.display = 'block'; return; } else { emptyState.style.display = 'none'; }
             const sections = { calentamiento: { el: calList, title: "1. Calentamiento" }, fuerza: { el: fueList, title: "2. Bloque Principal" }, estiramiento: { el: estList, title: "3. Estiramientos" } };
-
             Object.keys(sections).forEach(key => {
                 const items = currentExercisesList.filter(ex => ex.section === key);
                 if (items.length > 0) {
-                    const titleEl = document.createElement('h3');
-                    titleEl.className = 'section-title';
-                    titleEl.innerText = sections[key].title;
-                    sections[key].el.appendChild(titleEl);
-
+                    const titleEl = document.createElement('h3'); titleEl.className = 'section-title'; titleEl.innerText = sections[key].title; sections[key].el.appendChild(titleEl);
                     items.forEach(ex => {
-                        const card = document.createElement('div');
-                        card.className = 'exercise-card';
-                        card.onclick = function() { this.classList.toggle('active'); };
-                        
+                        const card = document.createElement('div'); card.className = 'exercise-card'; card.onclick = function() { this.classList.toggle('active'); };
                         let trackBadge = ex.trackProgress ? `<span style="font-size:0.65rem; background:${currentThemeColor}; color:#050505; padding:2px 6px; border-radius:4px; font-weight:800; margin-left:8px;">CON PROGRESO</span>` : '';
-
-                        card.innerHTML = `
-                            <div class="card-title">${ex.title} ${trackBadge}</div>
-                            <div class="card-subtitle">${ex.subtitle || ''}</div>
-                            <div class="card-details">${ex.details || ''}</div>
-                            <div class="card-hidden-content">
-                                ${ex.image ? `<img src="${ex.image}" class="exercise-img">` : ''}
-                                <p class="card-instructions">${ex.instructions || 'Sin instrucciones adicionales.'}</p>
-                            </div>
-                            <div class="card-actions">
-                                <button class="btn-small" onclick="event.stopPropagation(); editExercise('${ex.id}')">Editar</button>
-                                <button class="btn-small btn-delete" onclick="event.stopPropagation(); deleteExercise('${ex.id}')">Eliminar</button>
-                            </div>
-                        `;
+                        card.innerHTML = `<div class="card-title">${ex.title} ${trackBadge}</div><div class="card-subtitle">${ex.subtitle || ''}</div><div class="card-details">${ex.details || ''}</div><div class="card-hidden-content">${ex.image ? `<img src="${ex.image}" class="exercise-img">` : ''}<p class="card-instructions">${ex.instructions || 'Sin instrucciones adicionales.'}</p></div><div class="card-actions"><button class="btn-small" onclick="event.stopPropagation(); editExercise('${ex.id}')">Editar</button><button class="btn-small btn-delete" onclick="event.stopPropagation(); deleteExercise('${ex.id}')">Eliminar</button></div>`;
                         sections[key].el.appendChild(card);
                     });
                 }
             });
         }
 
+        // Lógica Formularios Ejercicios
         let currentImageBase64 = null;
-        document.getElementById('exImageInput')?.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) { currentImageBase64 = event.target.result; };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        function toggleTypeInputs() {
-            const type = document.getElementById('exType').value;
-            document.getElementById('repsInputs').style.display = (type === 'reps') ? 'block' : 'none';
-            document.getElementById('timeInputs').style.display = (type === 'time') ? 'block' : 'none';
-        }
-
-        function openExerciseModal() {
-            document.getElementById('exId').value = ''; document.getElementById('exTitle').value = '';
-            document.getElementById('exSubtitle').value = ''; document.getElementById('exInstructions').value = '';
-            if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = '';
-            document.getElementById('exType').value = 'reps'; document.getElementById('exTrackProgress').checked = false;
-            toggleTypeInputs(); currentImageBase64 = null;
-            document.getElementById('modalFormTitle').innerText = "Agregar Ejercicio";
-            document.getElementById('exerciseModal').style.display = 'flex';
-        }
-
+        document.getElementById('exImageInput')?.addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { currentImageBase64 = event.target.result; }; reader.readAsDataURL(file); } });
+        function toggleTypeInputs() { const type = document.getElementById('exType').value; document.getElementById('repsInputs').style.display = (type === 'reps') ? 'block' : 'none'; document.getElementById('timeInputs').style.display = (type === 'time') ? 'block' : 'none'; }
+        function openExerciseModal() { document.getElementById('exId').value = ''; document.getElementById('exTitle').value = ''; document.getElementById('exSubtitle').value = ''; document.getElementById('exInstructions').value = ''; if(document.getElementById('exImageInput')) document.getElementById('exImageInput').value = ''; document.getElementById('exType').value = 'reps'; document.getElementById('exTrackProgress').checked = false; toggleTypeInputs(); currentImageBase64 = null; document.getElementById('modalFormTitle').innerText = "Agregar Ejercicio"; document.getElementById('exerciseModal').style.display = 'flex'; }
         function closeExerciseModal() { document.getElementById('exerciseModal').style.display = 'none'; }
-
         function saveExercise() {
-            const title = document.getElementById('exTitle').value.trim();
-            if (!title) { alert("Ingresa un nombre para el ejercicio"); return; }
-            const exId = document.getElementById('exId').value || 'ex_' + Date.now();
-            const existing = currentExercisesList.find(e => e.id === exId);
-            const imageToSave = currentImageBase64 || (existing ? existing.image : null);
-            const type = document.getElementById('exType').value;
-            const trackProgress = document.getElementById('exTrackProgress').checked;
-
-            let finalDetailsStr = "";
-            let seriesVal = document.getElementById('exSeries').value; let repsVal = document.getElementById('exReps').value;
-            let workTimeVal = document.getElementById('exWorkTime').value; let restTimeVal = document.getElementById('exRestTime').value;
-            let roundsVal = document.getElementById('exRounds').value;
-
-            if (type === 'reps') { finalDetailsStr = `${seriesVal || 0} Series x ${repsVal || 0} Repeticiones`; } 
-            else {
-                let workPart = workTimeVal ? `${workTimeVal} trabajo` : ''; let restPart = restTimeVal ? `${restTimeVal} descanso` : '';
-                let roundsPart = roundsVal ? `${roundsVal}` : '';
-                finalDetailsStr = [roundsPart, [workPart, restPart].filter(Boolean).join(' / ')].filter(Boolean).join(' • ') || 'Por tiempo';
-            }
-
-            const exerciseData = {
-                id: exId, userId: activeProfileId, day: currentDay, section: document.getElementById('exSection').value,
-                title, subtitle: document.getElementById('exSubtitle').value.trim(), type, series: seriesVal, reps: repsVal, workTime: workTimeVal, restTime: restTimeVal, rounds: roundsVal,
-                details: finalDetailsStr, instructions: document.getElementById('exInstructions').value.trim(), image: imageToSave, trackProgress: trackProgress
-            };
-
-            const tx = db.transaction("exercises", "readwrite");
-            tx.objectStore("exercises").put(exerciseData);
-            tx.oncomplete = function() { closeExerciseModal(); loadExercises(); };
+            const title = document.getElementById('exTitle').value.trim(); if (!title) { alert("Ingresa un nombre para el ejercicio"); return; }
+            const exId = document.getElementById('exId').value || 'ex_' + Date.now(); const existing = currentExercisesList.find(e => e.id === exId); const imageToSave = currentImageBase64 || (existing ? existing.image : null); const type = document.getElementById('exType').value; const trackProgress = document.getElementById('exTrackProgress').checked;
+            let finalDetailsStr = ""; let seriesVal = document.getElementById('exSeries').value; let repsVal = document.getElementById('exReps').value; let workTimeVal = document.getElementById('exWorkTime').value; let restTimeVal = document.getElementById('exRestTime').value; let roundsVal = document.getElementById('exRounds').value;
+            if (type === 'reps') { finalDetailsStr = `${seriesVal || 0} Series x ${repsVal || 0} Repeticiones`; } else { let workPart = workTimeVal ? `${workTimeVal} trabajo` : ''; let restPart = restTimeVal ? `${restTimeVal} descanso` : ''; let roundsPart = roundsVal ? `${roundsVal}` : ''; finalDetailsStr = [roundsPart, [workPart, restPart].filter(Boolean).join(' / ')].filter(Boolean).join(' • ') || 'Por tiempo'; }
+            const exerciseData = { id: exId, userId: activeProfileId, day: currentDay, section: document.getElementById('exSection').value, title, subtitle: document.getElementById('exSubtitle').value.trim(), type, series: seriesVal, reps: repsVal, workTime: workTimeVal, restTime: restTimeVal, rounds: roundsVal, details: finalDetailsStr, instructions: document.getElementById('exInstructions').value.trim(), image: imageToSave, trackProgress: trackProgress };
+            const tx = db.transaction("exercises", "readwrite"); tx.objectStore("exercises").put(exerciseData); tx.oncomplete = function() { closeExerciseModal(); loadExercises(); };
         }
-
-        function editExercise(id) {
-            const ex = currentExercisesList.find(e => e.id === id);
-            if (ex) {
-                document.getElementById('exId').value = ex.id; document.getElementById('exSection').value = ex.section;
-                document.getElementById('exTitle').value = ex.title; document.getElementById('exSubtitle').value = ex.subtitle || '';
-                document.getElementById('exInstructions').value = ex.instructions || ''; document.getElementById('exType').value = ex.type || 'reps';
-                document.getElementById('exSeries').value = ex.series || ''; document.getElementById('exReps').value = ex.reps || '';
-                document.getElementById('exWorkTime').value = ex.workTime || ''; document.getElementById('exRestTime').value = ex.restTime || '';
-                document.getElementById('exRounds').value = ex.rounds || ''; document.getElementById('exTrackProgress').checked = !!ex.trackProgress;
-                toggleTypeInputs(); currentImageBase64 = ex.image || null;
-                document.getElementById('modalFormTitle').innerText = "Editar Ejercicio"; document.getElementById('exerciseModal').style.display = 'flex';
-            }
-        }
-
-        function deleteExercise(id) {
-            if (confirm("¿Seguro de que deseas eliminar este ejercicio?")) {
-                const tx = db.transaction("exercises", "readwrite");
-                tx.objectStore("exercises").delete(id);
-                tx.oncomplete = function() { loadExercises(); };
-            }
-        }
+        function editExercise(id) { const ex = currentExercisesList.find(e => e.id === id); if (ex) { document.getElementById('exId').value = ex.id; document.getElementById('exSection').value = ex.section; document.getElementById('exTitle').value = ex.title; document.getElementById('exSubtitle').value = ex.subtitle || ''; document.getElementById('exInstructions').value = ex.instructions || ''; document.getElementById('exType').value = ex.type || 'reps'; document.getElementById('exSeries').value = ex.series || ''; document.getElementById('exReps').value = ex.reps || ''; document.getElementById('exWorkTime').value = ex.workTime || ''; document.getElementById('exRestTime').value = ex.restTime || ''; document.getElementById('exRounds').value = ex.rounds || ''; document.getElementById('exTrackProgress').checked = !!ex.trackProgress; toggleTypeInputs(); currentImageBase64 = ex.image || null; document.getElementById('modalFormTitle').innerText = "Editar Ejercicio"; document.getElementById('exerciseModal').style.display = 'flex'; } }
+        function deleteExercise(id) { if (confirm("¿Seguro de que deseas eliminar este ejercicio?")) { const tx = db.transaction("exercises", "readwrite"); tx.objectStore("exercises").delete(id); tx.oncomplete = function() { loadExercises(); }; } }
 
         // --- SISTEMA DE PROGRESO Y GRÁFICAS AVANZADO ---
         let globalProgressRecords = [];
         let currentChartExercise = '';
+        const monthNamesFull = {'01':'Enero', '02':'Febrero', '03':'Marzo', '04':'Abril', '05':'Mayo', '06':'Junio', '07':'Julio', '08':'Agosto', '09':'Septiembre', '10':'Octubre', '11':'Noviembre', '12':'Diciembre'};
+        const monthNamesMap = {'01':'Ene', '02':'Feb', '03':'Mar', '04':'Abr', '05':'May', '06':'Jun', '07':'Jul', '08':'Ago', '09':'Sep', '10':'Oct', '11':'Nov', '12':'Dic'};
+
+        // Utilidad para formatear fecha de estilo "2026-10-02" a "02 de Octubre 2026"
+        function formatDateToCursive(dateStr) {
+            const [y, m, d] = dateStr.split('-');
+            return `${d} de ${monthNamesFull[m]} ${y}`;
+        }
+
+        // Toggle del historial
+        document.getElementById('btnToggleHistory').addEventListener('click', function() {
+            const content = document.getElementById('historyContentContainer');
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                this.innerText = 'Ocultar Historial ▲';
+            } else {
+                content.style.display = 'none';
+                this.innerText = 'Ver Historial de Registros ▼';
+            }
+        });
 
         function openProgressModal(editIndex = null, existingData = null) {
-            const select = document.getElementById('progExerciseSelect');
-            select.innerHTML = '';
+            const select = document.getElementById('progExerciseSelect'); select.innerHTML = '';
             const trackableExercises = allUserExercises.filter(e => e.trackProgress);
-
-            if (trackableExercises.length === 0) {
-                select.appendChild(new Option('No hay ejercicios marcados', ''));
-            } else {
-                [...new Set(trackableExercises.map(e => e.title))].forEach(name => select.appendChild(new Option(name, name)));
-            }
-
-            if (editIndex !== null && existingData) {
-                document.getElementById('progModalTitle').textContent = "Editar Serie"; select.value = existingData.exercise;
-                document.getElementById('progDate').value = existingData.date; document.getElementById('progSerieNum').value = existingData.serie;
-                document.getElementById('progWeight').value = existingData.weight; document.getElementById('progReps').value = existingData.reps;
-                document.getElementById('progIndexEdit').value = editIndex;
-            } else {
-                document.getElementById('progModalTitle').textContent = "Registrar Serie de Carga";
-                document.getElementById('progDate').value = new Date().toISOString().slice(0, 10);
-                document.getElementById('progSerieNum').value = '1'; document.getElementById('progWeight').value = '';
-                document.getElementById('progReps').value = ''; document.getElementById('progIndexEdit').value = '';
-            }
+            if (trackableExercises.length === 0) { select.appendChild(new Option('No hay ejercicios marcados', '')); } else { [...new Set(trackableExercises.map(e => e.title))].forEach(name => select.appendChild(new Option(name, name))); }
+            if (editIndex !== null && existingData) { document.getElementById('progModalTitle').textContent = "Editar Serie"; select.value = existingData.exercise; document.getElementById('progDate').value = existingData.date; document.getElementById('progSerieNum').value = existingData.serie; document.getElementById('progWeight').value = existingData.weight; document.getElementById('progReps').value = existingData.reps; document.getElementById('progIndexEdit').value = editIndex; } else { document.getElementById('progModalTitle').textContent = "Registrar Serie de Carga"; document.getElementById('progDate').value = new Date().toISOString().slice(0, 10); document.getElementById('progSerieNum').value = '1'; document.getElementById('progWeight').value = ''; document.getElementById('progReps').value = ''; document.getElementById('progIndexEdit').value = ''; }
             document.getElementById('progressModal').style.display = 'flex';
         }
 
@@ -676,382 +491,164 @@
             const exerciseName = document.getElementById('progExerciseSelect').value; const dateVal = document.getElementById('progDate').value;
             const serieVal = parseInt(document.getElementById('progSerieNum').value) || 1; const weightVal = parseFloat(document.getElementById('progWeight').value);
             const repsVal = parseInt(document.getElementById('progReps').value); const editIdx = document.getElementById('progIndexEdit').value;
+            if (!exerciseName) { alert("Selecciona un ejercicio válido."); return; } if (!dateVal) { alert("Ingresa la fecha."); return; } if (isNaN(weightVal)) { alert("Ingresa un peso válido."); return; } if (isNaN(repsVal)) { alert("Ingresa las repeticiones."); return; }
 
-            if (!exerciseName) { alert("Selecciona un ejercicio válido."); return; } if (!dateVal) { alert("Ingresa la fecha."); return; }
-            if (isNaN(weightVal)) { alert("Ingresa un peso válido."); return; } if (isNaN(repsVal)) { alert("Ingresa las repeticiones."); return; }
-
-            const tx = db.transaction("progress", "readwrite");
-            const store = tx.objectStore("progress");
-            const recordId = activeProfileId + '_' + exerciseName;
-            const getReq = store.get(recordId);
-
+            const tx = db.transaction("progress", "readwrite"); const store = tx.objectStore("progress"); const recordId = activeProfileId + '_' + exerciseName; const getReq = store.get(recordId);
             getReq.onsuccess = function() {
                 let record = getReq.result || { id: recordId, userId: activeProfileId, exercise: exerciseName, history: [] };
                 const newEntry = { date: dateVal, serie: serieVal, weight: weightVal, reps: repsVal };
-
-                if (editIdx !== "") { record.history[parseInt(editIdx)] = newEntry; } 
-                else { record.history.push(newEntry); }
-
+                if (editIdx !== "") { record.history[parseInt(editIdx)] = newEntry; } else { record.history.push(newEntry); }
                 record.history.sort((a, b) => new Date(a.date) - new Date(b.date));
-                store.put(record);
-                tx.oncomplete = function() { closeProgressModal(); loadProgressRecords(); };
+                store.put(record); tx.oncomplete = function() { closeProgressModal(); loadProgressRecords(); };
             };
         }
 
         function loadProgressRecords() {
             if (!db) return;
-            const tx = db.transaction("progress", "readonly");
-            const store = tx.objectStore("progress");
-            const req = store.getAll();
+            const tx = db.transaction("progress", "readonly"); const store = tx.objectStore("progress"); const req = store.getAll();
 
             req.onsuccess = function() {
                 const allRecords = req.result || [];
                 globalProgressRecords = allRecords.filter(r => r.userId === activeProfileId);
-                const tbody = document.getElementById('progressTableBody');
-                tbody.innerHTML = '';
+                const historyContainer = document.getElementById('historyContentContainer');
+                historyContainer.innerHTML = '';
 
                 if (globalProgressRecords.length === 0 || globalProgressRecords.every(r => r.history.length === 0)) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #666; font-size: 0.8rem;">Sin registros de progreso aún.</td></tr>';
-                    document.getElementById('chartTitle').textContent = "Selecciona un ejercicio para ver su gráfica";
+                    historyContainer.innerHTML = '<p style="text-align: center; color: #666; font-size: 0.8rem; margin-top:20px;">Sin registros de progreso aún.</p>';
+                    document.getElementById('chartTitle').textContent = "GRÁFICA: SIN DATOS DISPONIBLES";
                     clearCanvas(); updateChartSelectors(); return;
                 }
 
-                // Generar tabla histórica (solo los más recientes)
+                // Agrupar todos los historiales
                 let allHistoryEntries = [];
                 globalProgressRecords.forEach((r) => { r.history.forEach((h, idx) => allHistoryEntries.push({ exercise: r.exercise, index: idx, ...h })); });
+                
+                // Ordenar del más reciente al más antiguo
                 allHistoryEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-                allHistoryEntries.forEach((h) => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong style="color:${currentThemeColor}">${h.exercise}</strong><br><span style="font-size:0.68rem; color:#aaa;">${h.date}</span></td>
-                        <td>Serie ${h.serie}</td>
-                        <td><strong>${h.weight} KG</strong> x ${h.reps} reps</td>
-                        <td>
-                            <button class="btn-small" onclick="editProgressRecord('${h.exercise}', ${h.index})">✏️</button>
-                            <button class="btn-small btn-delete" onclick="deleteProgressRecord('${h.exercise}', ${h.index})">🗑</button>
-                        </td>`;
-                    tbody.appendChild(tr);
+                // Agrupar por fecha
+                const groupedByDate = {};
+                allHistoryEntries.forEach(entry => {
+                    if (!groupedByDate[entry.date]) groupedByDate[entry.date] = [];
+                    groupedByDate[entry.date].push(entry);
+                });
+
+                // Renderizar Tarjetas Agrupadas
+                Object.keys(groupedByDate).sort((a,b) => new Date(b) - new Date(a)).forEach(dateStr => {
+                    const groupDiv = document.createElement('div');
+                    
+                    const header = document.createElement('div');
+                    header.className = 'history-date-header';
+                    header.innerText = formatDateToCursive(dateStr);
+                    groupDiv.appendChild(header);
+
+                    groupedByDate[dateStr].forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'history-record-card';
+                        card.innerHTML = `
+                            <div class="history-record-info">
+                                <div class="history-record-ex">${item.exercise}</div>
+                                <div class="history-record-details">${item.weight} KG <span>x ${item.reps} reps</span> — <span>Serie ${item.serie}</span></div>
+                            </div>
+                            <div>
+                                <button class="btn-small" onclick="editProgressRecord('${item.exercise}', ${item.index})">✏️</button>
+                                <button class="btn-small btn-delete" onclick="deleteProgressRecord('${item.exercise}', ${item.index})">🗑</button>
+                            </div>
+                        `;
+                        groupDiv.appendChild(card);
+                    });
+
+                    historyContainer.appendChild(groupDiv);
                 });
 
                 updateChartSelectors();
             };
         }
 
-        // ACTUALIZACIÓN DINÁMICA DE FILTROS DE GRÁFICA
-        const monthNamesMap = {'01':'Ene', '02':'Feb', '03':'Mar', '04':'Abr', '05':'May', '06':'Jun', '07':'Jul', '08':'Ago', '09':'Sep', '10':'Oct', '11':'Nov', '12':'Dic'};
-        const monthNamesFull = {'01':'Enero', '02':'Febrero', '03':'Marzo', '04':'Abril', '05':'Mayo', '06':'Junio', '07':'Julio', '08':'Agosto', '09':'Septiembre', '10':'Octubre', '11':'Noviembre', '12':'Diciembre'};
-
+        // LÓGICA DE GRÁFICA (Avanzada - Igual a la versión anterior)
         function updateChartSelectors() {
-            const selectEx = document.getElementById('chartExerciseSelect');
-            if (!selectEx) return;
-            
+            const selectEx = document.getElementById('chartExerciseSelect'); if (!selectEx) return;
             const uniqueNames = [...new Set(globalProgressRecords.map(r => r.exercise))];
-            if (uniqueNames.length === 0) {
-                selectEx.innerHTML = '<option value="">Sin registros</option>';
-                return;
-            }
-
+            if (uniqueNames.length === 0) { selectEx.innerHTML = '<option value="">Sin registros</option>'; return; }
             selectEx.innerHTML = '';
-            uniqueNames.forEach(name => {
-                const opt = new Option(name, name);
-                if (name === currentChartExercise) opt.selected = true;
-                selectEx.appendChild(opt);
-            });
-
+            uniqueNames.forEach(name => { const opt = new Option(name, name); if (name === currentChartExercise) opt.selected = true; selectEx.appendChild(opt); });
             if (!currentChartExercise && uniqueNames.length > 0) { currentChartExercise = uniqueNames[0]; selectEx.value = currentChartExercise; }
             onExerciseChange();
         }
 
-        function onExerciseChange() {
-            currentChartExercise = document.getElementById('chartExerciseSelect').value;
-            updateTimeContextSelectors();
-            drawChart();
-        }
-
+        function onExerciseChange() { currentChartExercise = document.getElementById('chartExerciseSelect').value; updateTimeContextSelectors(); drawChart(); }
         function onTimeViewChange() { updateTimeContextSelectors(); drawChart(); }
         function onChartFilterChange() { drawChart(); }
 
         function updateTimeContextSelectors() {
-            const timeView = document.getElementById('chartTimeView').value;
-            const selectCtx = document.getElementById('chartTimeContext');
-            selectCtx.innerHTML = '';
-            
+            const timeView = document.getElementById('chartTimeView').value; const selectCtx = document.getElementById('chartTimeContext'); selectCtx.innerHTML = '';
             const record = globalProgressRecords.find(r => r.exercise === currentChartExercise);
             if (!record || !record.history.length) { selectCtx.innerHTML = '<option value="">Sin datos</option>'; return; }
-
             const uniqueVals = new Set();
-            record.history.forEach(h => {
-                if (timeView === 'ano') uniqueVals.add(h.date.substring(0, 4)); // YYYY
-                else if (timeView === 'mes') uniqueVals.add(h.date.substring(0, 7)); // YYYY-MM
-                else if (timeView === 'dia') uniqueVals.add(h.date); // YYYY-MM-DD
-            });
-
-            const sortedVals = Array.from(uniqueVals).sort((a,b) => b.localeCompare(a)); // Más recientes primero
-
+            record.history.forEach(h => { if (timeView === 'ano') uniqueVals.add(h.date.substring(0, 4)); else if (timeView === 'mes') uniqueVals.add(h.date.substring(0, 7)); else if (timeView === 'dia') uniqueVals.add(h.date); });
+            const sortedVals = Array.from(uniqueVals).sort((a,b) => b.localeCompare(a));
             sortedVals.forEach(val => {
-                const opt = document.createElement('option');
-                opt.value = val;
-                if (timeView === 'ano') { opt.textContent = val; } 
-                else if (timeView === 'mes') { const [y, m] = val.split('-'); opt.textContent = `${monthNamesFull[m]} ${y}`; } 
-                else { opt.textContent = val; }
+                const opt = document.createElement('option'); opt.value = val;
+                if (timeView === 'ano') { opt.textContent = val; } else if (timeView === 'mes') { const [y, m] = val.split('-'); opt.textContent = `${monthNamesFull[m]} ${y}`; } else { opt.textContent = val; }
                 selectCtx.appendChild(opt);
             });
         }
 
-        function deleteProgressRecord(exerciseName, index) {
-            if (confirm("¿Deseas eliminar este registro de serie?")) {
-                const tx = db.transaction("progress", "readwrite");
-                const store = tx.objectStore("progress");
-                const recordId = activeProfileId + '_' + exerciseName;
-                const getReq = store.get(recordId);
+        function editProgressRecord(exerciseName, index) { const record = globalProgressRecords.find(r => r.exercise === exerciseName); if (record && record.history[index]) { openProgressModal(index, { exercise: exerciseName, ...record.history[index] }); } }
+        function deleteProgressRecord(exerciseName, index) { if (confirm("¿Deseas eliminar este registro de serie?")) { const tx = db.transaction("progress", "readwrite"); const store = tx.objectStore("progress"); const recordId = activeProfileId + '_' + exerciseName; const getReq = store.get(recordId); getReq.onsuccess = function() { let record = getReq.result; if (record && record.history) { record.history.splice(index, 1); store.put(record); tx.oncomplete = function() { loadProgressRecords(); }; } }; } }
 
-                getReq.onsuccess = function() {
-                    let record = getReq.result;
-                    if (record && record.history) {
-                        record.history.splice(index, 1);
-                        store.put(record);
-                        tx.oncomplete = function() { loadProgressRecords(); };
-                    }
-                };
-            }
-        }
+        function clearCanvas() { const canvas = document.getElementById('progressCanvas'); const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-        function clearCanvas() {
-            const canvas = document.getElementById('progressCanvas'); const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        let chartRenderedPoints = []; // Para detectar el hover
-
+        let chartRenderedPoints = [];
         function drawChart() {
-            const exerciseName = document.getElementById('chartExerciseSelect').value;
-            const serieFilter = document.getElementById('chartSerieSelect').value;
-            const timeView = document.getElementById('chartTimeView').value;
-            const timeContext = document.getElementById('chartTimeContext').value;
+            const exerciseName = document.getElementById('chartExerciseSelect').value; const serieFilter = document.getElementById('chartSerieSelect').value; const timeView = document.getElementById('chartTimeView').value; const timeContext = document.getElementById('chartTimeContext').value;
+            const record = globalProgressRecords.find(r => r.exercise === exerciseName); const titleEl = document.getElementById('chartTitle'); const canvas = document.getElementById('progressCanvas'); const ctx = canvas.getContext('2d'); chartRenderedPoints = []; 
+            canvas.width = canvas.parentElement.clientWidth - 24; canvas.height = 140; ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const record = globalProgressRecords.find(r => r.exercise === exerciseName);
-            const titleEl = document.getElementById('chartTitle');
-            const canvas = document.getElementById('progressCanvas');
-            const ctx = canvas.getContext('2d');
-            chartRenderedPoints = []; 
+            if (!record || !record.history || record.history.length === 0 || !timeContext) { titleEl.textContent = `Gráfica: Sin datos disponibles`; return; }
 
-            canvas.width = canvas.parentElement.clientWidth - 24; canvas.height = 140;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            if (!record || !record.history || record.history.length === 0 || !timeContext) {
-                titleEl.textContent = `Gráfica: Sin datos disponibles`; return;
-            }
-
-            let history = record.history;
-            if (serieFilter !== 'all') { history = history.filter(h => String(h.serie) === String(serieFilter)); }
+            let history = record.history; if (serieFilter !== 'all') { history = history.filter(h => String(h.serie) === String(serieFilter)); }
             history.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            // Filtrado y Agrupación según la vista
             let finalPoints = [];
-
             if (timeView === 'ano') {
-                const yearRecords = history.filter(h => h.date.startsWith(timeContext));
-                const monthlyData = {};
-                yearRecords.forEach(h => {
-                    const month = h.date.substring(5, 7);
-                    if (!monthlyData[month]) monthlyData[month] = { sumW: 0, sumR: 0, count: 0 };
-                    monthlyData[month].sumW += parseFloat(h.weight);
-                    monthlyData[month].sumR += parseInt(h.reps);
-                    monthlyData[month].count++;
-                });
-                
-                Object.keys(monthlyData).sort().forEach(m => {
-                    const d = monthlyData[m];
-                    const avgW = parseFloat((d.sumW / d.count).toFixed(1));
-                    const avgR = Math.round(d.sumR / d.count);
-                    finalPoints.push({
-                        label: monthNamesMap[m],
-                        weight: avgW, reps: avgR,
-                        tooltipTitle: `Promedio ${monthNamesMap[m]} ${timeContext}`
-                    });
-                });
+                const yearRecords = history.filter(h => h.date.startsWith(timeContext)); const monthlyData = {};
+                yearRecords.forEach(h => { const month = h.date.substring(5, 7); if (!monthlyData[month]) monthlyData[month] = { sumW: 0, sumR: 0, count: 0 }; monthlyData[month].sumW += parseFloat(h.weight); monthlyData[month].sumR += parseInt(h.reps); monthlyData[month].count++; });
+                Object.keys(monthlyData).sort().forEach(m => { const d = monthlyData[m]; const avgW = parseFloat((d.sumW / d.count).toFixed(1)); const avgR = Math.round(d.sumR / d.count); finalPoints.push({ label: monthNamesMap[m], weight: avgW, reps: avgR, tooltipTitle: `Promedio ${monthNamesMap[m]} ${timeContext}` }); });
                 titleEl.textContent = `Desempeño Año ${timeContext}`;
-
             } else if (timeView === 'mes') {
-                const monthRecords = history.filter(h => h.date.startsWith(timeContext));
-                monthRecords.forEach(h => {
-                    finalPoints.push({
-                        label: h.date.substring(8, 10), // Día del mes
-                        weight: parseFloat(h.weight), reps: h.reps,
-                        tooltipTitle: `${h.date} (Serie ${h.serie})`
-                    });
-                });
-                const [y, m] = timeContext.split('-');
-                titleEl.textContent = `Progreso en ${monthNamesFull[m]} ${y}`;
-
+                const monthRecords = history.filter(h => h.date.startsWith(timeContext)); monthRecords.forEach(h => { finalPoints.push({ label: h.date.substring(8, 10), weight: parseFloat(h.weight), reps: h.reps, tooltipTitle: `${h.date} (Serie ${h.serie})` }); });
+                const [y, m] = timeContext.split('-'); titleEl.textContent = `Progreso en ${monthNamesFull[m]} ${y}`;
             } else if (timeView === 'dia') {
-                const dayRecords = history.filter(h => h.date === timeContext);
-                dayRecords.forEach(h => {
-                    finalPoints.push({
-                        label: `S${h.serie}`,
-                        weight: parseFloat(h.weight), reps: h.reps,
-                        tooltipTitle: `${h.date} - Serie ${h.serie}`
-                    });
-                });
+                const dayRecords = history.filter(h => h.date === timeContext); dayRecords.forEach(h => { finalPoints.push({ label: `S${h.serie}`, weight: parseFloat(h.weight), reps: h.reps, tooltipTitle: `${h.date} - Serie ${h.serie}` }); });
                 titleEl.textContent = `Series registradas el ${timeContext}`;
             }
 
-            if (serieFilter !== 'all') titleEl.textContent += ` — Serie ${serieFilter}`;
-            else titleEl.textContent += ` — Todas las series`;
+            if (serieFilter !== 'all') titleEl.textContent += ` — Serie ${serieFilter}`; else titleEl.textContent += ` — Todas las series`;
 
-            if (finalPoints.length === 0) {
-                ctx.fillStyle = '#888'; ctx.font = '11px Montserrat'; ctx.textAlign = 'center';
-                ctx.fillText("No hay registros para este filtro", canvas.width / 2, canvas.height / 2);
-                return;
-            }
+            if (finalPoints.length === 0) { ctx.fillStyle = '#888'; ctx.font = '11px Montserrat'; ctx.textAlign = 'center'; ctx.fillText("No hay registros para este filtro", canvas.width / 2, canvas.height / 2); return; }
 
-            const weights = finalPoints.map(p => p.weight);
-            const maxW = Math.max(...weights, 10); const minW = Math.min(...weights, 0);
-            const padding = 30; const chartW = canvas.width - padding * 2; const chartH = canvas.height - padding * 2;
+            const weights = finalPoints.map(p => p.weight); const maxW = Math.max(...weights, 10); const minW = Math.min(...weights, 0); const padding = 30; const chartW = canvas.width - padding * 2; const chartH = canvas.height - padding * 2;
 
-            // Dibuja los ejes
-            ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.beginPath();
-            ctx.moveTo(padding, padding); ctx.lineTo(padding, canvas.height - padding); ctx.lineTo(canvas.width - padding, canvas.height - padding);
-            ctx.stroke();
-
+            ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(padding, padding); ctx.lineTo(padding, canvas.height - padding); ctx.lineTo(canvas.width - padding, canvas.height - padding); ctx.stroke();
             const stepX = finalPoints.length > 1 ? chartW / (finalPoints.length - 1) : chartW / 2;
-
-            // Dibuja la línea de evolución
+            
             ctx.strokeStyle = currentThemeColor; ctx.lineWidth = 3; ctx.beginPath();
-            finalPoints.forEach((pt, i) => {
-                const x = finalPoints.length > 1 ? padding + (i * stepX) : canvas.width / 2;
-                const y = canvas.height - padding - ((pt.weight - minW) / (maxW - minW || 1)) * chartH;
-                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-                chartRenderedPoints.push({ x, y, weight: pt.weight, reps: pt.reps, tooltipTitle: pt.tooltipTitle, label: pt.label });
-            });
+            finalPoints.forEach((pt, i) => { const x = finalPoints.length > 1 ? padding + (i * stepX) : canvas.width / 2; const y = canvas.height - padding - ((pt.weight - minW) / (maxW - minW || 1)) * chartH; if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); chartRenderedPoints.push({ x, y, weight: pt.weight, reps: pt.reps, tooltipTitle: pt.tooltipTitle, label: pt.label }); });
             ctx.stroke();
 
-            // Dibuja los puntos y los textos de información estática
             chartRenderedPoints.forEach(pt => {
                 ctx.fillStyle = currentThemeColor; ctx.beginPath(); ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2); ctx.fill();
                 ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2); ctx.fill();
-
-                // ETIQUETAS DEL EJE X
-                ctx.fillStyle = '#888'; ctx.font = '9px Montserrat'; ctx.textAlign = 'center';
-                ctx.fillText(pt.label, pt.x, canvas.height - 10);
-
-                // TEXTO FIJO ARRIBA DEL PUNTO
-                ctx.fillStyle = '#fff'; ctx.font = '9px Montserrat';
-                ctx.fillText(`${pt.weight}kg (${pt.reps}r)`, pt.x, pt.y - 12);
+                ctx.fillStyle = '#888'; ctx.font = '9px Montserrat'; ctx.textAlign = 'center'; ctx.fillText(pt.label, pt.x, canvas.height - 10);
+                ctx.fillStyle = '#fff'; ctx.font = '9px Montserrat'; ctx.fillText(`${pt.weight}kg (${pt.reps}r)`, pt.x, pt.y - 12);
             });
         }
 
-        // EVENTOS DEL TOOLTIP INTERACTIVO
         document.addEventListener('DOMContentLoaded', () => {
-            const canvas = document.getElementById('progressCanvas');
-            const tooltip = document.getElementById('chartTooltip');
-
-            canvas.addEventListener('mousemove', (e) => {
-                const rect = canvas.getBoundingClientRect();
-                const mouseX = e.clientX - rect.left; const mouseY = e.clientY - rect.top;
-
-                let hoveredPoint = null;
-                for (let pt of chartRenderedPoints) {
-                    const dx = mouseX - pt.x; const dy = mouseY - pt.y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 14) { hoveredPoint = pt; break; }
-                }
-
-                if (hoveredPoint) {
-                    tooltip.style.display = 'block'; tooltip.style.left = hoveredPoint.x + 'px'; tooltip.style.top = hoveredPoint.y + 'px';
-                    tooltip.innerHTML = `<strong>${hoveredPoint.tooltipTitle}</strong><br>${hoveredPoint.weight} KG x ${hoveredPoint.reps} reps`;
-                } else { tooltip.style.display = 'none'; }
-            });
-
+            const canvas = document.getElementById('progressCanvas'); const tooltip = document.getElementById('chartTooltip');
+            canvas.addEventListener('mousemove', (e) => { const rect = canvas.getBoundingClientRect(); const mouseX = e.clientX - rect.left; const mouseY = e.clientY - rect.top; let hoveredPoint = null; for (let pt of chartRenderedPoints) { const dx = mouseX - pt.x; const dy = mouseY - pt.y; if (Math.sqrt(dx * dx + dy * dy) < 14) { hoveredPoint = pt; break; } } if (hoveredPoint) { tooltip.style.display = 'block'; tooltip.style.left = hoveredPoint.x + 'px'; tooltip.style.top = hoveredPoint.y + 'px'; tooltip.innerHTML = `<strong>${hoveredPoint.tooltipTitle}</strong><br>${hoveredPoint.weight} KG x ${hoveredPoint.reps} reps`; } else { tooltip.style.display = 'none'; } });
             canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
-        });
-
-        // MODO ENTRENADOR
-        let trainerIndex = 0;
-        function startTrainerMode() {
-            if (currentExercisesList.length === 0) { alert("Primero debes agregar al menos un ejercicio."); return; }
-            trainerIndex = 0;
-            document.getElementById('mainContentContainer').style.display = 'none'; document.querySelector('.action-buttons-grid').style.display = 'none';
-            document.getElementById('trainer-mode-container').style.display = 'block'; renderTrainerStep();
-        }
-        function exitTrainerMode() {
-            document.getElementById('trainer-mode-container').style.display = 'none'; document.getElementById('mainContentContainer').style.display = 'block';
-            document.querySelector('.action-buttons-grid').style.display = 'flex';
-        }
-        function renderTrainerStep() {
-            const ex = currentExercisesList[trainerIndex];
-            document.getElementById('trainerCounter').innerText = `Ejercicio ${trainerIndex + 1} de ${currentExercisesList.length}`;
-            document.getElementById('tTitle').innerText = ex.title; document.getElementById('tSubtitle').innerText = ex.subtitle || '';
-            document.getElementById('tDetails').innerText = ex.details || ''; document.getElementById('tInstructions').innerText = ex.instructions || 'Sin instrucciones adicionales.';
-            const imgEl = document.getElementById('tImg');
-            if (ex.image) { imgEl.src = ex.image; imgEl.style.display = 'block'; } else { imgEl.style.display = 'none'; }
-        }
-        function nextTrainerStep() { if (trainerIndex < currentExercisesList.length - 1) { trainerIndex++; renderTrainerStep(); } else { alert("¡Felicidades! Has completado el entrenamiento."); exitTrainerMode(); } }
-        function prevTrainerStep() { if (trainerIndex > 0) { trainerIndex--; renderTrainerStep(); } }
-
-        // TEMPORIZADOR DUAL
-        let audioCtx = null;
-        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-        function playTone(freq, dur) {
-            try { initAudio(); if (audioCtx.state === 'suspended') audioCtx.resume(); const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.frequency.value = freq; gain.gain.setValueAtTime(0.15, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + dur); } catch (e) {}
-        }
-        function playBeepShort() { playTone(600, 0.15); } function playBeepHigh() { playTone(880, 0.25); } function playDoubleBeep() { playTone(880, 0.15); setTimeout(() => playTone(1200, 0.25), 180); }
-
-        let currentTimerMode = 'hiit'; let timerInterval = null, isRunning = false, isPaused = false;
-        let currentPhase = 'prep', timeLeft = 10, currentRound = 1, maxRounds = 3, workDuration = 45, restDuration = 15, restTimeLeft = 60;
-
-        function updateTimerButtonIcon() { const iconEl = document.getElementById('mainBtnIcon'); if (isRunning && !isPaused) { iconEl.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; } else { iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>'; } }
-        function toggleTimerModal() { const modal = document.getElementById('timer-modal'); modal.style.display = (modal.style.display === 'block') ? 'none' : 'block'; if(modal.style.display === 'block' && currentTimerMode === 'rest') updateRestDisplayInit(); }
-
-        function switchTimerTab(mode) {
-            if(isRunning || isPaused) { clearInterval(timerInterval); isRunning = false; isPaused = false; updateTimerButtonIcon(); }
-            currentTimerMode = mode;
-            document.getElementById('hiitSection').style.display = (mode === 'hiit') ? 'block' : 'none'; document.getElementById('restSection').style.display = (mode === 'rest') ? 'block' : 'none';
-            document.getElementById('tabHiitBtn').classList.toggle('active', mode === 'hiit'); document.getElementById('tabRestBtn').classList.toggle('active', mode === 'rest');
-            document.getElementById('timerModalTitle').textContent = (mode === 'hiit') ? "Temporizador HIIT" : "Descanso Entre Series";
-            if(mode === 'rest') updateRestDisplayInit();
-        }
-
-        function updateRestDisplayInit() {
-            const val = parseInt(document.getElementById('quickRestTime').value) || 60; restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val;
-            let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60; document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            document.getElementById('quickStatusText').textContent = "Descanso entre series";
-        }
-
-        function updateDisplay() {
-            if(currentTimerMode === 'hiit') {
-                const statusEl = document.getElementById('timerStatusText'); const clockEl = document.getElementById('timerClockDisplay');
-                document.getElementById('timerRoundsDisplay').textContent = `Ronda ${currentRound} de ${maxRounds}`;
-                let m = Math.floor(timeLeft / 60), s = timeLeft % 60, ft = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-                if(currentPhase === 'prep') { statusEl.textContent = "⏳ Preparación"; clockEl.textContent = ft; } else if(currentPhase === 'round_announcement') { statusEl.textContent = ""; clockEl.textContent = `¡RONDA ${currentRound}!`; } else if(currentPhase === 'work') { statusEl.textContent = "🔥 ¡Trabajo!"; clockEl.textContent = ft; } else { statusEl.textContent = "💧 Descanso"; clockEl.textContent = ft; }
-            } else { let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60; document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
-        }
-
-        function startPauseTimer() {
-            if(currentTimerMode === 'rest') {
-                if (!isRunning && !isPaused) { const val = parseInt(document.getElementById('quickRestTime').value) || 60; restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val; isRunning = true; isPaused = false; playBeepHigh(); } else { isPaused = !isPaused; }
-                updateTimerButtonIcon();
-                if(timerInterval) clearInterval(timerInterval);
-                timerInterval = setInterval(() => { if (isRunning && !isPaused) { if (restTimeLeft > 0) { restTimeLeft--; if (restTimeLeft <= 3) playBeepShort(); updateDisplay(); } else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('quickStatusText').textContent = "¡Tiempo terminado! 🎉"; updateTimerButtonIcon(); } } }, 1000);
-                return;
-            }
-
-            if (!isRunning && !isPaused) {
-                workDuration = (document.getElementById('workUnit').value === 'min') ? parseInt(document.getElementById('workTime').value)*60 : parseInt(document.getElementById('workTime').value);
-                restDuration = (document.getElementById('restUnit').value === 'min') ? parseInt(document.getElementById('restTime').value)*60 : parseInt(document.getElementById('restTime').value);
-                maxRounds = parseInt(document.getElementById('totalRounds').value) || 3;
-                currentPhase = 'prep'; timeLeft = 10; currentRound = 1; isRunning = true; isPaused = false; playBeepHigh();
-            } else { isPaused = !isPaused; }
-
-            updateTimerButtonIcon(); updateDisplay();
-            if(timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => { if (isRunning && !isPaused) { if (timeLeft > 0) { timeLeft--; if (currentPhase !== 'round_announcement' && timeLeft <= 3) playBeepShort(); updateDisplay(); } else { if (currentPhase === 'prep') { currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); } else if (currentPhase === 'round_announcement') { currentPhase = 'work'; timeLeft = workDuration; playBeepHigh(); updateDisplay(); } else if (currentPhase === 'work') { if (restDuration > 0) { currentPhase = 'rest'; timeLeft = restDuration; playBeepShort(); updateDisplay(); } else { nextRoundProgression(); } } else if (currentPhase === 'rest') { nextRoundProgression(); } } } }, 1000);
-        }
-
-        function nextRoundProgression() { if (currentRound < maxRounds) { currentRound++; currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); } else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('timerStatusText').textContent = "¡Completado! 🎉"; updateTimerButtonIcon(); } }
-        function resetTimer() { clearInterval(timerInterval); isRunning = false; isPaused = false; updateTimerButtonIcon(); if(currentTimerMode === 'rest') { updateRestDisplayInit(); return; } timeLeft = 10; currentPhase = 'prep'; currentRound = 1; document.getElementById('timerStatusText').textContent = "Listo para empezar"; updateDisplay(); }
-
-        document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('btnStartTrainer').addEventListener('click', startTrainerMode);
             document.getElementById('btnAddExercise').addEventListener('click', openExerciseModal);
             document.getElementById('btnExitTrainer').addEventListener('click', exitTrainerMode);
@@ -1070,6 +667,29 @@
             document.getElementById('btnCloseExerciseModal').addEventListener('click', closeExerciseModal);
             document.getElementById('btnSaveExercise').addEventListener('click', saveExercise);
         });
+
+        // MODO ENTRENADOR y TEMPORIZADORES (Resto de la lógica intacta...)
+        let trainerIndex = 0;
+        function startTrainerMode() { if (currentExercisesList.length === 0) { alert("Primero debes agregar al menos un ejercicio."); return; } trainerIndex = 0; document.getElementById('mainContentContainer').style.display = 'none'; document.querySelector('.action-buttons-grid').style.display = 'none'; document.getElementById('trainer-mode-container').style.display = 'block'; renderTrainerStep(); }
+        function exitTrainerMode() { document.getElementById('trainer-mode-container').style.display = 'none'; document.getElementById('mainContentContainer').style.display = 'block'; document.querySelector('.action-buttons-grid').style.display = 'flex'; }
+        function renderTrainerStep() { const ex = currentExercisesList[trainerIndex]; document.getElementById('trainerCounter').innerText = `Ejercicio ${trainerIndex + 1} de ${currentExercisesList.length}`; document.getElementById('tTitle').innerText = ex.title; document.getElementById('tSubtitle').innerText = ex.subtitle || ''; document.getElementById('tDetails').innerText = ex.details || ''; document.getElementById('tInstructions').innerText = ex.instructions || 'Sin instrucciones adicionales.'; const imgEl = document.getElementById('tImg'); if (ex.image) { imgEl.src = ex.image; imgEl.style.display = 'block'; } else { imgEl.style.display = 'none'; } }
+        function nextTrainerStep() { if (trainerIndex < currentExercisesList.length - 1) { trainerIndex++; renderTrainerStep(); } else { alert("¡Felicidades! Has completado el entrenamiento."); exitTrainerMode(); } }
+        function prevTrainerStep() { if (trainerIndex > 0) { trainerIndex--; renderTrainerStep(); } }
+
+        let audioCtx = null; function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        function playTone(freq, dur) { try { initAudio(); if (audioCtx.state === 'suspended') audioCtx.resume(); const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.frequency.value = freq; gain.gain.setValueAtTime(0.15, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + dur); } catch (e) {} }
+        function playBeepShort() { playTone(600, 0.15); } function playBeepHigh() { playTone(880, 0.25); } function playDoubleBeep() { playTone(880, 0.15); setTimeout(() => playTone(1200, 0.25), 180); }
+
+        let currentTimerMode = 'hiit'; let timerInterval = null, isRunning = false, isPaused = false;
+        let currentPhase = 'prep', timeLeft = 10, currentRound = 1, maxRounds = 3, workDuration = 45, restDuration = 15, restTimeLeft = 60;
+        function updateTimerButtonIcon() { const iconEl = document.getElementById('mainBtnIcon'); if (isRunning && !isPaused) { iconEl.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; } else { iconEl.innerHTML = '<path d="M8 5v14l11-7z"/>'; } }
+        function toggleTimerModal() { const modal = document.getElementById('timer-modal'); modal.style.display = (modal.style.display === 'block') ? 'none' : 'block'; if(modal.style.display === 'block' && currentTimerMode === 'rest') updateRestDisplayInit(); }
+        function switchTimerTab(mode) { if(isRunning || isPaused) { clearInterval(timerInterval); isRunning = false; isPaused = false; updateTimerButtonIcon(); } currentTimerMode = mode; document.getElementById('hiitSection').style.display = (mode === 'hiit') ? 'block' : 'none'; document.getElementById('restSection').style.display = (mode === 'rest') ? 'block' : 'none'; document.getElementById('tabHiitBtn').classList.toggle('active', mode === 'hiit'); document.getElementById('tabRestBtn').classList.toggle('active', mode === 'rest'); document.getElementById('timerModalTitle').textContent = (mode === 'hiit') ? "Temporizador HIIT" : "Descanso Entre Series"; if(mode === 'rest') updateRestDisplayInit(); }
+        function updateRestDisplayInit() { const val = parseInt(document.getElementById('quickRestTime').value) || 60; restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val; let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60; document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; document.getElementById('quickStatusText').textContent = "Descanso entre series"; }
+        function updateDisplay() { if(currentTimerMode === 'hiit') { const statusEl = document.getElementById('timerStatusText'); const clockEl = document.getElementById('timerClockDisplay'); document.getElementById('timerRoundsDisplay').textContent = `Ronda ${currentRound} de ${maxRounds}`; let m = Math.floor(timeLeft / 60), s = timeLeft % 60, ft = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; if(currentPhase === 'prep') { statusEl.textContent = "⏳ Preparación"; clockEl.textContent = ft; } else if(currentPhase === 'round_announcement') { statusEl.textContent = ""; clockEl.textContent = `¡RONDA ${currentRound}!`; } else if(currentPhase === 'work') { statusEl.textContent = "🔥 ¡Trabajo!"; clockEl.textContent = ft; } else { statusEl.textContent = "💧 Descanso"; clockEl.textContent = ft; } } else { let m = Math.floor(restTimeLeft / 60), s = restTimeLeft % 60; document.getElementById('quickClockDisplay').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; } }
+        function startPauseTimer() { if(currentTimerMode === 'rest') { if (!isRunning && !isPaused) { const val = parseInt(document.getElementById('quickRestTime').value) || 60; restTimeLeft = (document.getElementById('quickRestUnit').value === 'min') ? val * 60 : val; isRunning = true; isPaused = false; playBeepHigh(); } else { isPaused = !isPaused; } updateTimerButtonIcon(); if(timerInterval) clearInterval(timerInterval); timerInterval = setInterval(() => { if (isRunning && !isPaused) { if (restTimeLeft > 0) { restTimeLeft--; if (restTimeLeft <= 3) playBeepShort(); updateDisplay(); } else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('quickStatusText').textContent = "¡Tiempo terminado! 🎉"; updateTimerButtonIcon(); } } }, 1000); return; } if (!isRunning && !isPaused) { workDuration = (document.getElementById('workUnit').value === 'min') ? parseInt(document.getElementById('workTime').value)*60 : parseInt(document.getElementById('workTime').value); restDuration = (document.getElementById('restUnit').value === 'min') ? parseInt(document.getElementById('restTime').value)*60 : parseInt(document.getElementById('restTime').value); maxRounds = parseInt(document.getElementById('totalRounds').value) || 3; currentPhase = 'prep'; timeLeft = 10; currentRound = 1; isRunning = true; isPaused = false; playBeepHigh(); } else { isPaused = !isPaused; } updateTimerButtonIcon(); updateDisplay(); if(timerInterval) clearInterval(timerInterval); timerInterval = setInterval(() => { if (isRunning && !isPaused) { if (timeLeft > 0) { timeLeft--; if (currentPhase !== 'round_announcement' && timeLeft <= 3) playBeepShort(); updateDisplay(); } else { if (currentPhase === 'prep') { currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); } else if (currentPhase === 'round_announcement') { currentPhase = 'work'; timeLeft = workDuration; playBeepHigh(); updateDisplay(); } else if (currentPhase === 'work') { if (restDuration > 0) { currentPhase = 'rest'; timeLeft = restDuration; playBeepShort(); updateDisplay(); } else { nextRoundProgression(); } } else if (currentPhase === 'rest') { nextRoundProgression(); } } } }, 1000); }
+        function nextRoundProgression() { if (currentRound < maxRounds) { currentRound++; currentPhase = 'round_announcement'; timeLeft = 2; playDoubleBeep(); updateDisplay(); } else { clearInterval(timerInterval); isRunning = false; playDoubleBeep(); document.getElementById('timerStatusText').textContent = "¡Completado! 🎉"; updateTimerButtonIcon(); } }
+        function resetTimer() { clearInterval(timerInterval); isRunning = false; isPaused = false; updateTimerButtonIcon(); if(currentTimerMode === 'rest') { updateRestDisplayInit(); return; } timeLeft = 10; currentPhase = 'prep'; currentRound = 1; document.getElementById('timerStatusText').textContent = "Listo para empezar"; updateDisplay(); }
     </script>
 </body>
 </html>
